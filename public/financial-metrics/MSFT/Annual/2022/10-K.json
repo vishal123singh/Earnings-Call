@@ -1,0 +1,181 @@
+[
+  {
+    "comapny_ticker": "MSFT",
+    "reportName": "INCOME Statement",
+    "data": {
+      "header": "INCOME Statement - USD shares in Millions, $ in Millions",
+      "period": "12 Months Ended",
+      "data": {
+        "Revenue": 125538,
+        "Cost of revenue": 43586,
+        "Gross margin": 135620,
+        "Research and development": 24512,
+        "Sales and marketing": 21825,
+        "General and administrative": 5900,
+        "Operating income": 83383,
+        "Other income, net": 333,
+        "Income before income taxes": 83716,
+        "Provision for income taxes": 10978,
+        "Net income": 72738,
+        "Basic": 7496,
+        "Diluted": 7540
+      }
+    },
+    "periodOfReport": "2022-06-30",
+    "dateFiled": "2022-07-28",
+    "formType": "10-K",
+    "quarter": "Q2"
+  },
+  {
+    "comapny_ticker": "MSFT",
+    "reportName": "COMPREHENSIVE INCOME Statement",
+    "data": {
+      "header": "COMPREHENSIVE INCOME Statement - USD $ in Millions",
+      "period": "12 Months Ended",
+      "data": {
+        "Net income": 72738,
+        "Net change related to derivatives": 6,
+        "Net change related to investments": 3990,
+        "Translation adjustments and other": 873,
+        "Other comprehensive income (loss)": 3526,
+        "Comprehensive income": 66238
+      }
+    },
+    "periodOfReport": "2022-06-30",
+    "dateFiled": "2022-07-28",
+    "formType": "10-K",
+    "quarter": "Q2"
+  },
+  {
+    "comapny_ticker": "MSFT",
+    "reportName": "BALANCE Sheet",
+    "data": {
+      "header": "BALANCE Sheet - USD $ in Millions",
+      "period": "Jun. 30, 2022",
+      "data": {
+        "Cash and cash equivalents": 13931,
+        "Short-term investments": 90826,
+        "Total cash, cash equivalents, and short-term investments": 104757,
+        "Accounts receivable, net of allowance for doubtful accounts of $633 and $751": 44261,
+        "Inventories": 3742,
+        "Other current assets": 16924,
+        "Total current assets": 169684,
+        "Property and equipment, net of accumulated depreciation of $59,660 and $51,351": 74398,
+        "Operating lease right-of-use assets": 13148,
+        "Equity investments": 6891,
+        "Goodwill": 67524,
+        "Intangible assets, net": 11298,
+        "Other long-term assets": 21897,
+        "Total assets": 364840,
+        "Accounts payable": 19000,
+        "Current portion of long-term debt": 2749,
+        "Accrued compensation": 10661,
+        "Short-term income taxes": 4067,
+        "Short-term unearned revenue": 45538,
+        "Other current liabilities": 13067,
+        "Total current liabilities": 95082,
+        "Long-term debt": 47032,
+        "Long-term income taxes": 26069,
+        "Long-term unearned revenue": 2870,
+        "Deferred income taxes": 230,
+        "Operating lease liabilities": 11489,
+        "Other long-term liabilities": 15526,
+        "Total liabilities": 198298,
+        "Common stock and paid-in capital – shares authorized 24,000; outstanding 7,464 and 7,519": 86939,
+        "Retained earnings": 84281,
+        "Accumulated other comprehensive income (loss)": 1822,
+        "Total stockholders’ equity": 166542,
+        "Total liabilities and stockholders’ equity": 364840
+      }
+    },
+    "periodOfReport": "2022-06-30",
+    "dateFiled": "2022-07-28",
+    "formType": "10-K",
+    "quarter": "Q2"
+  },
+  {
+    "comapny_ticker": "MSFT",
+    "reportName": "CASH Flow Statement",
+    "data": {
+      "header": "CASH Flow Statement - USD $ in Millions",
+      "period": "12 Months Ended",
+      "data": {
+        "Net income": 72738,
+        "Depreciation, amortization, and other": 14460,
+        "Stock-based compensation expense": 7502,
+        "Deferred income taxes": 11,
+        "Inventories": 168,
+        "Accounts payable": 2943,
+        "Unearned revenue": 5109,
+        "Income taxes": 696,
+        "Other current liabilities": 2344,
+        "Other long-term liabilities": 825,
+        "Net cash from operations": 89035,
+        "Cash premium on debt exchange": 0,
+        "Common stock issued": 1841,
+        "Maturities of investments": 16451,
+        "Sales of investments": 28443,
+        "Net change in cash and cash equivalents": 648,
+        "Cash and cash equivalents, beginning of period": 14224,
+        "Cash and cash equivalents, end of period": 13931
+      }
+    },
+    "periodOfReport": "2022-06-30",
+    "dateFiled": "2022-07-28",
+    "formType": "10-K",
+    "quarter": "Q2"
+  },
+  {
+    "comapny_ticker": "MSFT",
+    "reportName": "Gains on Derivative Instruments Recognized on Income Statement",
+    "data": {
+      "header": "Gains on Derivative Instruments Recognized on Income Statement - Other Income , Net - USD $ in Millions",
+      "period": "12 Months Ended",
+      "data": {
+        "Gains (Losses) on Derivatives Not Designated as Hedges": 9,
+        "Derivatives": 93,
+        "Hedged items": 108,
+        "Excluded from effectiveness assessment": 4,
+        "Amount reclassified from accumulated other comprehensive income": 17
+      }
+    },
+    "periodOfReport": "2022-06-30",
+    "dateFiled": "2022-07-28",
+    "formType": "10-K",
+    "quarter": "Q2"
+  },
+  {
+    "comapny_ticker": "MSFT",
+    "reportName": "Gains , Net of Tax, on Derivative Instruments Recognized on Comprehensive Income Statement",
+    "data": {
+      "header": "Gains , Net of Tax, on Derivative Instruments Recognized on Comprehensive Income Statement - USD $ in Millions",
+      "period": "12 Months Ended",
+      "data": {
+        "Included in effectiveness assessment": 34
+      }
+    },
+    "periodOfReport": "2022-06-30",
+    "dateFiled": "2022-07-28",
+    "formType": "10-K",
+    "quarter": "Q2"
+  },
+  {
+    "comapny_ticker": "MSFT",
+    "reportName": "Supplemental Balance Sheet Information Related to Leases",
+    "data": {
+      "header": "Supplemental Balance Sheet Information Related to Leases - USD $ in Millions",
+      "period": "Jun. 30, 2022",
+      "data": {
+        "Operating lease right-of-use assets": 13148,
+        "Total operating lease liabilities": 11489,
+        "Property and equipment, at cost": 17388,
+        "Property and equipment, net": 14103,
+        "Total finance lease liabilities": 13842
+      }
+    },
+    "periodOfReport": "2022-06-30",
+    "dateFiled": "2022-07-28",
+    "formType": "10-K",
+    "quarter": "Q2"
+  }
+]

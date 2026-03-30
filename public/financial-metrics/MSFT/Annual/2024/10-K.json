@@ -1,0 +1,177 @@
+[
+  {
+    "comapny_ticker": "MSFT",
+    "reportName": "INCOME Statement",
+    "data": {
+      "header": "INCOME Statement - USD shares in Millions, $ in Millions",
+      "period": "12 Months Ended",
+      "data": {
+        "Revenue": 180349,
+        "Cost of revenue": 58842,
+        "Gross margin": 171008,
+        "Research and development": 29510,
+        "Sales and marketing": 24456,
+        "General and administrative": 7609,
+        "Operating income": 109433,
+        "Other income (expense), net": 788,
+        "Income before income taxes": 107787,
+        "Provision for income taxes": 19651,
+        "Net income": 88136,
+        "Basic": 7431,
+        "Diluted": 7469
+      }
+    },
+    "periodOfReport": "2024-06-30",
+    "dateFiled": "2024-07-30",
+    "formType": "10-K",
+    "quarter": "Q2"
+  },
+  {
+    "comapny_ticker": "MSFT",
+    "reportName": "COMPREHENSIVE INCOME Statement",
+    "data": {
+      "header": "COMPREHENSIVE INCOME Statement - USD $ in Millions",
+      "period": "12 Months Ended",
+      "data": {
+        "Net income": 88136,
+        "Net change related to derivatives": 24,
+        "Net change related to investments": 957,
+        "Other comprehensive income (loss)": 753,
+        "Comprehensive income": 88889
+      }
+    },
+    "periodOfReport": "2024-06-30",
+    "dateFiled": "2024-07-30",
+    "formType": "10-K",
+    "quarter": "Q2"
+  },
+  {
+    "comapny_ticker": "MSFT",
+    "reportName": "BALANCE Sheet",
+    "data": {
+      "header": "BALANCE Sheet - USD $ in Millions",
+      "period": "Jun. 30, 2024",
+      "data": {
+        "Cash and cash equivalents": 18315,
+        "Short-term investments": 57228,
+        "Total cash, cash equivalents, and short-term investments": 75543,
+        "Accounts receivable, net of allowance for doubtful accounts of $830 and $650": 56924,
+        "Inventories": 1246,
+        "Other current assets": 26021,
+        "Total current assets": 159734,
+        "Property and equipment, net of accumulated depreciation of $76,421 and $68,251": 135591,
+        "Operating lease right-of-use assets": 18961,
+        "Equity and other investments": 14600,
+        "Goodwill": 119220,
+        "Intangible assets, net": 27597,
+        "Other long-term assets": 36460,
+        "Total assets": 512163,
+        "Accounts payable": 21996,
+        "Short-term debt": 6693,
+        "Current portion of long-term debt": 2249,
+        "Accrued compensation": 12564,
+        "Short-term income taxes": 5017,
+        "Short-term unearned revenue": 57582,
+        "Other current liabilities": 19185,
+        "Total current liabilities": 125286,
+        "Long-term debt": 42688,
+        "Long-term income taxes": 27931,
+        "Long-term unearned revenue": 2602,
+        "Deferred income taxes": 2618,
+        "Operating lease liabilities": 15497,
+        "Other long-term liabilities": 27064,
+        "Total liabilities": 243686,
+        "Common stock and paid-in capital - shares authorized 24,000; outstanding 7,434 and 7,432": 100923,
+        "Retained earnings": 173144,
+        "Total stockholders’ equity": 268477,
+        "Total liabilities and stockholders’ equity": 512163
+      }
+    },
+    "periodOfReport": "2024-06-30",
+    "dateFiled": "2024-07-30",
+    "formType": "10-K",
+    "quarter": "Q2"
+  },
+  {
+    "comapny_ticker": "MSFT",
+    "reportName": "CASH Flow Statement",
+    "data": {
+      "header": "CASH Flow Statement - USD $ in Millions",
+      "period": "12 Months Ended",
+      "data": {
+        "Net income": 88136,
+        "Depreciation, amortization, and other": 22287,
+        "Stock-based compensation expense": 10734,
+        "Net recognized losses (gains) on investments and derivatives": 305,
+        "Inventories": 1284,
+        "Accounts payable": 3545,
+        "Unearned revenue": 5348,
+        "Income taxes": 1687,
+        "Other current liabilities": 4867,
+        "Other long-term liabilities": 749,
+        "Net cash from operations": 118548,
+        "Proceeds from issuance of debt, maturities of 90 days or less, net": 5250,
+        "Proceeds from issuance of debt": 24395,
+        "Common stock issued": 2002,
+        "Maturities of investments": 24775,
+        "Sales of investments": 10894,
+        "Net change in cash and cash equivalents": 20773,
+        "Cash and cash equivalents, beginning of period": 34704,
+        "Cash and cash equivalents, end of period": 18315
+      }
+    },
+    "periodOfReport": "2024-06-30",
+    "dateFiled": "2024-07-30",
+    "formType": "10-K",
+    "quarter": "Q2"
+  },
+  {
+    "comapny_ticker": "MSFT",
+    "reportName": "Gains , Net of Tax, on Derivative Instruments Recognized in Comprehensive Income Statement",
+    "data": {
+      "header": "Gains , Net of Tax, on Derivative Instruments Recognized in Comprehensive Income Statement - USD $ in Millions",
+      "period": "12 Months Ended",
+      "data": {
+        "Included in effectiveness assessment": 34
+      }
+    },
+    "periodOfReport": "2024-06-30",
+    "dateFiled": "2024-07-30",
+    "formType": "10-K",
+    "quarter": "Q2"
+  },
+  {
+    "comapny_ticker": "MSFT",
+    "reportName": "Impact of Acquistion on Income Statement",
+    "data": {
+      "header": "Impact of Acquistion on Income Statement - Activision Blizzard, Inc. $ in Millions",
+      "period": "12 Months Ended",
+      "data": {
+        "Revenue": 5729
+      }
+    },
+    "periodOfReport": "2024-06-30",
+    "dateFiled": "2024-07-30",
+    "formType": "10-K",
+    "quarter": "Q2"
+  },
+  {
+    "comapny_ticker": "MSFT",
+    "reportName": "Supplemental Balance Sheet Information Related to Leases",
+    "data": {
+      "header": "Supplemental Balance Sheet Information Related to Leases - USD $ in Millions",
+      "period": "Jun. 30, 2024",
+      "data": {
+        "Operating lease right-of-use assets": 18961,
+        "Total operating lease liabilities": 15497,
+        "Property and equipment, at cost": 32248,
+        "Property and equipment, net": 25862,
+        "Total finance lease liabilities": 24796
+      }
+    },
+    "periodOfReport": "2024-06-30",
+    "dateFiled": "2024-07-30",
+    "formType": "10-K",
+    "quarter": "Q2"
+  }
+]

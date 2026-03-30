@@ -1,0 +1,146 @@
+[
+  {
+    "reportName": "INCOME Statement",
+    "data": {
+      "header": "INCOME Statement - USD shares in Millions, $ in Millions",
+      "period": "3 Months Ended",
+      "data": {
+        "Cost of revenue": 3941,
+        "Gross margin": 36729,
+        "Research and development": 6984,
+        "Sales and marketing": 5750,
+        "General and administrative": 1643,
+        "Operating income": 22352,
+        "Other income (expense), net": 321,
+        "Income before income taxes": 22673,
+        "Provision for income taxes": 4374,
+        "Basic": 7441,
+        "Diluted": 7464,
+        "Revenue": 37269
+      }
+    },
+    "periodOfReport": "2023-03-31",
+    "dateFiled": "2023-04-25",
+    "formType": "10-Q",
+    "quarter": "Q1"
+  },
+  {
+    "reportName": "COMPREHENSIVE INCOME Statement",
+    "data": {
+      "header": "COMPREHENSIVE INCOME Statement - USD $ in Millions",
+      "period": "3 Months Ended",
+      "data": {
+        "Net change related to derivatives": 6,
+        "Net change related to investments": 753,
+        "Translation adjustments and other": 69,
+        "Other comprehensive income (loss)": 813
+      }
+    },
+    "periodOfReport": "2023-03-31",
+    "dateFiled": "2023-04-25",
+    "formType": "10-Q",
+    "quarter": "Q1"
+  },
+  {
+    "reportName": "BALANCE Sheet",
+    "data": {
+      "header": "BALANCE Sheet - USD $ in Millions",
+      "period": "Mar. 31, 2023",
+      "data": {
+        "Short-term investments": 77865,
+        "Total cash, cash equivalents, and short-term investments": 104427,
+        "Accounts receivable, net of allowance for doubtful accounts of $495 and $633": 37420,
+        "Inventories": 2877,
+        "Other current assets": 19165,
+        "Total current assets": 163889,
+        "Property and equipment, net of accumulated depreciation of $65,998 and $59,660": 88132,
+        "Operating lease right-of-use assets": 13879,
+        "Equity investments": 9415,
+        "Goodwill": 67940,
+        "Intangible assets, net": 9879,
+        "Other long-term assets": 26954,
+        "Total assets": 380088,
+        "Accounts payable": 15305,
+        "Current portion of long-term debt": 6245,
+        "Accrued compensation": 10411,
+        "Short-term income taxes": 4163,
+        "Short-term unearned revenue": 36903,
+        "Other current liabilities": 12664,
+        "Total current liabilities": 85691,
+        "Long-term debt": 41965,
+        "Long-term income taxes": 25000,
+        "Long-term unearned revenue": 2698,
+        "Deferred income taxes": 302,
+        "Operating lease liabilities": 12312,
+        "Other long-term liabilities": 17437,
+        "Total liabilities": 185405,
+        "Common stock and paid-in capital - shares authorized 24,000: outstanding 7,437 and 7,464": 92093,
+        "Retained earnings": 108234,
+        "Total stockholders’ equity": 194683
+      }
+    },
+    "periodOfReport": "2023-03-31",
+    "dateFiled": "2023-04-25",
+    "formType": "10-Q",
+    "quarter": "Q1"
+  },
+  {
+    "reportName": "CASH Flow Statement",
+    "data": {
+      "header": "CASH Flow Statement - USD $ in Millions",
+      "period": "3 Months Ended",
+      "data": {
+        "Depreciation, amortization, and other": 3549,
+        "Stock-based compensation expense": 2465,
+        "Net recognized losses (gains) on investments and derivatives": 105,
+        "Accounts receivable": 857,
+        "Inventories": 106,
+        "Other current assets": 1152,
+        "Accounts payable": 520,
+        "Income taxes": 1414,
+        "Other current liabilities": 1715,
+        "Other long-term liabilities": 6,
+        "Net cash from operations": 24441,
+        "Repayments of debt": 0,
+        "Common stock issued": 536,
+        "Maturities of investments": 13154,
+        "Sales of investments": 1239,
+        "Effect of foreign exchange rates on cash and cash equivalents": 29,
+        "Net change in cash and cash equivalents": 10916,
+        "Cash and cash equivalents, beginning of period": 15646
+      }
+    },
+    "periodOfReport": "2023-03-31",
+    "dateFiled": "2023-04-25",
+    "formType": "10-Q",
+    "quarter": "Q1"
+  },
+  {
+    "reportName": "Gains , Net of Tax, on Derivative Instruments Recognized on Comprehensive Income Statement",
+    "data": {
+      "header": "Gains , Net of Tax, on Derivative Instruments Recognized on Comprehensive Income Statement - USD $ in Millions",
+      "period": "3 Months Ended",
+      "data": {}
+    },
+    "periodOfReport": "2023-03-31",
+    "dateFiled": "2023-04-25",
+    "formType": "10-Q",
+    "quarter": "Q1"
+  },
+  {
+    "reportName": "Supplemental Balance Sheet Information Related to Leases",
+    "data": {
+      "header": "Supplemental Balance Sheet Information Related to Leases - USD $ in Millions",
+      "period": "Mar. 31, 2023",
+      "data": {
+        "Total operating lease liabilities": 12312,
+        "Property and equipment, net": 15365,
+        "Total finance lease liabilities": 1153
+      }
+    },
+    "periodOfReport": "2023-03-31",
+    "dateFiled": "2023-04-25",
+    "formType": "10-Q",
+    "quarter": "Q1"
+  }
+]

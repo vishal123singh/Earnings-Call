@@ -1,0 +1,137 @@
+[
+  {
+    "reportName": "INCOME Statement",
+    "data": {
+      "header": "INCOME Statement - USD shares in Millions, $ in Millions",
+      "period": "3 Months Ended",
+      "data": {
+        "Cost of revenue": 4302,
+        "Gross margin": 34670,
+        "Research and development": 6628,
+        "Sales and marketing": 5126,
+        "General and administrative": 1398,
+        "Operating income": 21518,
+        "Other income, net": 54,
+        "Income before income taxes": 21572,
+        "Provision for income taxes": 4016,
+        "Basic": 7457,
+        "Diluted": 7485,
+        "Revenue": 34381
+      }
+    },
+    "periodOfReport": "2022-09-30",
+    "dateFiled": "2022-10-25",
+    "formType": "10-Q",
+    "quarter": "Q3"
+  },
+  {
+    "reportName": "COMPREHENSIVE INCOME Statement",
+    "data": {
+      "header": "COMPREHENSIVE INCOME Statement - USD $ in Millions",
+      "period": "3 Months Ended",
+      "data": {
+        "Net change related to derivatives": 7
+      }
+    },
+    "periodOfReport": "2022-09-30",
+    "dateFiled": "2022-10-25",
+    "formType": "10-Q",
+    "quarter": "Q3"
+  },
+  {
+    "reportName": "BALANCE Sheet",
+    "data": {
+      "header": "BALANCE Sheet - USD $ in Millions",
+      "period": "Sep. 30, 2022",
+      "data": {
+        "Short-term investments": 84378,
+        "Total cash, cash equivalents, and short-term investments": 107262,
+        "Accounts receivable, net of allowance for doubtful accounts of $438 and $633": 31279,
+        "Inventories": 4268,
+        "Other current assets": 18003,
+        "Total current assets": 160812,
+        "Property and equipment, net of accumulated depreciation of $60,638 and $59,660": 77037,
+        "Operating lease right-of-use assets": 13347,
+        "Equity investments": 6839,
+        "Goodwill": 67459,
+        "Intangible assets, net": 10808,
+        "Other long-term assets": 23482,
+        "Total assets": 359784,
+        "Accounts payable": 16609,
+        "Current portion of long-term debt": 3248,
+        "Accrued compensation": 7405,
+        "Short-term income taxes": 6729,
+        "Short-term unearned revenue": 41340,
+        "Other current liabilities": 12058,
+        "Total current liabilities": 87389,
+        "Long-term debt": 45374,
+        "Long-term income taxes": 23712,
+        "Long-term unearned revenue": 2549,
+        "Deferred income taxes": 223,
+        "Operating lease liabilities": 11660,
+        "Other long-term liabilities": 15311,
+        "Total liabilities": 186218,
+        "Common stock and paid-in capital – shares authorized 24,000; outstanding 7,457 and 7,464": 88535,
+        "Retained earnings": 92374,
+        "Total stockholders’ equity": 173566
+      }
+    },
+    "periodOfReport": "2022-09-30",
+    "dateFiled": "2022-10-25",
+    "formType": "10-Q",
+    "quarter": "Q3"
+  },
+  {
+    "reportName": "CASH Flow Statement",
+    "data": {
+      "header": "CASH Flow Statement - USD $ in Millions",
+      "period": "3 Months Ended",
+      "data": {
+        "Depreciation, amortization, and other": 2790,
+        "Stock-based compensation expense": 2192,
+        "Accounts receivable": 11729,
+        "Other current assets": 940,
+        "Income taxes": 410,
+        "Other long-term liabilities": 188,
+        "Net cash from operations": 23198,
+        "Common stock issued": 575,
+        "Maturities of investments": 6662,
+        "Sales of investments": 2711,
+        "Net change in cash and cash equivalents": 8953,
+        "Cash and cash equivalents, beginning of period": 13931
+      }
+    },
+    "periodOfReport": "2022-09-30",
+    "dateFiled": "2022-10-25",
+    "formType": "10-Q",
+    "quarter": "Q3"
+  },
+  {
+    "reportName": "Gains , Net of Tax, on Derivative Instruments Recognized on Comprehensive Income Statement",
+    "data": {
+      "header": "Gains , Net of Tax, on Derivative Instruments Recognized on Comprehensive Income Statement - USD $ in Millions",
+      "period": "3 Months Ended",
+      "data": {}
+    },
+    "periodOfReport": "2022-09-30",
+    "dateFiled": "2022-10-25",
+    "formType": "10-Q",
+    "quarter": "Q3"
+  },
+  {
+    "reportName": "Supplemental Balance Sheet Information Related to Leases",
+    "data": {
+      "header": "Supplemental Balance Sheet Information Related to Leases - USD $ in Millions",
+      "period": "Sep. 30, 2022",
+      "data": {
+        "Total operating lease liabilities": 11660,
+        "Property and equipment, net": 13847,
+        "Total finance lease liabilities": 1055
+      }
+    },
+    "periodOfReport": "2022-09-30",
+    "dateFiled": "2022-10-25",
+    "formType": "10-Q",
+    "quarter": "Q3"
+  }
+]

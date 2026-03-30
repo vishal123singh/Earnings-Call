@@ -1,0 +1,159 @@
+[
+  {
+    "comapny_ticker": "MSFT",
+    "reportName": "INCOME Statement",
+    "data": {
+      "header": "INCOME Statement - USD shares in Millions, $ in Millions",
+      "period": "12 Months Ended",
+      "data": {
+        "Revenue": 147216,
+        "Cost of revenue": 48059,
+        "Gross margin": 146052,
+        "Research and development": 27195,
+        "Sales and marketing": 22759,
+        "General and administrative": 7575,
+        "Operating income": 88523,
+        "Other income, net": 788,
+        "Income before income taxes": 89311,
+        "Provision for income taxes": 16950,
+        "Net income": 72361,
+        "Basic": 7446,
+        "Diluted": 7472
+      }
+    },
+    "periodOfReport": "2023-06-30",
+    "dateFiled": "2023-07-27",
+    "formType": "10-K",
+    "quarter": "Q2"
+  },
+  {
+    "comapny_ticker": "MSFT",
+    "reportName": "COMPREHENSIVE INCOME Statement",
+    "data": {
+      "header": "COMPREHENSIVE INCOME Statement - USD $ in Millions",
+      "period": "12 Months Ended",
+      "data": {
+        "Net income": 72361,
+        "Net change related to derivatives": 6,
+        "Translation adjustments and other": 873,
+        "Comprehensive income": 70696
+      }
+    },
+    "periodOfReport": "2023-06-30",
+    "dateFiled": "2023-07-27",
+    "formType": "10-K",
+    "quarter": "Q2"
+  },
+  {
+    "comapny_ticker": "MSFT",
+    "reportName": "BALANCE Sheet",
+    "data": {
+      "header": "BALANCE Sheet - USD $ in Millions",
+      "period": "Jun. 30, 2023",
+      "data": {
+        "Cash and cash equivalents": 34704,
+        "Short-term investments": 76558,
+        "Total cash, cash equivalents, and short-term investments": 111262,
+        "Accounts receivable, net of allowance for doubtful accounts of $650 and $633": 48688,
+        "Inventories": 2500,
+        "Other current assets": 21807,
+        "Total current assets": 184257,
+        "Property and equipment, net of accumulated depreciation of $68,251 and $59,660": 95641,
+        "Operating lease right-of-use assets": 14346,
+        "Equity investments": 9879,
+        "Goodwill": 67886,
+        "Intangible assets, net": 9366,
+        "Other long-term assets": 30601,
+        "Total assets": 411976,
+        "Accounts payable": 18095,
+        "Current portion of long-term debt": 5247,
+        "Accrued compensation": 11009,
+        "Short-term income taxes": 4152,
+        "Short-term unearned revenue": 50901,
+        "Other current liabilities": 14745,
+        "Total current liabilities": 104149,
+        "Long-term debt": 41990,
+        "Long-term income taxes": 25560,
+        "Long-term unearned revenue": 2912,
+        "Deferred income taxes": 433,
+        "Operating lease liabilities": 12728,
+        "Other long-term liabilities": 17981,
+        "Total liabilities": 205753,
+        "Common stock and paid-in capital - shares authorized 24,000; outstanding 7,432 and 7,464": 93718,
+        "Retained earnings": 118848,
+        "Total stockholders’ equity": 206223,
+        "Total liabilities and stockholders’ equity": 411976
+      }
+    },
+    "periodOfReport": "2023-06-30",
+    "dateFiled": "2023-07-27",
+    "formType": "10-K",
+    "quarter": "Q2"
+  },
+  {
+    "comapny_ticker": "MSFT",
+    "reportName": "CASH Flow Statement",
+    "data": {
+      "header": "CASH Flow Statement - USD $ in Millions",
+      "period": "12 Months Ended",
+      "data": {
+        "Net income": 72361,
+        "Depreciation, amortization, and other": 13861,
+        "Stock-based compensation expense": 9611,
+        "Net recognized losses (gains) on investments and derivatives": 196,
+        "Inventories": 1242,
+        "Accounts payable": 2943,
+        "Unearned revenue": 5535,
+        "Income taxes": 696,
+        "Other current liabilities": 2272,
+        "Other long-term liabilities": 553,
+        "Net cash from operations": 87582,
+        "Cash premium on debt exchange": 0,
+        "Common stock issued": 1866,
+        "Maturities of investments": 33510,
+        "Sales of investments": 14354,
+        "Net change in cash and cash equivalents": 20773,
+        "Cash and cash equivalents, beginning of period": 13931,
+        "Cash and cash equivalents, end of period": 34704
+      }
+    },
+    "periodOfReport": "2023-06-30",
+    "dateFiled": "2023-07-27",
+    "formType": "10-K",
+    "quarter": "Q2"
+  },
+  {
+    "comapny_ticker": "MSFT",
+    "reportName": "Gains , Net of Tax, on Derivative Instruments Recognized on Comprehensive Income Statement",
+    "data": {
+      "header": "Gains , Net of Tax, on Derivative Instruments Recognized on Comprehensive Income Statement - USD $ in Millions",
+      "period": "12 Months Ended",
+      "data": {
+        "Included in effectiveness assessment": 34
+      }
+    },
+    "periodOfReport": "2023-06-30",
+    "dateFiled": "2023-07-27",
+    "formType": "10-K",
+    "quarter": "Q2"
+  },
+  {
+    "comapny_ticker": "MSFT",
+    "reportName": "Supplemental Balance Sheet Information Related to Leases",
+    "data": {
+      "header": "Supplemental Balance Sheet Information Related to Leases - USD $ in Millions",
+      "period": "Jun. 30, 2023",
+      "data": {
+        "Operating lease right-of-use assets": 14346,
+        "Total operating lease liabilities": 12728,
+        "Property and equipment, at cost": 20538,
+        "Property and equipment, net": 15891,
+        "Total finance lease liabilities": 15870
+      }
+    },
+    "periodOfReport": "2023-06-30",
+    "dateFiled": "2023-07-27",
+    "formType": "10-K",
+    "quarter": "Q2"
+  }
+]

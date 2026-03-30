@@ -1,0 +1,972 @@
+{
+  "incomeStatement": {
+    "annual": {
+      "headers": [
+        "Breakdown",
+        "TTM",
+        "12/31/2024",
+        "12/31/2023",
+        "12/31/2022",
+        "12/31/2021"
+      ],
+      "rows": [
+        {
+          "metric": "Total Revenue",
+          "values": [
+            "1123736",
+            "1103803",
+            "1042509",
+            "1048586",
+            "990852"
+          ]
+        },
+        {
+          "metric": "Credit Losses Provision",
+          "values": [
+            "-59580",
+            "-58793",
+            "-142656",
+            "-71697",
+            "35365"
+          ]
+        },
+        {
+          "metric": "Non Interest Expense",
+          "values": [
+            "572810",
+            "569150",
+            "542918",
+            "522579",
+            "525899"
+          ]
+        },
+        {
+          "metric": "Special Income Charges",
+          "values": [
+            "--",
+            "0",
+            "0",
+            "-1212",
+            "-4206"
+          ]
+        },
+        {
+          "metric": "Pretax Income",
+          "values": [
+            "491346",
+            "475860",
+            "356935",
+            "453098",
+            "496112"
+          ]
+        },
+        {
+          "metric": "Tax Provision",
+          "values": [
+            "119038",
+            "117175",
+            "87830",
+            "106558",
+            "119199"
+          ]
+        },
+        {
+          "metric": "Net Income Common Stockholders",
+          "values": [
+            "372308",
+            "358685",
+            "269105",
+            "346540",
+            "376913"
+          ]
+        },
+        {
+          "metric": "Diluted NI Available to Com Stockholders",
+          "values": [
+            "372308",
+            "358685",
+            "269105",
+            "346540",
+            "376913"
+          ]
+        },
+        {
+          "metric": "Basic EPS",
+          "values": [
+            "5.41",
+            "5.21",
+            "3.90",
+            "5.01",
+            "5.43"
+          ]
+        },
+        {
+          "metric": "Diluted EPS",
+          "values": [
+            "5.38",
+            "5.19",
+            "3.89",
+            "4.99",
+            "5.40"
+          ]
+        },
+        {
+          "metric": "Basic Average Shares",
+          "values": [
+            "68803.10",
+            "68808.83",
+            "68977.45",
+            "69193.59",
+            "69431.86"
+          ]
+        },
+        {
+          "metric": "Diluted Average Shares",
+          "values": [
+            "69065.89",
+            "69061.83",
+            "69104.16",
+            "69419.72",
+            "69761.39"
+          ]
+        },
+        {
+          "metric": "Interest Income after Provision for Loan Loss",
+          "values": [
+            "810061",
+            "790397",
+            "692388",
+            "729329",
+            "690692"
+          ]
+        },
+        {
+          "metric": "Net Income from Continuing & Discontinued Operation",
+          "values": [
+            "372308",
+            "358685",
+            "269105",
+            "346540",
+            "376913"
+          ]
+        },
+        {
+          "metric": "Normalized Income",
+          "values": [
+            "372308",
+            "358685",
+            "269105",
+            "347467.18",
+            "380109.56"
+          ]
+        },
+        {
+          "metric": "Total Money Market Investments",
+          "values": [
+            "48058",
+            "49906",
+            "47936",
+            "23085",
+            "3924"
+          ]
+        },
+        {
+          "metric": "Reconciled Depreciation",
+          "values": [
+            "45320",
+            "46728",
+            "45933",
+            "53626",
+            "47929"
+          ]
+        },
+        {
+          "metric": "Net Income from Continuing Operation Net Minority Interest",
+          "values": [
+            "372308",
+            "358685",
+            "269105",
+            "346540",
+            "376913"
+          ]
+        },
+        {
+          "metric": "Total Unusual Items Excluding Goodwill",
+          "values": [
+            "0",
+            "0",
+            "0",
+            "-1212",
+            "-4206"
+          ]
+        },
+        {
+          "metric": "Total Unusual Items",
+          "values": [
+            "0",
+            "0",
+            "0",
+            "-1212",
+            "-4206"
+          ]
+        },
+        {
+          "metric": "Tax Rate for Calcs",
+          "values": [
+            "0",
+            "0",
+            "0",
+            "0",
+            "0"
+          ]
+        },
+        {
+          "metric": "Tax Effect of Unusual Items",
+          "values": [
+            "0",
+            "0",
+            "0",
+            "-284.82",
+            "-1009.44"
+          ]
+        }
+      ]
+    },
+    "quarterly": {
+      "headers": [
+        "Breakdown",
+        "TTM",
+        "12/31/2024",
+        "12/31/2023",
+        "12/31/2022",
+        "12/31/2021"
+      ],
+      "rows": [
+        {
+          "metric": "Total Revenue",
+          "values": [
+            "1123736",
+            "1103803",
+            "1042509",
+            "1048586",
+            "990852"
+          ]
+        },
+        {
+          "metric": "Credit Losses Provision",
+          "values": [
+            "-59580",
+            "-58793",
+            "-142656",
+            "-71697",
+            "35365"
+          ]
+        },
+        {
+          "metric": "Non Interest Expense",
+          "values": [
+            "572810",
+            "569150",
+            "542918",
+            "522579",
+            "525899"
+          ]
+        },
+        {
+          "metric": "Special Income Charges",
+          "values": [
+            "--",
+            "0",
+            "0",
+            "-1212",
+            "-4206"
+          ]
+        },
+        {
+          "metric": "Pretax Income",
+          "values": [
+            "491346",
+            "475860",
+            "356935",
+            "453098",
+            "496112"
+          ]
+        },
+        {
+          "metric": "Tax Provision",
+          "values": [
+            "119038",
+            "117175",
+            "87830",
+            "106558",
+            "119199"
+          ]
+        },
+        {
+          "metric": "Net Income Common Stockholders",
+          "values": [
+            "372308",
+            "358685",
+            "269105",
+            "346540",
+            "376913"
+          ]
+        },
+        {
+          "metric": "Diluted NI Available to Com Stockholders",
+          "values": [
+            "372308",
+            "358685",
+            "269105",
+            "346540",
+            "376913"
+          ]
+        },
+        {
+          "metric": "Basic EPS",
+          "values": [
+            "5.41",
+            "5.21",
+            "3.90",
+            "5.01",
+            "5.43"
+          ]
+        },
+        {
+          "metric": "Diluted EPS",
+          "values": [
+            "5.38",
+            "5.19",
+            "3.89",
+            "4.99",
+            "5.40"
+          ]
+        },
+        {
+          "metric": "Basic Average Shares",
+          "values": [
+            "68803.10",
+            "68808.83",
+            "68977.45",
+            "69193.59",
+            "69431.86"
+          ]
+        },
+        {
+          "metric": "Diluted Average Shares",
+          "values": [
+            "69065.89",
+            "69061.83",
+            "69104.16",
+            "69419.72",
+            "69761.39"
+          ]
+        },
+        {
+          "metric": "Interest Income after Provision for Loan Loss",
+          "values": [
+            "810061",
+            "790397",
+            "692388",
+            "729329",
+            "690692"
+          ]
+        },
+        {
+          "metric": "Net Income from Continuing & Discontinued Operation",
+          "values": [
+            "372308",
+            "358685",
+            "269105",
+            "346540",
+            "376913"
+          ]
+        },
+        {
+          "metric": "Normalized Income",
+          "values": [
+            "372308",
+            "358685",
+            "269105",
+            "347467.18",
+            "380109.56"
+          ]
+        },
+        {
+          "metric": "Total Money Market Investments",
+          "values": [
+            "48058",
+            "49906",
+            "47936",
+            "23085",
+            "3924"
+          ]
+        },
+        {
+          "metric": "Reconciled Depreciation",
+          "values": [
+            "45320",
+            "46728",
+            "45933",
+            "53626",
+            "47929"
+          ]
+        },
+        {
+          "metric": "Net Income from Continuing Operation Net Minority Interest",
+          "values": [
+            "372308",
+            "358685",
+            "269105",
+            "346540",
+            "376913"
+          ]
+        },
+        {
+          "metric": "Total Unusual Items Excluding Goodwill",
+          "values": [
+            "0",
+            "0",
+            "0",
+            "-1212",
+            "-4206"
+          ]
+        },
+        {
+          "metric": "Total Unusual Items",
+          "values": [
+            "0",
+            "0",
+            "0",
+            "-1212",
+            "-4206"
+          ]
+        },
+        {
+          "metric": "Tax Rate for Calcs",
+          "values": [
+            "0",
+            "0",
+            "0",
+            "0",
+            "0"
+          ]
+        },
+        {
+          "metric": "Tax Effect of Unusual Items",
+          "values": [
+            "0",
+            "0",
+            "0",
+            "-284.82",
+            "-1009.44"
+          ]
+        }
+      ]
+    }
+  },
+  "balanceSheet": {
+    "annual": {
+      "headers": [
+        "Breakdown",
+        "12/31/2024",
+        "12/31/2023",
+        "12/31/2022",
+        "12/31/2021"
+      ],
+      "rows": [
+        {
+          "metric": "Total Assets",
+          "values": [
+            "26262050",
+            "25203699",
+            "25053286",
+            "23858321"
+          ]
+        },
+        {
+          "metric": "Total Liabilities Net Minority Interest",
+          "values": [
+            "22510528",
+            "21776952",
+            "21855886",
+            "20891870"
+          ]
+        },
+        {
+          "metric": "Total Equity Gross Minority Interest",
+          "values": [
+            "3751522",
+            "3426747",
+            "3197400",
+            "2966451"
+          ]
+        },
+        {
+          "metric": "Total Capitalization",
+          "values": [
+            "4175619",
+            "4066648",
+            "5201458",
+            "3832658"
+          ]
+        },
+        {
+          "metric": "Common Stock Equity",
+          "values": [
+            "3751522",
+            "3426747",
+            "3197400",
+            "2966451"
+          ]
+        },
+        {
+          "metric": "Net Tangible Assets",
+          "values": [
+            "2665115",
+            "2323152",
+            "2075560",
+            "1827893"
+          ]
+        },
+        {
+          "metric": "Invested Capital",
+          "values": [
+            "4175619",
+            "4066648",
+            "5201458",
+            "3832658"
+          ]
+        },
+        {
+          "metric": "Tangible Book Value",
+          "values": [
+            "2665115",
+            "2323152",
+            "2075560",
+            "1827893"
+          ]
+        },
+        {
+          "metric": "Total Debt",
+          "values": [
+            "424097",
+            "639901",
+            "2004058",
+            "866207"
+          ]
+        },
+        {
+          "metric": "Net Debt",
+          "values": [
+            "--",
+            "--",
+            "885926",
+            "--"
+          ]
+        },
+        {
+          "metric": "Share Issued",
+          "values": [
+            "72699.25",
+            "72516.08",
+            "72263.73",
+            "72017.13"
+          ]
+        },
+        {
+          "metric": "Ordinary Shares Number",
+          "values": [
+            "69068.61",
+            "69053.34",
+            "69369.05",
+            "69609.23"
+          ]
+        },
+        {
+          "metric": "Treasury Shares Number",
+          "values": [
+            "3630.64",
+            "3462.74",
+            "2894.68",
+            "2407.90"
+          ]
+        }
+      ]
+    },
+    "quarterly": {
+      "headers": [
+        "Breakdown",
+        "12/31/2024",
+        "12/31/2023",
+        "12/31/2022",
+        "12/31/2021"
+      ],
+      "rows": [
+        {
+          "metric": "Total Assets",
+          "values": [
+            "26262050",
+            "25203699",
+            "25053286",
+            "23858321"
+          ]
+        },
+        {
+          "metric": "Total Liabilities Net Minority Interest",
+          "values": [
+            "22510528",
+            "21776952",
+            "21855886",
+            "20891870"
+          ]
+        },
+        {
+          "metric": "Total Equity Gross Minority Interest",
+          "values": [
+            "3751522",
+            "3426747",
+            "3197400",
+            "2966451"
+          ]
+        },
+        {
+          "metric": "Total Capitalization",
+          "values": [
+            "4175619",
+            "4066648",
+            "5201458",
+            "3832658"
+          ]
+        },
+        {
+          "metric": "Common Stock Equity",
+          "values": [
+            "3751522",
+            "3426747",
+            "3197400",
+            "2966451"
+          ]
+        },
+        {
+          "metric": "Net Tangible Assets",
+          "values": [
+            "2665115",
+            "2323152",
+            "2075560",
+            "1827893"
+          ]
+        },
+        {
+          "metric": "Invested Capital",
+          "values": [
+            "4175619",
+            "4066648",
+            "5201458",
+            "3832658"
+          ]
+        },
+        {
+          "metric": "Tangible Book Value",
+          "values": [
+            "2665115",
+            "2323152",
+            "2075560",
+            "1827893"
+          ]
+        },
+        {
+          "metric": "Total Debt",
+          "values": [
+            "424097",
+            "639901",
+            "2004058",
+            "866207"
+          ]
+        },
+        {
+          "metric": "Net Debt",
+          "values": [
+            "--",
+            "--",
+            "885926",
+            "--"
+          ]
+        },
+        {
+          "metric": "Share Issued",
+          "values": [
+            "72699.25",
+            "72516.08",
+            "72263.73",
+            "72017.13"
+          ]
+        },
+        {
+          "metric": "Ordinary Shares Number",
+          "values": [
+            "69068.61",
+            "69053.34",
+            "69369.05",
+            "69609.23"
+          ]
+        },
+        {
+          "metric": "Treasury Shares Number",
+          "values": [
+            "3630.64",
+            "3462.74",
+            "2894.68",
+            "2407.90"
+          ]
+        }
+      ]
+    }
+  },
+  "cashFlow": {
+    "annual": {
+      "headers": [
+        "Breakdown",
+        "TTM",
+        "12/31/2024",
+        "12/31/2023",
+        "12/31/2022",
+        "12/31/2021"
+      ],
+      "rows": [
+        {
+          "metric": "Operating Cash Flow",
+          "values": [
+            "252465",
+            "154193",
+            "568959",
+            "1062473",
+            "9140"
+          ]
+        },
+        {
+          "metric": "Investing Cash Flow",
+          "values": [
+            "-661496",
+            "-846682",
+            "-338194",
+            "-4874530",
+            "-420984"
+          ]
+        },
+        {
+          "metric": "Financing Cash Flow",
+          "values": [
+            "490179",
+            "745562",
+            "-181593",
+            "865532",
+            "2359195"
+          ]
+        },
+        {
+          "metric": "End Cash Position",
+          "values": [
+            "1292400",
+            "1220377",
+            "1167304",
+            "1118132",
+            "4064657"
+          ]
+        },
+        {
+          "metric": "Income Tax Paid Supplemental Data",
+          "values": [
+            "102322",
+            "102511",
+            "101328",
+            "133894",
+            "71807"
+          ]
+        },
+        {
+          "metric": "Interest Paid Supplemental Data",
+          "values": [
+            "522648",
+            "540270",
+            "418445",
+            "86643",
+            "48960"
+          ]
+        },
+        {
+          "metric": "Capital Expenditure",
+          "values": [
+            "-12727",
+            "-13477",
+            "-17531",
+            "-13568",
+            "-25448"
+          ]
+        },
+        {
+          "metric": "Issuance of Debt",
+          "values": [
+            "6365000",
+            "6308000",
+            "15842000",
+            "3950000",
+            "0"
+          ]
+        },
+        {
+          "metric": "Repayment of Debt",
+          "values": [
+            "-6720918",
+            "-6526963",
+            "-17207845",
+            "-2814576",
+            "-296325"
+          ]
+        },
+        {
+          "metric": "Repurchase of Capital Stock",
+          "values": [
+            "-23806",
+            "-7954",
+            "-20346",
+            "-22421",
+            "-9439"
+          ]
+        },
+        {
+          "metric": "Free Cash Flow",
+          "values": [
+            "239738",
+            "140716",
+            "551428",
+            "1048905",
+            "-16308"
+          ]
+        }
+      ]
+    },
+    "quarterly": {
+      "headers": [
+        "Breakdown",
+        "TTM",
+        "12/31/2024",
+        "12/31/2023",
+        "12/31/2022",
+        "12/31/2021"
+      ],
+      "rows": [
+        {
+          "metric": "Operating Cash Flow",
+          "values": [
+            "252465",
+            "154193",
+            "568959",
+            "1062473",
+            "9140"
+          ]
+        },
+        {
+          "metric": "Investing Cash Flow",
+          "values": [
+            "-661496",
+            "-846682",
+            "-338194",
+            "-4874530",
+            "-420984"
+          ]
+        },
+        {
+          "metric": "Financing Cash Flow",
+          "values": [
+            "490179",
+            "745562",
+            "-181593",
+            "865532",
+            "2359195"
+          ]
+        },
+        {
+          "metric": "End Cash Position",
+          "values": [
+            "1292400",
+            "1220377",
+            "1167304",
+            "1118132",
+            "4064657"
+          ]
+        },
+        {
+          "metric": "Income Tax Paid Supplemental Data",
+          "values": [
+            "102322",
+            "102511",
+            "101328",
+            "133894",
+            "71807"
+          ]
+        },
+        {
+          "metric": "Interest Paid Supplemental Data",
+          "values": [
+            "522648",
+            "540270",
+            "418445",
+            "86643",
+            "48960"
+          ]
+        },
+        {
+          "metric": "Capital Expenditure",
+          "values": [
+            "-12727",
+            "-13477",
+            "-17531",
+            "-13568",
+            "-25448"
+          ]
+        },
+        {
+          "metric": "Issuance of Debt",
+          "values": [
+            "6365000",
+            "6308000",
+            "15842000",
+            "3950000",
+            "0"
+          ]
+        },
+        {
+          "metric": "Repayment of Debt",
+          "values": [
+            "-6720918",
+            "-6526963",
+            "-17207845",
+            "-2814576",
+            "-296325"
+          ]
+        },
+        {
+          "metric": "Repurchase of Capital Stock",
+          "values": [
+            "-23806",
+            "-7954",
+            "-20346",
+            "-22421",
+            "-9439"
+          ]
+        },
+        {
+          "metric": "Free Cash Flow",
+          "values": [
+            "239738",
+            "140716",
+            "551428",
+            "1048905",
+            "-16308"
+          ]
+        }
+      ]
+    }
+  }
+}

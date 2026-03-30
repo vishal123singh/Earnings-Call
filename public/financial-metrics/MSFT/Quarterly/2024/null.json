@@ -1,0 +1,159 @@
+[
+  {
+    "reportName": "INCOME Statement",
+    "data": {
+      "header": "INCOME Statement - USD shares in Millions, $ in Millions",
+      "period": "3 Months Ended",
+      "data": {
+        "Revenue": 53413,
+        "Cost of revenue": 17943,
+        "Gross margin": 47833,
+        "Research and development": 7917,
+        "Sales and marketing": 6440,
+        "General and administrative": 1823,
+        "Operating income": 31653,
+        "Income before income taxes": 29365,
+        "Provision for income taxes": 5257,
+        "Net income": 24108,
+        "Basic": 7435,
+        "Diluted": 7468
+      }
+    },
+    "periodOfReport": "2024-12-31",
+    "dateFiled": "2025-01-29",
+    "formType": "10-Q",
+    "quarter": null
+  },
+  {
+    "reportName": "COMPREHENSIVE INCOME Statement",
+    "data": {
+      "header": "COMPREHENSIVE INCOME Statement - USD $ in Millions",
+      "period": "3 Months Ended",
+      "data": {
+        "Net income": 24108,
+        "Net change related to derivatives": 34,
+        "Net change related to investments": 1331,
+        "Translation adjustments and other": 660,
+        "Other comprehensive income (loss)": 1988,
+        "Comprehensive income": 22674
+      }
+    },
+    "periodOfReport": "2024-12-31",
+    "dateFiled": "2025-01-29",
+    "formType": "10-Q",
+    "quarter": null
+  },
+  {
+    "reportName": "BALANCE Sheet",
+    "data": {
+      "header": "BALANCE Sheet - USD $ in Millions",
+      "period": "Dec. 31, 2024",
+      "data": {
+        "Cash and cash equivalents": 17482,
+        "Short-term investments": 54073,
+        "Total cash, cash equivalents, and short-term investments": 71555,
+        "Accounts receivable, net of allowance for doubtful accounts of $662 and $830": 48188,
+        "Inventories": 909,
+        "Other current assets": 26428,
+        "Total current assets": 147080,
+        "Property and equipment, net of accumulated depreciation of $82,820 and $76,421": 166902,
+        "Operating lease right-of-use assets": 22816,
+        "Equity and other investments": 15581,
+        "Goodwill": 119191,
+        "Intangible assets, net": 25385,
+        "Other long-term assets": 36943,
+        "Total assets": 533898,
+        "Accounts payable": 22608,
+        "Short-term debt": 0,
+        "Current portion of long-term debt": 5248,
+        "Accrued compensation": 9176,
+        "Short-term income taxes": 6056,
+        "Short-term unearned revenue": 45508,
+        "Other current liabilities": 20286,
+        "Total current liabilities": 108882,
+        "Long-term debt": 39722,
+        "Long-term income taxes": 24389,
+        "Long-term unearned revenue": 2537,
+        "Deferred income taxes": 2513,
+        "Operating lease liabilities": 17254,
+        "Other long-term liabilities": 35906,
+        "Total liabilities": 231203,
+        "Common stock and paid-in capital - shares authorized 24,000; outstanding 7,435 and 7,434": 104829,
+        "Retained earnings": 203482,
+        "Total stockholders’ equity": 302695,
+        "Total liabilities and stockholders’ equity": 533898
+      }
+    },
+    "periodOfReport": "2024-12-31",
+    "dateFiled": "2025-01-29",
+    "formType": "10-Q",
+    "quarter": null
+  },
+  {
+    "reportName": "CASH Flow Statement",
+    "data": {
+      "header": "CASH Flow Statement - USD $ in Millions",
+      "period": "3 Months Ended",
+      "data": {
+        "Net income": 24108,
+        "Depreciation, amortization, and other": 6827,
+        "Stock-based compensation expense": 3089,
+        "Net recognized losses on investments and derivatives": 976,
+        "Accounts receivable": 8059,
+        "Inventories": 711,
+        "Other current assets": 725,
+        "Accounts payable": 958,
+        "Other current liabilities": 3217,
+        "Other long-term liabilities": 716,
+        "Net cash from operations": 22291,
+        "Proceeds from issuance (repayments) of debt, maturities of 90 days or less, net": 0,
+        "Proceeds from issuance of debt": 0,
+        "Repayments of debt": 0,
+        "Common stock issued": 256,
+        "Net cash from (used in) financing": 4614,
+        "Maturities of investments": 2604,
+        "Sales of investments": 2559,
+        "Other, net": 1347,
+        "Effect of foreign exchange rates on cash and cash equivalents": 72,
+        "Cash and cash equivalents, beginning of period": 20840,
+        "Cash and cash equivalents, end of period": 17482
+      }
+    },
+    "periodOfReport": "2024-12-31",
+    "dateFiled": "2025-01-29",
+    "formType": "10-Q",
+    "quarter": null
+  },
+  {
+    "reportName": "Gains , Net of Tax, on Derivative Instruments Recognized in Comprehensive Income Statement",
+    "data": {
+      "header": "Gains , Net of Tax, on Derivative Instruments Recognized in Comprehensive Income Statement - USD $ in Millions",
+      "period": "3 Months Ended",
+      "data": {
+        "Included in effectiveness assessment": 37
+      }
+    },
+    "periodOfReport": "2024-12-31",
+    "dateFiled": "2025-01-29",
+    "formType": "10-Q",
+    "quarter": null
+  },
+  {
+    "reportName": "Supplemental Balance Sheet Information Related to Leases",
+    "data": {
+      "header": "Supplemental Balance Sheet Information Related to Leases - USD $ in Millions",
+      "period": "Dec. 31, 2024",
+      "data": {
+        "Operating lease right-of-use assets": 22816,
+        "Total operating lease liabilities": 17254,
+        "Property and equipment, net": 34889,
+        "Total finance lease liabilities": 33404,
+        "Property and equipment, at cost": 42539
+      }
+    },
+    "periodOfReport": "2024-12-31",
+    "dateFiled": "2025-01-29",
+    "formType": "10-Q",
+    "quarter": null
+  }
+]

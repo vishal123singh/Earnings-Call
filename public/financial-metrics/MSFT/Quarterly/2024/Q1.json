@@ -1,0 +1,174 @@
+[
+  {
+    "reportName": "INCOME Statement",
+    "data": {
+      "header": "INCOME Statement - USD shares in Millions, $ in Millions",
+      "period": "3 Months Ended",
+      "data": {
+        "Revenue": 44778,
+        "Cost of revenue": 14166,
+        "Gross margin": 43353,
+        "Research and development": 7653,
+        "Sales and marketing": 6207,
+        "General and administrative": 1912,
+        "Operating income": 27581,
+        "Other income (expense), net": 321,
+        "Income before income taxes": 26727,
+        "Provision for income taxes": 4788,
+        "Net income": 21939,
+        "Basic": 7431,
+        "Diluted": 7472
+      }
+    },
+    "periodOfReport": "2024-03-31",
+    "dateFiled": "2024-04-25",
+    "formType": "10-Q",
+    "quarter": "Q1"
+  },
+  {
+    "reportName": "COMPREHENSIVE INCOME Statement",
+    "data": {
+      "header": "COMPREHENSIVE INCOME Statement - USD $ in Millions",
+      "period": "3 Months Ended",
+      "data": {
+        "Net income": 21939,
+        "Net change related to derivatives": 10,
+        "Net change related to investments": 753,
+        "Translation adjustments and other": 69,
+        "Other comprehensive income (loss)": 813,
+        "Comprehensive income": 21453
+      }
+    },
+    "periodOfReport": "2024-03-31",
+    "dateFiled": "2024-04-25",
+    "formType": "10-Q",
+    "quarter": "Q1"
+  },
+  {
+    "reportName": "BALANCE Sheet",
+    "data": {
+      "header": "BALANCE Sheet - USD $ in Millions",
+      "period": "Mar. 31, 2024",
+      "data": {
+        "Cash and cash equivalents": 19634,
+        "Short-term investments": 60387,
+        "Total cash, cash equivalents, and short-term investments": 80021,
+        "Accounts receivable, net of allowance for doubtful accounts of $616 and $650": 44029,
+        "Inventories": 1304,
+        "Other current assets": 21826,
+        "Total current assets": 147180,
+        "Property and equipment, net of accumulated depreciation of $74,945 and $68,251": 121375,
+        "Operating lease right-of-use assets": 17371,
+        "Equity and other investments": 14807,
+        "Goodwill": 119163,
+        "Intangible assets, net": 28828,
+        "Other long-term assets": 35551,
+        "Total assets": 484275,
+        "Accounts payable": 18087,
+        "Short-term debt": 20535,
+        "Current portion of long-term debt": 2249,
+        "Accrued compensation": 10432,
+        "Short-term income taxes": 7311,
+        "Short-term unearned revenue": 41888,
+        "Other current liabilities": 18023,
+        "Total current liabilities": 118525,
+        "Long-term debt": 42658,
+        "Long-term income taxes": 26786,
+        "Long-term unearned revenue": 2945,
+        "Deferred income taxes": 2469,
+        "Operating lease liabilities": 14469,
+        "Other long-term liabilities": 23271,
+        "Total liabilities": 231123,
+        "Common stock and paid-in capital - shares authorized 24,000; outstanding 7,433 and 7,432": 99193,
+        "Retained earnings": 159394,
+        "Total stockholders’ equity": 253152,
+        "Total liabilities and stockholders’ equity": 484275
+      }
+    },
+    "periodOfReport": "2024-03-31",
+    "dateFiled": "2024-04-25",
+    "formType": "10-Q",
+    "quarter": "Q1"
+  },
+  {
+    "reportName": "CASH Flow Statement",
+    "data": {
+      "header": "CASH Flow Statement - USD $ in Millions",
+      "period": "3 Months Ended",
+      "data": {
+        "Net income": 21939,
+        "Depreciation, amortization, and other": 6027,
+        "Stock-based compensation expense": 2703,
+        "Net recognized losses (gains) on investments and derivatives": 49,
+        "Accounts receivable": 6055,
+        "Inventories": 260,
+        "Other current assets": 951,
+        "Accounts payable": 648,
+        "Income taxes": 2622,
+        "Other current liabilities": 2803,
+        "Other long-term liabilities": 48,
+        "Net cash from operations": 31917,
+        "Proceeds from issuance (repayments) of debt, maturities of 90 days or less, net": 0,
+        "Proceeds from issuance of debt": 6352,
+        "Repayments of debt": 0,
+        "Common stock issued": 522,
+        "Maturities of investments": 3350,
+        "Sales of investments": 1941,
+        "Effect of foreign exchange rates on cash and cash equivalents": 29,
+        "Net change in cash and cash equivalents": 2329,
+        "Cash and cash equivalents, beginning of period": 17305,
+        "Cash and cash equivalents, end of period": 19634
+      }
+    },
+    "periodOfReport": "2024-03-31",
+    "dateFiled": "2024-04-25",
+    "formType": "10-Q",
+    "quarter": "Q1"
+  },
+  {
+    "reportName": "Gains , Net of Tax, on Derivative Instruments Recognized in Comprehensive Income Statement",
+    "data": {
+      "header": "Gains , Net of Tax, on Derivative Instruments Recognized in Comprehensive Income Statement - USD $ in Millions",
+      "period": "3 Months Ended",
+      "data": {
+        "Included in effectiveness assessment": 5
+      }
+    },
+    "periodOfReport": "2024-03-31",
+    "dateFiled": "2024-04-25",
+    "formType": "10-Q",
+    "quarter": "Q1"
+  },
+  {
+    "reportName": "Impact of Acquistion on Income Statement",
+    "data": {
+      "header": "Impact of Acquistion on Income Statement - Activision Blizzard, Inc. - USD $ in Millions",
+      "period": "3 Months Ended",
+      "data": {
+        "Revenue": 1969
+      }
+    },
+    "periodOfReport": "2024-03-31",
+    "dateFiled": "2024-04-25",
+    "formType": "10-Q",
+    "quarter": "Q1"
+  },
+  {
+    "reportName": "Supplemental Balance Sheet Information Related to Leases",
+    "data": {
+      "header": "Supplemental Balance Sheet Information Related to Leases - USD $ in Millions",
+      "period": "Mar. 31, 2024",
+      "data": {
+        "Operating lease right-of-use assets": 17371,
+        "Total operating lease liabilities": 14469,
+        "Property and equipment, net": 21463,
+        "Total finance lease liabilities": 21036,
+        "Property and equipment, at cost": 27328
+      }
+    },
+    "periodOfReport": "2024-03-31",
+    "dateFiled": "2024-04-25",
+    "formType": "10-Q",
+    "quarter": "Q1"
+  }
+]

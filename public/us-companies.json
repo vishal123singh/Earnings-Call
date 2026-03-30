@@ -1,0 +1,502 @@
+{
+    "data": {
+        "filters": {
+            "region": [
+                {
+                    "name": "Africa",
+                    "value": "africa"
+                },
+                {
+                    "name": "Asia",
+                    "value": "asia"
+                },
+                {
+                    "name": "Australia and South Pacific",
+                    "value": "australia_and_south_pacific"
+                },
+                {
+                    "name": "Caribbean",
+                    "value": "caribbean"
+                },
+                {
+                    "name": "Europe",
+                    "value": "europe"
+                },
+                {
+                    "name": "Middle East",
+                    "value": "middle_east"
+                },
+                {
+                    "name": "North America",
+                    "value": "north_america"
+                },
+                {
+                    "name": "South America",
+                    "value": "south_america"
+                }
+            ],
+            "country": [
+                {
+                    "name": "United Kingdom",
+                    "value": "united_kingdom"
+                },
+                {
+                    "name": "United States",
+                    "value": "united_states"
+                },
+                {
+                    "name": "Luxembourg",
+                    "value": "luxembourg"
+                },
+                {
+                    "name": "Brazil",
+                    "value": "brazil"
+                },
+                {
+                    "name": "Canada",
+                    "value": "canada"
+                },
+                {
+                    "name": "Chile",
+                    "value": "chile"
+                },
+                {
+                    "name": "Taiwan",
+                    "value": "taiwan"
+                },
+                {
+                    "name": "Colombia",
+                    "value": "colombia"
+                },
+                {
+                    "name": "Netherlands",
+                    "value": "netherlands"
+                },
+                {
+                    "name": "Greece",
+                    "value": "greece"
+                },
+                {
+                    "name": "Singapore",
+                    "value": "singapore"
+                },
+                {
+                    "name": "Argentina",
+                    "value": "argentina"
+                },
+                {
+                    "name": "Ireland",
+                    "value": "ireland"
+                },
+                {
+                    "name": "Switzerland",
+                    "value": "switzerland"
+                },
+                {
+                    "name": "South Africa",
+                    "value": "south_africa"
+                },
+                {
+                    "name": "Israel",
+                    "value": "israel"
+                },
+                {
+                    "name": "Japan",
+                    "value": "japan"
+                },
+                {
+                    "name": "China",
+                    "value": "china"
+                },
+                {
+                    "name": "Bermuda",
+                    "value": "bermuda"
+                },
+                {
+                    "name": "South Korea",
+                    "value": "south_korea"
+                },
+                {
+                    "name": "Spain",
+                    "value": "spain"
+                },
+                {
+                    "name": "India",
+                    "value": "india"
+                }
+            ],
+            "exchange": [
+                {
+                    "name": "NASDAQ",
+                    "value": "NASDAQ"
+                },
+                {
+                    "name": "NYSE",
+                    "value": "NYSE"
+                },
+                {
+                    "name": "AMEX",
+                    "value": "AMEX"
+                }
+            ],
+            "sector": [
+                {
+                    "name": "Technology",
+                    "value": "technology"
+                },
+                {
+                    "name": "Telecommunications",
+                    "value": "telecommunications"
+                },
+                {
+                    "name": "Healthcare",
+                    "value": "health_care"
+                },
+                {
+                    "name": "Financials",
+                    "value": "finance"
+                },
+                {
+                    "name": "Real Estate",
+                    "value": "real_estate"
+                },
+                {
+                    "name": "Consumer Discretionary",
+                    "value": "consumer_discretionary"
+                },
+                {
+                    "name": "Consumer Staples",
+                    "value": "consumer_staples"
+                },
+                {
+                    "name": "Industrials",
+                    "value": "industrials"
+                },
+                {
+                    "name": "Basic Materials",
+                    "value": "basic_materials"
+                },
+                {
+                    "name": "Energy",
+                    "value": "energy"
+                },
+                {
+                    "name": "Utilities",
+                    "value": "utilities"
+                }
+            ],
+            "recommendation": [
+                {
+                    "name": "Strong Buy",
+                    "value": "strong_buy"
+                },
+                {
+                    "name": "Hold",
+                    "value": "hold"
+                },
+                {
+                    "name": "Buy",
+                    "value": "buy"
+                },
+                {
+                    "name": "Sell",
+                    "value": "sell"
+                },
+                {
+                    "name": "Strong Sell",
+                    "value": "strong_sell"
+                }
+            ],
+            "marketcap": [
+                {
+                    "name": "Mega (>$200B)",
+                    "value": "mega"
+                },
+                {
+                    "name": "Large ($10B-$200B)",
+                    "value": "large"
+                },
+                {
+                    "name": "Medium ($2B-$10B)",
+                    "value": "mid"
+                },
+                {
+                    "name": "Small ($300M-$2B)",
+                    "value": "small"
+                },
+                {
+                    "name": "Micro ($50M-$300M)",
+                    "value": "micro"
+                },
+                {
+                    "name": "Nano (<$50M)",
+                    "value": "nano"
+                }
+            ],
+            "exsubcategory": [
+                {
+                    "name": "Global Select",
+                    "value": "NGS"
+                },
+                {
+                    "name": "Global Market",
+                    "value": "NGM"
+                },
+                {
+                    "name": "Capital Market",
+                    "value": "NCM"
+                },
+                {
+                    "name": "ADR",
+                    "value": "ADR"
+                }
+            ]
+        },
+        "table": {
+            "asOf": null,
+            "headers": {
+                "symbol": "Symbol",
+                "name": "Name",
+                "lastsale": "Last Sale",
+                "netchange": "Net Change",
+                "pctchange": "% Change",
+                "marketCap": "Market Cap"
+            },
+            "rows": [
+                {
+                    "symbol": "MPX",
+                    "name": "Marine Products Corporation Common Stock",
+                    "lastsale": "$8.39",
+                    "netchange": "0.01",
+                    "pctchange": "0.119%",
+                    "marketCap": "293,326,649",
+                    "url": "/market-activity/stocks/mpx"
+                },
+                {
+                    "symbol": "TPVG",
+                    "name": "TriplePoint Venture Growth BDC Corp. Common Stock",
+                    "lastsale": "$6.98",
+                    "netchange": "-0.11",
+                    "pctchange": "-1.551%",
+                    "marketCap": "280,158,850",
+                    "url": "/market-activity/stocks/tpvg"
+                },
+                {
+                    "symbol": "MCR",
+                    "name": "MFS Charter Income Trust Common Stock",
+                    "lastsale": "$6.27",
+                    "netchange": "UNCH",
+                    "pctchange": "--",
+                    "marketCap": "275,932,543",
+                    "url": "/market-activity/stocks/mcr"
+                },
+                {
+                    "symbol": "NREF",
+                    "name": "NexPoint Real Estate Finance, Inc. Common Stock",
+                    "lastsale": "$15.29",
+                    "netchange": "0.10",
+                    "pctchange": "0.658%",
+                    "marketCap": "269,769,513",
+                    "url": "/market-activity/stocks/nref"
+                },
+                {
+                    "symbol": "NRDY",
+                    "name": "Nerdy Inc. Class A Common Stock",
+                    "lastsale": "$1.42",
+                    "netchange": "-0.04",
+                    "pctchange": "-2.74%",
+                    "marketCap": "259,074,804",
+                    "url": "/market-activity/stocks/nrdy"
+                },
+                {
+                    "symbol": "ACRE",
+                    "name": "Ares Commercial Real Estate Corporation Common Stock",
+                    "lastsale": "$4.63",
+                    "netchange": "-0.07",
+                    "pctchange": "-1.489%",
+                    "marketCap": "253,987,804",
+                    "url": "/market-activity/stocks/acre"
+                },
+                {
+                    "symbol": "LAW",
+                    "name": "CS Disco, Inc. Common Stock",
+                    "lastsale": "$4.09",
+                    "netchange": "-0.05",
+                    "pctchange": "-1.208%",
+                    "marketCap": "246,968,290",
+                    "url": "/market-activity/stocks/law"
+                },
+                {
+                    "symbol": "GCO",
+                    "name": "Genesco Inc. Common Stock",
+                    "lastsale": "$21.23",
+                    "netchange": "0.30",
+                    "pctchange": "1.433%",
+                    "marketCap": "234,343,343",
+                    "url": "/market-activity/stocks/gco"
+                },
+                {
+                    "symbol": "SMRT",
+                    "name": "SmartRent, Inc. Class A Common Stock",
+                    "lastsale": "$1.21",
+                    "netchange": "0.09",
+                    "pctchange": "8.036%",
+                    "marketCap": "233,168,537",
+                    "url": "/market-activity/stocks/smrt"
+                },
+                {
+                    "symbol": "EAF",
+                    "name": "GrafTech International Ltd. Common Stock",
+                    "lastsale": "$0.8744",
+                    "netchange": "-0.0759",
+                    "pctchange": "-7.987%",
+                    "marketCap": "224,951,388",
+                    "url": "/market-activity/stocks/eaf"
+                },
+                {
+                    "symbol": "NVRO",
+                    "name": "Nevro Corp. Common Stock",
+                    "lastsale": "$5.84",
+                    "netchange": "UNCH",
+                    "pctchange": "--",
+                    "marketCap": "221,210,820",
+                    "url": "/market-activity/stocks/nvro"
+                },
+                {
+                    "symbol": "ONTF",
+                    "name": "ON24, Inc. Common Stock",
+                    "lastsale": "$5.20",
+                    "netchange": "-0.17",
+                    "pctchange": "-3.166%",
+                    "marketCap": "220,091,118",
+                    "url": "/market-activity/stocks/ontf"
+                },
+                {
+                    "symbol": "SES",
+                    "name": "SES AI Corporation Class A Common Stock",
+                    "lastsale": "$0.5207",
+                    "netchange": "-0.0226",
+                    "pctchange": "-4.16%",
+                    "marketCap": "189,878,389",
+                    "url": "/market-activity/stocks/ses"
+                },
+                {
+                    "symbol": "DBI",
+                    "name": "Designer Brands Inc. Class A Common Stock",
+                    "lastsale": "$3.65",
+                    "netchange": "0.08",
+                    "pctchange": "2.241%",
+                    "marketCap": "175,109,498",
+                    "url": "/market-activity/stocks/dbi"
+                },
+                {
+                    "symbol": "BHR",
+                    "name": "Braemar Hotels & Resorts Inc. Common Stock",
+                    "lastsale": "$2.49",
+                    "netchange": "-0.14",
+                    "pctchange": "-5.323%",
+                    "marketCap": "166,945,842",
+                    "url": "/market-activity/stocks/bhr"
+                },
+                {
+                    "symbol": "DM",
+                    "name": "Desktop Metal, Inc. Class A Common Stock",
+                    "lastsale": "$4.91",
+                    "netchange": "-0.08",
+                    "pctchange": "-1.603%",
+                    "marketCap": "163,706,367",
+                    "url": "/market-activity/stocks/dm"
+                },
+                {
+                    "symbol": "SKIL",
+                    "name": "Skillsoft Corp. Class A Common Stock",
+                    "lastsale": "$19.24",
+                    "netchange": "-0.42",
+                    "pctchange": "-2.136%",
+                    "marketCap": "159,375,598",
+                    "url": "/market-activity/stocks/skil"
+                },
+                {
+                    "symbol": "RMAX",
+                    "name": "RE/MAX Holdings, Inc. Class A Common Stock",
+                    "lastsale": "$8.37",
+                    "netchange": "-0.19",
+                    "pctchange": "-2.22%",
+                    "marketCap": "158,887,057",
+                    "url": "/market-activity/stocks/rmax"
+                },
+                {
+                    "symbol": "MED",
+                    "name": "MEDIFAST INC Common Stock",
+                    "lastsale": "$13.48",
+                    "netchange": "-0.35",
+                    "pctchange": "-2.531%",
+                    "marketCap": "147,441,948",
+                    "url": "/market-activity/stocks/med"
+                },
+                {
+                    "symbol": "CCRD",
+                    "name": "CoreCard Corporation Common Stock",
+                    "lastsale": "$18.71",
+                    "netchange": "0.05",
+                    "pctchange": "0.268%",
+                    "marketCap": "145,688,764",
+                    "url": "/market-activity/stocks/ccrd"
+                },
+                {
+                    "symbol": "TSE",
+                    "name": "Trinseo PLC Ordinary Shares ",
+                    "lastsale": "$3.68",
+                    "netchange": "-0.01",
+                    "pctchange": "-0.271%",
+                    "marketCap": "130,571,861",
+                    "url": "/market-activity/stocks/tse"
+                },
+                {
+                    "symbol": "ONL",
+                    "name": "Orion Properties Inc. Common Stock",
+                    "lastsale": "$2.14",
+                    "netchange": "-0.02",
+                    "pctchange": "-0.926%",
+                    "marketCap": "120,073,861",
+                    "url": "/market-activity/stocks/onl"
+                },
+                {
+                    "symbol": "SPCE",
+                    "name": "Virgin Galactic Holdings, Inc. Common Stock",
+                    "lastsale": "$3.03",
+                    "netchange": "0.02",
+                    "pctchange": "0.664%",
+                    "marketCap": "107,650,901",
+                    "url": "/market-activity/stocks/spce"
+                },
+                {
+                    "symbol": "MKFG",
+                    "name": "Markforged Holding Corporation Common Stock",
+                    "lastsale": "$4.68",
+                    "netchange": "0.11",
+                    "pctchange": "2.407%",
+                    "marketCap": "96,501,764",
+                    "url": "/market-activity/stocks/mkfg"
+                },
+                {
+                    "symbol": "UFI",
+                    "name": "Unifi, Inc. New Common Stock",
+                    "lastsale": "$4.81",
+                    "netchange": "0.12",
+                    "pctchange": "2.559%",
+                    "marketCap": "88,269,729",
+                    "url": "/market-activity/stocks/ufi"
+                }
+            ]
+        },
+        "totalrecords": 27,
+        "asof": "Last price as of Mar 31, 2025"
+    },
+    "message": null,
+    "status": {
+        "rCode": 200,
+        "bCodeMessage": null,
+        "developerMessage": null
+    }
+}
