@@ -1,5 +1,4 @@
 "use client";
-import axios from "axios";
 import { useEffect, useState } from "react";
 import {
   Tabs,
@@ -13,27 +12,49 @@ import {
   TableHead,
   TableRow,
   Paper,
-  MenuItem,
-  Select,
   FormControl,
   InputLabel,
+  Select,
+  MenuItem,
+  Chip,
+  CircularProgress,
+  Alert,
+  IconButton,
+  Tooltip,
 } from "@mui/material";
-import { useSelector, useDispatch } from "react-redux";
+import {
+  TrendingUp,
+  TrendingDown,
+  Download,
+  Print,
+  Refresh,
+} from "@mui/icons-material";
+import axios from "axios";
+import { useDispatch, useSelector } from "react-redux";
 import { setFilterConfig } from "../../../store/sidebarSlice";
-import { quarters, years, companies } from "../../../public/data";
+import { companies, quarters, years } from "../../../public/data";
 
-// ✅ Report Types
-const reportTypes = [
-  { name: "Annual", value: "annual" },
-  { name: "Quarterly", value: "quarterly" },
+// Report sections configuration
+const reportSections = [
+  { name: "Income Statement", value: "income_statement", icon: "💰" },
+  { name: "Balance Sheet", value: "balance_sheet", icon: "🏦" },
+  { name: "Cash Flow", value: "cash_flow", icon: "💵" },
+];
+
+const periodTypes = [
+  { name: "📅 Annual", value: "annual" },
+  { name: "📆 Quarterly", value: "quarterly" },
 ];
 
 export default function FinancialReports() {
   const dispatch = useDispatch();
-  const [symbol, setSymbol] = useState("");
-  const [reportType, setReportType] = useState("annual"); // ✅ Default to Annual
   const [data, setData] = useState(null);
   const [loading, setLoading] = useState(false);
+  const [error, setError] = useState(null);
+  const [selectedSection, setSelectedSection] = useState("income_statement");
+  const [selectedPeriod, setSelectedPeriod] = useState("annual");
+  const [ticker, setTicker] = useState("MSFT");
+
   const selectedCompanies = useSelector(
     (state) => state.sidebar.selectedCompanies,
   );
@@ -61,416 +82,439 @@ export default function FinancialReports() {
 
   // Set initial symbol from selected companies
   useEffect(() => {
-    console.log("selectedCompanies", selectedCompanies);
-
     if (selectedCompanies?.length) {
-      setSymbol(selectedCompanies[0]);
+      setTicker(selectedCompanies[0]);
     }
   }, [selectedCompanies]);
 
   // Prefetch report whenever symbol or reportType changes
   useEffect(() => {
-    if (symbol) {
+    if (ticker) {
       fetchData();
     }
-  }, [symbol, reportType]);
+  }, [ticker, selectedPeriod]);
 
-  // 🔍 Fetch Data from API
+  // Fetch data function - replace with your actual API endpoint
   const fetchData = async () => {
-    if (!symbol) return alert("Please select a company!");
     setLoading(true);
+    setError(null);
     try {
-      const res = await axios.get(
-        `/api/scrape?symbol=${symbol}&reportType=${reportType}`,
-      );
-      if (res.data.success && res.data.financialData.length > 0) {
-        setData(res.data.financialData);
-      } else {
-        alert(`No data found for ${symbol}`);
-        setData(null);
-      }
-    } catch (error) {
-      console.error("Error fetching data:", error);
-      alert("Error fetching data. Please check the API or network connection.");
+      // Actual API call example:
+      const response = await axios.get(`/api/scrape-yf?ticker=${ticker}`);
+      setData(response.data);
+    } catch (err) {
+      setError("Failed to fetch financial data. Please try again.");
+      console.error("Error fetching data:", err);
+    } finally {
+      setLoading(false);
     }
-    setLoading(false);
   };
 
-  return (
-    <div className="min-h-screen bg-gradient-to-br from-purple-100 via-purple-100 to-purple-100 p-8">
-      <div className="max-w-xl mx-auto bg-white/80 backdrop-blur-lg p-8 rounded-3xl shadow-xl border border-gray-200">
-        {/* 📊 Report Type Dropdown */}
-        <FormControl fullWidth sx={{ mb: 4 }}>
-          <InputLabel>Select Report Type</InputLabel>
-          <Select
-            value={reportType}
-            onChange={(e) => setReportType(e.target.value)}
-            sx={{ backgroundColor: "#fff", borderRadius: 2 }}
-          >
-            {reportTypes.map((type) => (
-              <MenuItem key={type.value} value={type.value}>
-                {type.name}
-              </MenuItem>
-            ))}
-          </Select>
-        </FormControl>
+  // Load data on mount
+  useState(() => {
+    fetchData();
+  }, []);
 
-        {/* 🚀 Fetch Button */}
+  if (loading) {
+    return (
+      <Box className="flex justify-center items-center min-h-screen">
+        <CircularProgress size={60} />
+        <Typography variant="h6" className="ml-4">
+          Loading financial data...
+        </Typography>
+      </Box>
+    );
+  }
+
+  if (error) {
+    return (
+      <Box className="p-8">
+        <Alert severity="error" className="mb-4">
+          {error}
+        </Alert>
         <button
           onClick={fetchData}
-          disabled={loading}
-          className={`w-full bg-purple-600 text-white p-3 rounded-lg ${
-            loading ? "opacity-50 cursor-not-allowed" : "hover:scale-105"
-          } transition-all duration-300`}
+          className="bg-blue-600 text-white px-6 py-2 rounded-lg hover:bg-blue-700"
         >
-          {loading ? "Fetching Data..." : "Fetch Report"}
+          Retry
         </button>
+      </Box>
+    );
+  }
+
+  if (!data || !data.success) {
+    return (
+      <Box className="p-8 text-center">
+        <Typography variant="h6">No data available</Typography>
+        <button
+          onClick={fetchData}
+          className="mt-4 bg-blue-600 text-white px-6 py-2 rounded-lg"
+        >
+          Load Data
+        </button>
+      </Box>
+    );
+  }
+
+  const financialData = data.data;
+  const currentData = financialData[selectedSection]?.[selectedPeriod];
+
+  return (
+    <div className="min-h-screen bg-gradient-to-br from-gray-50 to-blue-50">
+      {/* Header */}
+      <div className="bg-gradient-to-r from-blue-700 to-purple-700 text-white shadow-lg">
+        <div className="max-w-7xl mx-auto px-4 py-6">
+          <div className="flex justify-between items-center">
+            <div>
+              <Typography variant="h3" className="font-bold">
+                {data.ticker} Financial Reports
+              </Typography>
+              <Typography variant="body1" className="text-blue-100 mt-1">
+                Last updated:{" "}
+                {new Date(financialData.fetched_at).toLocaleString()}
+              </Typography>
+            </div>
+            <div className="flex gap-2">
+              <Tooltip title="Refresh">
+                <IconButton
+                  onClick={fetchData}
+                  className="bg-white/10 text-white hover:bg-white/20"
+                >
+                  <Refresh />
+                </IconButton>
+              </Tooltip>
+              <Tooltip title="Print">
+                <IconButton
+                  onClick={() => window.print()}
+                  className="bg-white/10 text-white hover:bg-white/20"
+                >
+                  <Print />
+                </IconButton>
+              </Tooltip>
+              {data.cached && (
+                <Chip
+                  label="Cached Data"
+                  size="small"
+                  className="bg-yellow-500 text-white"
+                />
+              )}
+            </div>
+          </div>
+        </div>
       </div>
 
-      {/* 📊 Financial Data Display */}
-      <FinancialDataDisplay financialData={data} />
+      <div className="max-w-7xl mx-auto px-4 py-6">
+        {/* Controls */}
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mb-6">
+          <Paper className="p-4">
+            <FormControl fullWidth>
+              <InputLabel>Financial Statement</InputLabel>
+              <Select
+                value={selectedSection}
+                onChange={(e) => setSelectedSection(e.target.value)}
+                label="Financial Statement"
+              >
+                {reportSections.map((section) => (
+                  <MenuItem key={section.value} value={section.value}>
+                    {section.icon} {section.name}
+                  </MenuItem>
+                ))}
+              </Select>
+            </FormControl>
+          </Paper>
+
+          <Paper className="p-4">
+            <FormControl fullWidth>
+              <InputLabel>Reporting Period</InputLabel>
+              <Select
+                value={selectedPeriod}
+                onChange={(e) => setSelectedPeriod(e.target.value)}
+                label="Reporting Period"
+              >
+                {periodTypes.map((period) => (
+                  <MenuItem key={period.value} value={period.value}>
+                    {period.name}
+                  </MenuItem>
+                ))}
+              </Select>
+            </FormControl>
+          </Paper>
+        </div>
+
+        {/* Key Metrics Cards */}
+        {currentData && currentData.rows && (
+          <KeyMetricsCards
+            rows={currentData.rows.slice(0, 4)}
+            headers={currentData.headers}
+          />
+        )}
+
+        {/* Financial Table */}
+        {currentData && (
+          <FinancialTable
+            data={currentData}
+            title={`${reportSections.find((s) => s.value === selectedSection)?.name} - ${periodTypes.find((p) => p.value === selectedPeriod)?.name}`}
+            ticker={data.ticker}
+          />
+        )}
+      </div>
     </div>
   );
 }
 
-// 🎯 Updated Grouping Logic
-const groupReportsByType = (data) => {
-  const groupedData = data.reduce((acc, item) => {
-    const year = item.year;
-    if (!acc[year]) {
-      acc[year] = {
-        annual: [],
-        quarterly: {},
-      };
-    }
+// Key Metrics Cards Component
+const KeyMetricsCards = ({ rows, headers }) => {
+  const metrics = rows.slice(0, 4);
+  const latestPeriod = headers[1] || "Current";
 
-    // Group 10-K as annual reports
-    if (item.formType === "10-K") {
-      acc[year].annual.push(item);
-    }
-
-    // Group 10-Q as quarterly reports
-    if (item.formType === "10-Q" && item.data?.length > 0) {
-      item.data.forEach((report) => {
-        const quarter = report.quarter || "N/A";
-        if (!acc[year].quarterly[quarter]) {
-          acc[year].quarterly[quarter] = [];
-        }
-        acc[year].quarterly[quarter].push(report);
-      });
-    }
-
-    return acc;
-  }, {});
-
-  return groupedData;
-};
-
-// ✅ Updated Financial Data Display
-const FinancialDataDisplay = ({ financialData }) => {
-  const [selectedYear, setSelectedYear] = useState(0);
-  const [selectedTab, setSelectedTab] = useState(0);
-  const [selectedQuarter, setSelectedQuarter] = useState(0);
-
-  // ✅ Group Reports by Year and Type
-  const groupedData = groupReportsByType(financialData || []);
-  const years = Object.keys(groupedData).sort((a, b) => b - a);
-
-  // 🛑 Handle Missing or Empty Data
-  if (!financialData || financialData.length === 0) {
-    return (
-      <div className="mt-8 text-center text-gray-300">
-        <Typography
-          variant="h6"
-          sx={{
-            color: "grey",
-            fontSize: "1.2rem",
-          }}
-        >
-          No financial data available. Please select a company.
-        </Typography>
-      </div>
-    );
-  }
-
-  // ✅ Handle Year Tab Change
-  const handleYearChange = (event, newValue) => {
-    setSelectedYear(newValue);
-    setSelectedTab(0);
-    setSelectedQuarter(0);
-  };
-
-  // ✅ Handle Annual/Quarterly Tab Change
-  const handleTabChange = (event, newValue) => {
-    setSelectedTab(newValue);
-  };
-
-  // ✅ Handle Quarterly Tab Change
-  const handleQuarterChange = (event, newValue) => {
-    setSelectedQuarter(newValue);
+  const getTrend = (current, previous) => {
+    if (!previous || previous === "--") return null;
+    const curr = parseFloat(current);
+    const prev = parseFloat(previous);
+    if (isNaN(curr) || isNaN(prev)) return null;
+    const change = ((curr - prev) / prev) * 100;
+    return change;
   };
 
   return (
-    <Box
-      sx={{
-        width: "100%",
-        marginTop: 6,
-        padding: 4,
-        backgroundColor: "rgba(255, 255, 255, 0.9)",
-        borderRadius: 4,
-        boxShadow: "0 8px 32px rgba(0, 0, 0, 0.2)",
-        backdropFilter: "blur(10px)",
-        border: "1px solid rgba(255, 255, 255, 0.18)",
-      }}
-    >
-      {/* 📊 Title */}
-      <Typography
-        variant="h4"
-        gutterBottom
-        sx={{
-          fontWeight: "bold",
-          color: "#6B46C1",
-          textAlign: "center",
-          letterSpacing: 1,
-        }}
-      >
-        📊 Financial Reports for {financialData?.[0]?.symbol || "N/A"}
-      </Typography>
+    <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 mb-6">
+      {metrics.map((row, idx) => {
+        const currentValue = row.values[0];
+        const previousValue = row.values[1];
+        const trend = getTrend(currentValue, previousValue);
+        const isPositive =
+          trend > 0 ||
+          (row.metric.toLowerCase().includes("income") && trend > 0);
 
-      {/* 📅 Year Selection */}
-      <Tabs
-        value={selectedYear}
-        onChange={handleYearChange}
-        variant="scrollable"
-        scrollButtons="auto"
-        sx={{
-          marginBottom: 3,
-          backgroundColor: "#E9D8FD",
-          borderRadius: 2,
-          "& .MuiTabs-indicator": {
-            backgroundColor: "#6B46C1",
-          },
-        }}
-      >
-        {years.map((year, index) => (
-          <Tab
-            key={index}
-            label={`Year: ${year}`}
-            sx={{
-              fontWeight: selectedYear === index ? "bold" : "normal",
-              color: selectedYear === index ? "#6B46C1" : "#4A5568",
-              transition: "0.3s ease-in-out",
-              "&:hover": {
-                backgroundColor: "#D6BCFA",
-                borderRadius: 2,
-              },
-            }}
-          />
-        ))}
-      </Tabs>
-
-      {/* 📚 Annual vs Quarterly Tabs */}
-      <Tabs
-        value={selectedTab}
-        onChange={handleTabChange}
-        variant="scrollable"
-        scrollButtons="auto"
-        sx={{
-          marginBottom: 3,
-          backgroundColor: "#EDF2F7",
-          borderRadius: 2,
-          "& .MuiTabs-indicator": {
-            backgroundColor: "#9F7AEA",
-          },
-        }}
-      >
-        <Tab label="📅 Annual Reports (10-K)" />
-        <Tab label="📅 Quarterly Reports (10-Q)" />
-      </Tabs>
-
-      {/* 🎯 Annual Reports Display */}
-      {selectedTab === 0 &&
-        groupedData[years[selectedYear]]?.annual.map((report, index) => (
-          <div key={index}>
-            {report.data.map((reportItem, i) => (
-              <ReportTable key={`${index}-${i}`} report={reportItem} />
-            ))}
-          </div>
-        ))}
-
-      {/* 📚 Quarterly Reports with Quarter Tabs */}
-      {selectedTab === 1 &&
-        Object.keys(groupedData[years[selectedYear]]?.quarterly || {}).length >
-          0 && (
-          <Box>
-            <Tabs
-              value={selectedQuarter}
-              onChange={handleQuarterChange}
-              variant="scrollable"
-              scrollButtons="auto"
-              sx={{
-                marginBottom: 3,
-                backgroundColor: "#E9D8FD",
-                borderRadius: 2,
-                "& .MuiTabs-indicator": {
-                  backgroundColor: "#6B46C1",
-                },
-              }}
-            >
-              {Object.keys(
-                groupedData[years[selectedYear]].quarterly || {},
-              ).map((quarter, index) => (
-                <Tab
-                  key={index}
-                  label={`📅 ${quarter}`}
-                  sx={{
-                    fontWeight: selectedQuarter === index ? "bold" : "normal",
-                    color: selectedQuarter === index ? "#6B46C1" : "#4A5568",
-                    transition: "0.3s ease-in-out",
-                    "&:hover": {
-                      backgroundColor: "#D6BCFA",
-                      borderRadius: 2,
-                    },
-                  }}
-                />
-              ))}
-            </Tabs>
-
-            {/* Display Quarterly Reports */}
-            {groupedData[years[selectedYear]]?.quarterly &&
-              Object.keys(groupedData[years[selectedYear]].quarterly).map(
-                (quarter, index) =>
-                  selectedQuarter === index &&
-                  groupedData[years[selectedYear]].quarterly[quarter].map(
-                    (report, i) => <ReportTable key={i} report={report} />,
-                  ),
-              )}
-          </Box>
-        )}
-    </Box>
+        return (
+          <Paper key={idx} className="p-4 hover:shadow-lg transition-shadow">
+            <Typography variant="body2" className="text-gray-500 mb-2">
+              {row.metric}
+            </Typography>
+            <Typography variant="h5" className="font-bold text-gray-800 mb-2">
+              {formatValue(currentValue, row.metric)}
+            </Typography>
+            {trend !== null && (
+              <div className="flex items-center gap-1">
+                {isPositive ? (
+                  <TrendingUp className="text-green-600" fontSize="small" />
+                ) : (
+                  <TrendingDown className="text-red-600" fontSize="small" />
+                )}
+                <Typography
+                  variant="caption"
+                  className={isPositive ? "text-green-600" : "text-red-600"}
+                >
+                  {Math.abs(trend).toFixed(1)}% vs {latestPeriod}
+                </Typography>
+              </div>
+            )}
+          </Paper>
+        );
+      })}
+    </div>
   );
 };
 
-// 📄 Updated Report Table Component
-const ReportTable = ({ report }) => (
-  <Box
-    sx={{
-      marginTop: 3,
-      borderRadius: 3,
-      backgroundColor: "#fff",
-      boxShadow: "0 8px 24px rgba(0,0,0,0.1)",
-      padding: 4,
-    }}
-  >
-    {/* 📚 Report Name */}
-    <Typography
-      variant="h6"
-      gutterBottom
-      sx={{
-        fontWeight: "bold",
-        color: "#6B46C1",
-        textAlign: "center",
-        marginBottom: 2,
-      }}
-    >
-      📄 {report.reportName || "Report"}
-    </Typography>
+// Financial Table Component
+const FinancialTable = ({ data, title, ticker }) => {
+  const [sortColumn, setSortColumn] = useState(null);
+  const [sortDirection, setSortDirection] = useState("asc");
+  const [searchTerm, setSearchTerm] = useState("");
 
-    {/* 📝 Report Metadata */}
-    <Typography
-      variant="body1"
-      sx={{
-        textAlign: "center",
-        fontStyle: "italic",
-        color: "#4A5568",
-        marginBottom: 2,
-      }}
-    >
-      {report.data?.header || "N/A"} <br />
-      📅 {report.data?.period || "N/A"}
-    </Typography>
+  if (!data || !data.rows || data.rows.length === 0) {
+    return (
+      <Paper className="p-8 text-center">
+        <Typography variant="h6" color="textSecondary">
+          No data available for this section
+        </Typography>
+      </Paper>
+    );
+  }
 
-    {/* 📊 Financial Data Table */}
-    {report.data?.data && Object.keys(report.data.data).length > 0 ? (
-      <TableContainer
-        component={Paper}
-        sx={{
-          marginTop: 2,
-          borderRadius: 2,
-          boxShadow: "0 4px 12px rgba(0, 0, 0, 0.1)",
-          maxHeight: 400,
-          overflowY: "auto",
-        }}
-      >
-        <Table
-          stickyHeader
-          sx={{
-            minWidth: 650,
-            "& .MuiTableCell-head": {
-              backgroundColor: "#6B46C1",
-              color: "#fff",
-              fontWeight: "bold",
-            },
-            "& .MuiTableRow-root:hover": {
-              backgroundColor: "#f5f7fa",
-            },
-          }}
-        >
+  const { headers, rows } = data;
+
+  // Filter rows based on search
+  const filteredRows = rows.filter((row) =>
+    row.metric.toLowerCase().includes(searchTerm.toLowerCase()),
+  );
+
+  // Sort rows
+  const sortedRows = [...filteredRows];
+  if (sortColumn !== null) {
+    sortedRows.sort((a, b) => {
+      const aVal = parseFloat(a.values[sortColumn]) || 0;
+      const bVal = parseFloat(b.values[sortColumn]) || 0;
+      return sortDirection === "asc" ? aVal - bVal : bVal - aVal;
+    });
+  }
+
+  const handleSort = (columnIndex) => {
+    if (sortColumn === columnIndex) {
+      setSortDirection(sortDirection === "asc" ? "desc" : "asc");
+    } else {
+      setSortColumn(columnIndex);
+      setSortDirection("asc");
+    }
+  };
+
+  return (
+    <Paper className="overflow-hidden">
+      <div className="bg-gradient-to-r from-blue-600 to-purple-600 p-4">
+        <div className="flex justify-between items-center">
+          <div>
+            <Typography variant="h6" className="text-white">
+              {title}
+            </Typography>
+            <Typography variant="caption" className="text-blue-100">
+              Ticker: {ticker}
+            </Typography>
+          </div>
+          <div className="flex gap-2">
+            <input
+              type="text"
+              placeholder="Search metrics..."
+              value={searchTerm}
+              onChange={(e) => setSearchTerm(e.target.value)}
+              className="px-3 py-1 rounded-lg text-gray-800 placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-blue-300"
+            />
+            <Tooltip title="Export to CSV">
+              <IconButton
+                onClick={() => exportToCSV(sortedRows, headers)}
+                className="bg-white/10 text-white hover:bg-white/20"
+              >
+                <Download />
+              </IconButton>
+            </Tooltip>
+          </div>
+        </div>
+      </div>
+
+      <TableContainer className="overflow-x-auto" style={{ maxHeight: 600 }}>
+        <Table stickyHeader className="min-w-[800px]">
           <TableHead>
-            <TableRow>
-              <TableCell>📈 Metric</TableCell>
-              <TableCell align="right">💸 Value</TableCell>
+            <TableRow className="bg-gray-50">
+              {headers.map((header, idx) => (
+                <TableCell
+                  key={idx}
+                  className={`font-bold ${
+                    idx > 0 ? "cursor-pointer hover:bg-gray-100" : ""
+                  }`}
+                  onClick={() => idx > 0 && handleSort(idx - 1)}
+                  style={{
+                    position: idx === 0 ? "sticky" : "static",
+                    left: idx === 0 ? 0 : "auto",
+                    backgroundColor: "#f9fafb",
+                    zIndex: idx === 0 ? 10 : 1,
+                  }}
+                >
+                  {header}
+                  {idx > 0 && sortColumn === idx - 1 && (
+                    <span className="ml-1">
+                      {sortDirection === "asc" ? "↑" : "↓"}
+                    </span>
+                  )}
+                </TableCell>
+              ))}
             </TableRow>
           </TableHead>
           <TableBody>
-            {Object.entries(report.data.data || {}).map(([key, value], i) => (
+            {sortedRows.map((row, rowIdx) => (
               <TableRow
-                key={i}
+                key={rowIdx}
+                className="hover:bg-gray-50 transition-colors"
                 sx={{
                   "&:nth-of-type(even)": {
-                    backgroundColor: "#F3F4F6",
+                    backgroundColor: "#f9fafb",
                   },
                 }}
               >
                 <TableCell
                   component="th"
                   scope="row"
-                  sx={{
-                    fontWeight: "500",
-                    color: "#4A5568",
+                  className="font-medium text-gray-900"
+                  style={{
+                    position: "sticky",
+                    left: 0,
+                    backgroundColor: "white",
+                    zIndex: 1,
                   }}
                 >
-                  {key}
+                  {row.metric}
                 </TableCell>
-                <TableCell
-                  align="right"
-                  sx={{
-                    fontWeight: "bold",
-                    color: "#2D3748",
-                  }}
-                >
-                  {typeof value === "number"
-                    ? `${value.toLocaleString()}`
-                    : value || "N/A"}
-                </TableCell>
+                {row.values.map((value, valIdx) => (
+                  <TableCell
+                    key={valIdx}
+                    align="right"
+                    className={`font-mono ${
+                      parseFloat(value) < 0 ? "text-red-600" : "text-gray-900"
+                    }`}
+                  >
+                    {formatValue(value, row.metric)}
+                  </TableCell>
+                ))}
               </TableRow>
             ))}
           </TableBody>
         </Table>
       </TableContainer>
-    ) : (
-      <Typography
-        variant="body2"
-        color="textSecondary"
-        mt={2}
-        sx={{
-          textAlign: "center",
-          fontStyle: "italic",
-          color: "#4A5568",
-        }}
-      >
-        🚫 No data available for this section.
-      </Typography>
-    )}
-  </Box>
-);
+
+      <div className="p-4 bg-gray-50 border-t">
+        <Typography variant="caption" className="text-gray-500">
+          Showing {sortedRows.length} of {rows.length} metrics | All values in
+          thousands USD unless otherwise specified
+        </Typography>
+      </div>
+    </Paper>
+  );
+};
+
+// Helper function to format values
+function formatValue(value, metric) {
+  if (value === "--" || value === null || value === undefined) return "N/A";
+
+  const numValue = parseFloat(value);
+  if (isNaN(numValue)) return value;
+
+  // Format EPS values
+  if (metric.toLowerCase().includes("eps")) {
+    return `$${numValue.toFixed(2)}`;
+  }
+
+  // Format percentage values
+  if (
+    metric.toLowerCase().includes("rate") ||
+    metric.toLowerCase().includes("margin")
+  ) {
+    return `${numValue.toFixed(2)}%`;
+  }
+
+  // Format large numbers
+  if (Math.abs(numValue) >= 1e9) {
+    return `$${(numValue / 1e9).toFixed(2)}B`;
+  }
+  if (Math.abs(numValue) >= 1e6) {
+    return `$${(numValue / 1e6).toFixed(2)}M`;
+  }
+  if (Math.abs(numValue) >= 1e3) {
+    return `$${(numValue / 1e3).toFixed(2)}K`;
+  }
+
+  return `$${numValue.toLocaleString()}`;
+}
+
+// Export to CSV function
+function exportToCSV(rows, headers) {
+  const csvHeaders = headers.join(",");
+  const csvRows = rows.map((row) => {
+    return [row.metric, ...row.values].join(",");
+  });
+  const csv = [csvHeaders, ...csvRows].join("\n");
+  const blob = new Blob([csv], { type: "text/csv" });
+  const url = URL.createObjectURL(blob);
+  const a = document.createElement("a");
+  a.href = url;
+  a.download = `financial_report_${Date.now()}.csv`;
+  a.click();
+  URL.revokeObjectURL(url);
+}

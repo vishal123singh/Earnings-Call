@@ -144,6 +144,7 @@ const FinancialAnalysisDashboard = ({
   }, []);
 
   useEffect(() => {
+    console.log(companyData);
     const loadData = async () => {
       const newData = {};
       for (const ticker of selectedCompanies) {
@@ -464,7 +465,7 @@ const FinancialAnalysisDashboard = ({
                 </div>
               </div>
             ) : (
-             <>
+              <>
                 <div className="relative">
                   {graphData && (
                     <button
@@ -476,11 +477,11 @@ const FinancialAnalysisDashboard = ({
                     </button>
                   )}
                 </div>
-                  <div className="w-full h-96 flex items-center justify-center">
-                    <div className="w-full h-full relative">
-                      <ChartContainer graphData={graphData} />
-                    </div>
+                <div className="w-full h-96 flex items-center justify-center">
+                  <div className="w-full h-full relative">
+                    <ChartContainer graphData={graphData} />
                   </div>
+                </div>
 
                 {graphData?.analysis && (
                   <div className="mt-2">
@@ -495,7 +496,6 @@ const FinancialAnalysisDashboard = ({
                   </div>
                 )}
               </>
-
             )}
           </div>
 

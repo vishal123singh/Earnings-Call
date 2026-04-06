@@ -1,5 +1,5 @@
 "use client";
-import { Mic, Send, ChevronDown } from "lucide-react";
+import { Mic, Send, ChevronDown, SendHorizonalIcon, X } from "lucide-react";
 import React, { useState, useEffect, useRef } from "react";
 import Head from "next/head";
 import { useDispatch, useSelector } from "react-redux";
@@ -19,6 +19,7 @@ import { Menu, MenuButton, MenuItem } from "@headlessui/react";
 import { setFilterConfig } from "../../../store/sidebarSlice";
 import VoiceRecorder from "@/components/ui/voice-input";
 import { createPortal } from "react-dom";
+import { Button } from "@/components/ui/button";
 
 const options = Object.entries(suggestedQuestions).map(([category, data]) => ({
   label: category,
@@ -188,6 +189,13 @@ export default function AggregateDashboard() {
           />
         </div>
 
+        {/* <button
+          onClick={() => setIsChatOpen(true)}
+          className="mb-4 px-4 py-2 bg-purple-600 text-white rounded-lg hover:bg-purple-700 transition duration-300"
+        >
+          Upload Earnings Call Transcripts
+        </button> */}
+
         <div className="h-[55vh] overflow-y-auto bg-purple-50 shadow-md rounded-2xl p-6 space-y-4 border border-purple-200">
           {chats.map((chat, index) => (
             <div
@@ -223,6 +231,12 @@ export default function AggregateDashboard() {
           onSubmit={onPromptSubmit}
           onVoiceInput={(input) => setInputValue(input)}
         />
+        <FetchUploadPopUp
+          isOpen={isChatOpen}
+          setIsOpen={setIsChatOpen}
+          chats={fetchUploadChats}
+          setChats={setFetchUploadChats}
+        />
       </div>
     </div>
   );
@@ -232,7 +246,7 @@ function FetchUploadPopUp({ isOpen, setIsOpen, chats, setChats }) {
   const [inputText, setInput] = useState("");
   const [isLoading, setLoading] = useState(false);
   const scrollViewRef = useRef(null);
-  const apiUrl = `${process.env.NEXT_PUBLIC_API_URL}/fetch-upload`;
+  const apiUrl = `${process.env.NEXT_PUBLIC_API_URL}/fetch-upload-v2`;
 
   useEffect(() => {
     if (scrollViewRef.current) {
@@ -292,102 +306,106 @@ function FetchUploadPopUp({ isOpen, setIsOpen, chats, setChats }) {
       });
     }
   };
+  const handleKeyDown = (e) => {
+    if (e.key === "Enter") {
+      e.preventDefault(); // Prevent default form submission (if inside a form)
+      getAgentResponse();
+    }
+  };
+
+  if (!isOpen) return null;
 
   return (
-    <div className="flex flex-col h-full">
-      <Head>
-        <title>Aggregate Business Insights</title>
-      </Head>
+    <div className="fixed bottom-6 right-6 flex flex-col items-end z-[9999]">
+      <div
+        style={{
+          boxShadow: "4px 4px 10px rgba(0, 0, 0, 0.5)",
+          border: 2,
+          borderColor: "blue",
+        }}
+        className="bg-white shadow-2xl rounded-2xl p-4 m-4 mb-8 h-[500px] w-[800px] flex flex-col"
+      >
+        <div className="flex justify-center items-center pb-0">
+          <h3 className="text-lg font-medium text-gray-700">
+            Upload Earnings Calls Transcripts To Get Insights
+          </h3>
+          <Button
+            className="absolute r-0"
+            onClick={() => {
+              setIsOpen(false);
+              setLoading(false);
+              setInput("");
+            }}
+          >
+            <X className="w-5 h-5" />
+          </Button>
+        </div>
+        <div className="p-4 bg-white rounded-lg">
+          <section className="mt-3 p-4 text-gray-600 border border-gray-300 rounded-lg bg-gray-50">
+            <p className="text-sm">
+              <span className="font-semibold">Prompt type 1:&nbsp;</span>
+              Ticker=<span className="text-blue-600">SOFI</span>, Year=
+              <span className="text-blue-600">2024</span>, Quarters=
+              <span className="text-blue-600">4</span>
+            </p>
+            <p className="text-sm mt-2">
+              <span className="font-semibold">Prompt type 2:&nbsp;</span>
+              Ticker=<span className="text-blue-600">[SOFI, JPM, MS]</span>,
+              Year=<span className="text-blue-600">2024</span>, Quarters=
+              <span className="text-blue-600">4</span>
+            </p>
+          </section>
+        </div>
 
-      <main className="container mx-auto p-6 bg-gradient-to-br from-[#1e1e2f] to-[#121212] text-white rounded-xl shadow-2xl">
-        <div className="backdrop-blur-xl bg-white/5 p-6 w-full h-full shadow-2xl rounded-2xl border border-gray-700">
-          {/* Top Section */}
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
-            <div>
-              <label className="block text-sm font-semibold text-gray-400 mb-2">
-                Category
-              </label>
-              <SelectWithSubmenu className="w-full border border-gray-600 bg-[#1e1e2f] text-gray-300 rounded-lg focus:ring-2 focus:ring-blue-400 p-3 transition-transform duration-300 hover:scale-105" />
-            </div>
-          </div>
-
-          {/* Chat Window */}
-          <div className="h-[60vh] overflow-y-auto bg-[#1b1b2b] shadow-inner p-6 space-y-4 rounded-lg border border-gray-700">
-            {chats?.map((m, index) => (
-              <div
+        <div className="flex-1 overflow-y-auto p-2">
+          <div className="flex-1 overflow-y-auto">
+            {chats.map((msg, index) => (
+              <section
+                style={{ marginBottom: msg.id % 2 === 0 ? "60px" : "30px" }}
                 key={index}
-                className={`p-4 rounded-xl text-md ${
-                  m.role === "user"
-                    ? "bg-gradient-to-r from-blue-500 to-purple-600 text-white"
-                    : "bg-gray-800 text-gray-300"
-                } shadow-md`}
+                className={`flex-1 overflow-y-auto p-[20px] rounded text-sm-200 ${
+                  msg.sender === "user"
+                    ? "bg-blue-100 text-white self-end"
+                    : "bg-gray-200 text-black self-start"
+                }`}
               >
-                <span
-                  className={`font-medium ${
-                    m.role === "user" ? "text-blue-300" : "text-green-400"
-                  }`}
-                >
-                  {m.role === "user" ? "User: " : "AI: "}
-                </span>
-                <div className="prose ml-4">
+                <div className="prose ml-6 custom-markdown">
                   <ReactMarkdown
                     remarkPlugins={[remarkGfm]}
                     rehypePlugins={[rehypeRaw]}
                   >
-                    {m.content}
+                    {msg.text}
                   </ReactMarkdown>
                 </div>
-                <div className="mt-4">
-                  {m.role === "assistant" &&
-                    chartData?.chartData?.length > 0 && (
-                      <DynamicChart
-                        data={chartData?.chartData}
-                        chartType={chartData?.chartType}
-                      />
-                    )}
-                </div>
-              </div>
+              </section>
             ))}
-
-            {/* Loading Indicator */}
-            {isLoading && (
-              <div className="flex flex-col justify-center items-center py-6">
-                <div className="animate-spin rounded-full h-10 w-10 border-t-4 border-blue-500 border-opacity-50" />
-                <p className="text-sm text-gray-500 mt-2">
-                  Generating response...
-                </p>
-              </div>
-            )}
-            <div ref={messagesEndRef} />
           </div>
 
-          {/* Input Form */}
-          <form
-            onSubmit={(e) => {
-              e.preventDefault();
-              if (!selectedCompanies.length) {
-                return alert("Please select at least one company");
-              }
-              getAgentResponse();
-            }}
-            className="mt-4 flex items-center bg-[#1e1e2f] border border-gray-700 rounded-lg shadow-md"
-          >
-            <input
-              type="text"
-              value={inputValue}
-              onChange={handleInputChangeWithCompany}
-              placeholder="Type your question..."
-              className="flex-1 bg-transparent text-white placeholder-gray-500 px-4 py-3 focus:outline-none"
-            />
-            <button
-              type="submit"
-              className="bg-gradient-to-r from-blue-500 to-purple-600 text-white px-6 py-3 rounded-r-lg transition-transform duration-300 hover:scale-105 hover:from-purple-600 hover:to-blue-500"
-            >
-              Send
-            </button>
-          </form>
+          {isLoading && (
+            <div className="loading-container">
+              <div className="spinner"></div>
+              <p className="loading-text">Uploading transcripts...</p>
+            </div>
+          )}
+
+          <div ref={scrollViewRef}></div>
         </div>
-      </main>
+        <div className="border-t pt-2 flex items-center">
+          <input
+            type="text"
+            placeholder="Type a message..."
+            className="flex-1 border-none outline-none px-3 py-2 rounded-lg bg-gray-200"
+            onChange={(e) => setInput(e.target.value)}
+            value={inputText}
+            onKeyDown={handleKeyDown}
+          />
+          <SendHorizonalIcon
+            onClick={getAgentResponse}
+            className="w-5 h-5 ml-2"
+            color="blue"
+          />
+        </div>
+      </div>
     </div>
   );
 }
@@ -575,4 +593,3 @@ function BusinessInsightsForm({
     </form>
   );
 }
-

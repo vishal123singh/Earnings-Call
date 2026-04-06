@@ -144,7 +144,9 @@ export async function POST(req: NextRequest) {
     }
 
     const completion = await openai.chat.completions.create({
-      model: "deepseek/deepseek-r1:free",
+      // model: "deepseek/deepseek-r1:free",
+      model: "nvidia/nemotron-3-nano-30b-a3b:free",
+
       temperature: 0.7,
       messages: [
         {
@@ -168,7 +170,6 @@ export async function POST(req: NextRequest) {
     });
 
     const content = completion.choices?.[0]?.message?.content ?? "";
-    console.log("Raw AI content:", content);
 
     const parsed = parseAIResponse(content);
 

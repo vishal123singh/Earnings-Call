@@ -72,11 +72,11 @@ const CompanyEarningsCard = ({ item }) => {
       <h3 className="text-lg font-semibold text-purple-600">{item.name}</h3>
       <h5 className="text-lg font-semibold text-gray-600">({item.symbol})</h5>
       <div className="flex items-center gap-2 mb-2">
-        <img
+        {/* <img
           src={companyLogos[item.symbol]}
           alt={item.name || "Company Logo"}
           className="w-5 h-5"
-        />
+        /> */}
         <h3 className="text-lg font-semibold text-purple-600">{item.name}</h3>
       </div>
 

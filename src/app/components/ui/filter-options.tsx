@@ -113,15 +113,15 @@ const FilterOptions = () => {
   // Get filter configuration and current selections from redux state
   const filterConfig = useSelector((state: any) => state.sidebar.filterConfig);
   const selectedCompanies = useSelector(
-    (state: any) => state.sidebar.selectedCompanies
+    (state: any) => state.sidebar.selectedCompanies,
   );
   const selectedYear = useSelector((state: any) => state.sidebar.selectedYear);
   const selectedQuarter = useSelector(
-    (state: any) => state.sidebar.selectedQuarter
+    (state: any) => state.sidebar.selectedQuarter,
   );
   const selectedPersona = useSelector((state: any) => state.sidebar.persona);
   const selectedModal = useSelector(
-    (state: any) => state.sidebar.foundationModel
+    (state: any) => state.sidebar.foundationModel,
   );
 
   // Create option arrays for companies, years and quarters
@@ -130,13 +130,13 @@ const FilterOptions = () => {
       value: company.ticker,
       label: company.name,
       logo: company.logo,
-    })
+    }),
   );
   const yearOptions: OptionType[] = (filterConfig.years as number[]).map(
-    (year) => ({ value: year, label: String(year) })
+    (year) => ({ value: year, label: String(year) }),
   );
   const quarterOptions: OptionType[] = (filterConfig.quarters as string[]).map(
-    (quarter) => ({ value: quarter, label: quarter })
+    (quarter) => ({ value: quarter, label: quarter }),
   );
   const personaOptions: OptionType[] = personas.map((persona) => ({
     value: persona,
@@ -144,15 +144,15 @@ const FilterOptions = () => {
   }));
 
   const handleCompanySelect = (
-    selected: OptionType | MultiValue<OptionType>
+    selected: OptionType | MultiValue<OptionType>,
   ) => {
     if (filterConfig.selectProps.companies.isMulti) {
       dispatch(
         setCompanies(
           (selected as MultiValue<OptionType>).map(
-            (option) => option.value as string
-          )
-        )
+            (option) => option.value as string,
+          ),
+        ),
       );
     } else {
       const option = selected as OptionType;
@@ -165,9 +165,9 @@ const FilterOptions = () => {
       dispatch(
         setYear(
           (selected as MultiValue<OptionType>).map(
-            (option) => option.value as number
-          )
-        )
+            (option) => option.value as number,
+          ),
+        ),
       );
     } else {
       const option = selected as OptionType;
@@ -175,14 +175,16 @@ const FilterOptions = () => {
     }
   };
 
-  const handleQuarterSelect = (selected: OptionType | MultiValue<OptionType>) => {
+  const handleQuarterSelect = (
+    selected: OptionType | MultiValue<OptionType>,
+  ) => {
     if (filterConfig.selectProps.quarters.isMulti) {
       dispatch(
         setQuarter(
           (selected as MultiValue<OptionType>).map(
-            (option) => option.value as string
-          )
-        )
+            (option) => option.value as string,
+          ),
+        ),
       );
     } else {
       const option = selected as OptionType;
@@ -202,44 +204,42 @@ const FilterOptions = () => {
     }
   };
 
-  useEffect(() => {
-    console.log("Selected Companies:", selectedCompanies);
-    console.log("Selected Year:", selectedYear);
-    console.log("Selected Quarter:", selectedQuarter);
-  }, [selectedCompanies, selectedYear, selectedQuarter]);
-
   return (
     <div
-      className={`transition-all duration-300 ${!collapsed ? "p-8 opacity-100 space-y-6" : "p-0 opacity-0"
-        } bg-white border border-gray-200 shadow-lg h-screen overflow-hidden`}
+      className={`transition-all duration-300 ${
+        !collapsed ? "p-8 opacity-100 space-y-6" : "p-0 opacity-0"
+      } bg-white border border-gray-200 shadow-lg h-screen overflow-hidden`}
     >
       {/* Company Multi-Select */}
       <div>
         <label className="text-sm font-medium text-gray-800 block mb-2">
           Company
         </label>
-        <Select isDisabled={filterConfig.selectProps.companies.isDisabled}
+        <Select
+          isDisabled={filterConfig.selectProps.companies.isDisabled}
           options={companyOptions}
           isMulti={filterConfig.selectProps.companies.isMulti}
           value={
             filterConfig.selectProps.companies.isMulti
               ? companyOptions.filter((option) =>
-                selectedCompanies.includes(option.value)
-              )
-              : companyOptions.find((option) => option.value === selectedCompanies[0]) || null
+                  selectedCompanies.includes(option.value),
+                )
+              : companyOptions.find(
+                  (option) => option.value === selectedCompanies[0],
+                ) || null
           }
           onChange={handleCompanySelect}
           placeholder={filterConfig.selectProps.companies.placeholder}
           styles={customStyles}
           formatOptionLabel={(option: OptionType) => (
             <div className="flex items-center">
-              {option.logo && (
+              {/* {option.logo && (
                 <img
                   src={option.logo}
                   alt={option.label}
                   className="w-6 h-6 mr-2 rounded-full"
                 />
-              )}
+              )} */}
               <span>{option.label}</span>
             </div>
           )}
@@ -251,18 +251,18 @@ const FilterOptions = () => {
         <label className="text-sm font-medium text-gray-600 block mb-2">
           Year
         </label>
-        <Select isDisabled={filterConfig.selectProps.years.isDisabled}
+        <Select
+          isDisabled={filterConfig.selectProps.years.isDisabled}
           options={yearOptions}
           isMulti={filterConfig.selectProps.years.isMulti}
           value={
             filterConfig.selectProps.years.isMulti
               ? yearOptions.filter((option) =>
-                (selectedYear as number[]).includes(option.value as number)
-              )
+                  (selectedYear as number[]).includes(option.value as number),
+                )
               : yearOptions.find(
-                (option) =>
-                  option.value === (selectedYear as number[])[0]
-              ) || null
+                  (option) => option.value === (selectedYear as number[])[0],
+                ) || null
           }
           onChange={handleYearSelect}
           placeholder={filterConfig.selectProps.years.placeholder}
@@ -275,20 +275,20 @@ const FilterOptions = () => {
         <label className="text-sm font-medium text-gray-600 block mb-2">
           Quarter
         </label>
-        <Select isDisabled={filterConfig.selectProps.quarters.isDisabled}
+        <Select
+          isDisabled={filterConfig.selectProps.quarters.isDisabled}
           options={quarterOptions}
           isMulti={filterConfig.selectProps.quarters.isMulti}
           value={
             filterConfig.selectProps.quarters.isMulti
               ? quarterOptions.filter((option) =>
-                (selectedQuarter as string[]).includes(
-                  option.value as string
+                  (selectedQuarter as string[]).includes(
+                    option.value as string,
+                  ),
                 )
-              )
               : quarterOptions.find(
-                (option) =>
-                  option.value === (selectedQuarter as string[])[0]
-              ) || null
+                  (option) => option.value === (selectedQuarter as string[])[0],
+                ) || null
           }
           onChange={handleQuarterSelect}
           placeholder={filterConfig.selectProps.quarters.placeholder}
@@ -301,7 +301,8 @@ const FilterOptions = () => {
         <label className="text-sm font-medium text-gray-600 block mb-2">
           Persona
         </label>
-        <Select isDisabled={filterConfig.selectProps.persona.isDisabled}
+        <Select
+          isDisabled={filterConfig.selectProps.persona.isDisabled}
           options={personaOptions}
           isMulti={filterConfig.selectProps.persona.isMulti}
           value={
@@ -309,9 +310,7 @@ const FilterOptions = () => {
               ? { value: selectedPersona, label: selectedPersona }
               : null
           }
-          onChange={(option: any) =>
-            dispatch(setPersona(option?.value))
-          }
+          onChange={(option: any) => dispatch(setPersona(option?.value))}
           placeholder={filterConfig.selectProps.persona.placeholder}
           styles={customStyles}
         />
@@ -322,7 +321,8 @@ const FilterOptions = () => {
         <label className="text-sm font-medium text-gray-600 block mb-2">
           Model
         </label>
-        <Select isDisabled={filterConfig.selectProps.model.isDisabled}
+        <Select
+          isDisabled={filterConfig.selectProps.model.isDisabled}
           options={models}
           isMulti={filterConfig.selectProps.model.isMulti}
           value={

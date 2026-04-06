@@ -1,129 +1,178 @@
-import { S3Client, GetObjectCommand } from "@aws-sdk/client-s3";
-import { BedrockRuntimeClient } from "@aws-sdk/client-bedrock-runtime";
-
-// Ensure AWS credentials are available
-if (!process.env.M_ACCESS_KEY_ID || !process.env.M_SECRET_ACCESS_KEY) {
-    throw new Error("Missing AWS credentials. Please set AWS_ACCESS_KEY_ID and AWS_SECRET_ACCESS_KEY.");
-}
-
-// AWS Clients
-const s3Client = new S3Client({
-    region: process.env.REGION ?? "us-east-1",
-    credentials: {
-        accessKeyId: process.env.M_ACCESS_KEY_ID,
-        secretAccessKey: process.env.M_SECRET_ACCESS_KEY,
-    },
-});
-
-const bedrockClient = new BedrockRuntimeClient({
-    region: process.env.REGION ?? "us-east-1",
-    credentials: {
-        accessKeyId: process.env.M_ACCESS_KEY_ID,
-        secretAccessKey: process.env.M_SECRET_ACCESS_KEY,
-    },
-});
+import { NextResponse } from "next/server";
+import fs from "fs";
+import path from "path";
+import OpenAI from "openai";
 
 const quarters = { "1st": 1, "2nd": 2, "3rd": 3, "4th": 4 };
 
+const openai = new OpenAI({
+  baseURL: "https://openrouter.ai/api/v1",
+  apiKey: process.env.OPEN_ROUTER_API_KEY,
+});
 
-
-// Express-style API handler for Next.js
 export async function POST(req) {
-    try {
-        // Parse the request body
-        const body = await req.json();
-        const { selectedCompany, selectedYear, selectedQuarter } = body;
+  try {
+    const body = await req.json();
+    const { selectedCompany, selectedQuarter, selectedYear } = body;
 
-        console.log("Request Received:", { selectedCompany, selectedYear, selectedQuarter });
+    const ticker = selectedCompany.ticker || selectedCompany.value;
+    const quarter = quarters[selectedQuarter];
+    const quarterFormatted = `Q${quarter}`;
 
-        // Ensure required fields are present
-        if (!selectedCompany || !selectedCompany.ticker || !selectedYear || !selectedQuarter) {
-            return new Response("Missing required fields", { status: 400 });
-        }
+    const transcriptPath = path.join(
+      process.cwd(),
+      "transcripts/json",
+      ticker,
+      String(selectedYear),
+      `Q${quarter}.json`,
+    );
 
-        // Invoke Model with proper parameter order
-        const result = await invokeModel(selectedCompany, selectedQuarter, selectedYear);
+    const sentimentPath = path.join(
+      process.cwd(),
+      "sentiments/json",
+      ticker,
+      String(selectedYear),
+      `Q${quarter}.json`,
+    );
 
-        return new Response(result, {
-            headers: {
-                "Content-Type": "text/plain; charset=utf-8",
-                "Cache-Control": "no-cache",
-            }
-        });
-    } catch (error) {
-        console.error("Error in POST handler:", error);
-        return new Response("Internal Server Error", { status: 500 });
+    // 1️⃣ Check local sentiment
+    if (fs.existsSync(sentimentPath)) {
+      const sentimentData = JSON.parse(fs.readFileSync(sentimentPath, "utf-8"));
+      return NextResponse.json(sentimentData);
     }
+
+    // 2️⃣ Get transcript
+    let transcriptData = null;
+    if (fs.existsSync(transcriptPath)) {
+      transcriptData = JSON.parse(fs.readFileSync(transcriptPath, "utf-8"));
+      console.log("Loaded transcript from local cache:", transcriptPath);
+      console.log("Transcript metadata:", transcriptData.metadata);
+    } else {
+      const pythonApiUrl =
+        process.env.PYTHON_API_URL || "http://localhost:8000";
+      const pythonApiEndpoint = `${pythonApiUrl}/scrape/${ticker.toLowerCase()}/${selectedYear}/Q${quarterFormatted}`;
+      const pythonResponse = await fetch(pythonApiEndpoint);
+      if (!pythonResponse.ok)
+        throw new Error(`Python API error: ${pythonResponse.status}`);
+      const pythonData = await pythonResponse.json();
+      if (!pythonData.success)
+        throw new Error(
+          pythonData.error || "Python API returned unsuccessful response",
+        );
+
+      transcriptData = {
+        presentation: pythonData.presentation || [],
+        qa_session: pythonData.qa_session || [],
+        participants: pythonData.participants || {
+          corporate: [],
+          analysts: [],
+        },
+        metadata: pythonData.metadata || {
+          company: ticker,
+          ticker,
+          quarter: quarterFormatted,
+          year: selectedYear,
+          date: null,
+          transcript_type: "Earnings Transcript",
+        },
+        stats: pythonData.stats || {
+          presentation_speeches: pythonData.presentation?.length || 0,
+          qa_speeches: pythonData.qa_session?.length || 0,
+        },
+      };
+
+      await saveLocally(transcriptPath, transcriptData);
+    }
+
+    // 3️⃣ Generate structured sentiment using OpenAI
+    const sentiment = await generateStructuredSentiment(transcriptData);
+
+    await saveLocally(sentimentPath, sentiment);
+
+    return NextResponse.json(sentiment);
+  } catch (error) {
+    console.error("POST Error:", error);
+    return new Response(
+      JSON.stringify({
+        error: "Error occurred while fetching sentiment",
+        details: error instanceof Error ? error.message : String(error),
+      }),
+      { status: 500 },
+    );
+  }
 }
 
-// Function to invoke model using S3 data
-const invokeModel = async (selectedCompany, selectedQuarter, selectedYear) => {
-    try {
-        const ticker = selectedCompany.ticker;
-        const quarter = quarters[selectedQuarter];
+// Save JSON locally
+async function saveLocally(filePath, data) {
+  const dirPath = path.dirname(filePath);
+  if (!fs.existsSync(dirPath)) fs.mkdirSync(dirPath, { recursive: true });
+  fs.writeFileSync(filePath, JSON.stringify(data, null, 2), "utf-8");
+}
 
-        if (!ticker || !quarter || !selectedYear) {
-            throw new Error("Invalid parameters provided to invokeModel.");
-        }
+// OpenAI structured sentiment
+async function generateStructuredSentiment(transcriptData) {
+  // Format a section
+  const formatSection = (title, entries) => {
+    return [
+      `=== ${title} ===`,
+      ...entries.map(
+        (e) => `${e.speaker}${e.title ? " — " + e.title : ""}: ${e.text}`,
+      ),
+    ].join("\n\n");
+  };
 
-        console.log(`Fetching S3 data for ${ticker}, Q${quarter} ${selectedYear}`);
-        // s3://earnings-calls-transcripts/sentiment_analysis/SOFI/2024/
-        // Construct S3 URI
-        const s3Uri = `s3://earnings-calls-transcripts/sentiment_analysis/${ticker}/${selectedYear}/Q${quarter}.txt`;
-        const { bucketName, objectKey } = parseS3Uri(s3Uri);
+  // Combine both sections
+  const combinedText = [
+    formatSection("Presentation", transcriptData.presentation),
+    formatSection("Q&A Session", transcriptData.qa_session),
+  ].join("\n\n");
 
-        // Fetch transcript from S3
-        return await invokeModelWithS3Prompt(bucketName, objectKey);
-    } catch (error) {
-        console.error("Error in invokeModel:", error);
-        return "Error fetching model data";
-    }
-};
+  console.log(
+    "Generating sentiment for:",
+    transcriptData.metadata.ticker,
+    transcriptData.metadata.quarter,
+    transcriptData.metadata.year,
+  );
+  console.log("Transcript length (chars):", combinedText.length);
 
-// Convert S3 data stream to string
-const streamToString = async (stream) => {
-    return new Promise((resolve, reject) => {
-        let data = "";
-        stream.on("data", (chunk) => (data += chunk));
-        stream.on("end", () => resolve(data));
-        stream.on("error", reject);
-    });
-};
+  console.log("Transcript sample:", combinedText.slice(0, 500));
 
-// Fetch data from S3
-const fetchS3Data = async (bucketName, objectKey) => {
-    try {
-        const command = new GetObjectCommand({ Bucket: bucketName, Key: objectKey });
-        const { Body } = await s3Client.send(command);
-        if (!Body) throw new Error(`S3 object ${objectKey} is empty or not found`);
-        return await streamToString(Body);
-    } catch (error) {
-        console.error("Error fetching S3 object:", error);
-        return `Error: Unable to retrieve S3 data for ${bucketName}/${objectKey}`;
-    }
-};
+  const prompt = `
+You are a financial analyst. Given the following earnings transcript, provide a structured JSON output with:
+- label: Positive, Neutral, or Negative
+- confidence: float number between 0 and 1
+- reasoning: 1-2 sentences explaining the sentiment
 
-// Invoke Bedrock Model with Stream (for future model integration)
-const invokeModelWithS3Prompt = async (bucketName, objectKey) => {
-    try {
-        // Fetch transcript from S3
-        const transcript = await fetchS3Data(bucketName, objectKey);
-        if (!transcript) throw new Error("Transcript is empty");
+Transcript:
+${combinedText}
 
-        console.log("Successfully retrieved transcript:", transcript.slice(0, 100), "...");
+Respond ONLY with JSON.
+`;
+  const completion = await openai.chat.completions.create({
+    model: "nvidia/nemotron-3-nano-30b-a3b:free",
+    messages: [{ role: "user", content: prompt }],
+    temperature: 0.2,
+  });
 
-        return transcript; // Returning the transcript for now
-    } catch (error) {
-        console.error("Error invoking model:", error);
-        return "Error processing model request";
-    }
-};
+  const responseText = completion.choices[0].message?.content || "";
 
-// Parse S3 URI to get bucket name and object key
-const parseS3Uri = (s3Uri) => {
-    const parts = s3Uri.replace("s3://", "").split("/");
-    return {
-        bucketName: parts.shift(), // First part is the bucket name
-        objectKey: parts.join("/"), // Remaining parts form the object key
+  // Try parsing GPT output safely
+  let sentimentJson = {};
+  try {
+    sentimentJson = JSON.parse(responseText);
+  } catch {
+    sentimentJson = {
+      label: "Neutral",
+      confidence: 0.5,
+      reasoning: responseText.slice(0, 200), // fallback
     };
-};
+  }
+
+  return {
+    ticker: transcriptData.metadata.ticker,
+    quarter: transcriptData.metadata.quarter,
+    year: transcriptData.metadata.year,
+    sentiment_analysis: sentimentJson,
+    generated_at: new Date().toISOString(),
+  };
+}
