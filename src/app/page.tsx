@@ -1,18 +1,17 @@
-'use client';
+"use client";
 
-import { motion } from 'framer-motion';
-import { ArrowRight } from 'lucide-react';
-import { useState, useContext } from 'react';
-import Image from 'next/image';
-import { Button } from './components/ui/button';
-import { Input } from './components/ui/input';
-import VideoPlay from './components/home/homepage/VideoPlay';
-import TabComponent from './components/home/homepage/TabComponent';
-import { ParentContext } from './layout';
-import ChatStep from './components/home/homepage/EarningsAssitant';
-import CompaniesCarousel from './components/home/homepage/CompaniesCarousel';
-import Footer from './components/home/homepage/Footer';
-import AIVoiceAssistant from './components/AIVoiceAssistant';
+import { motion } from "framer-motion";
+import { ArrowRight } from "lucide-react";
+import { useState, useContext } from "react";
+import Image from "next/image";
+import { Button } from "./components/ui/button";
+import { Input } from "./components/ui/input";
+import VideoPlay from "./components/home/homepage/VideoPlay";
+import TabComponent from "./components/home/homepage/TabComponent";
+import { ParentContext } from "./layout";
+import ChatStep from "./components/home/homepage/EarningsAssitant";
+import CompaniesCarousel from "./components/home/homepage/CompaniesCarousel";
+import Footer from "./components/home/homepage/Footer";
 
 export default function LandingPage() {
   const { setIsLoginOpen, isVoiceAssistantOpen, setIsVoiceAssistantOpen } =
@@ -56,7 +55,7 @@ export default function LandingPage() {
             <motion.div
               initial={{ x: 0 }}
               whileHover={{ x: 8 }} // Moves smoothly when hovered
-              transition={{ type: 'spring', stiffness: 150, damping: 12 }}
+              transition={{ type: "spring", stiffness: 150, damping: 12 }}
               className="group-hover:translate-x-2"
             >
               <ArrowRight className="w-4 sm:w-5 h-4 sm:h-5" />
