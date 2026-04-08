@@ -1,5 +1,12 @@
 "use client";
-import { Mic, Send, ChevronDown, SendHorizonalIcon, X } from "lucide-react";
+import {
+  Mic,
+  Send,
+  ChevronDown,
+  SendHorizonalIcon,
+  X,
+  ChevronRight,
+} from "lucide-react";
 import React, { useState, useEffect, useRef } from "react";
 import Head from "next/head";
 import { useDispatch, useSelector } from "react-redux";
@@ -20,6 +27,7 @@ import { setFilterConfig } from "../../../store/sidebarSlice";
 import VoiceRecorder from "@/components/ui/voice-input";
 import { createPortal } from "react-dom";
 import { Button } from "@/components/ui/button";
+import TranscriptSearch from "@/components/SearchTranscripts";
 
 const options = Object.entries(suggestedQuestions).map(([category, data]) => ({
   label: category,
@@ -172,39 +180,68 @@ export default function AggregateDashboard() {
   };
 
   return (
-    <div className="flex flex-col h-full bg-white text-gray-800">
+    <div
+      className="flex flex-col h-full"
+      style={{ background: "var(--background)", color: "var(--foreground)" }}
+    >
       <Head>
         <title>Aggregate Business Insights</title>
       </Head>
 
       <div className="container mx-auto p-6">
         <div className="mt-6 mb-6">
-          <label className="block text-sm font-semibold text-gray-600 mb-2">
+          <label
+            className="block text-sm font-semibold mb-2"
+            style={{ color: "var(--muted-foreground)" }}
+          >
             Category
           </label>
           <SelectWithSubmenu
-            className="w-full border border-gray-300 rounded-lg p-2 focus:ring-2 focus:ring-blue-400"
+            className="w-full rounded-lg p-2 focus:ring-2 transition-all"
+            style={{
+              border: `1px solid var(--border)`,
+              background: "var(--background)",
+              color: "var(--foreground)",
+            }}
             handleCategoryChange={handleCategoryChange}
             handleButtonClick={handleButtonClick}
           />
         </div>
 
+        {/* <TranscriptSearch /> */}
+
+        {/* Commented out button - kept for reference */}
         {/* <button
           onClick={() => setIsChatOpen(true)}
-          className="mb-4 px-4 py-2 bg-purple-600 text-white rounded-lg hover:bg-purple-700 transition duration-300"
+          className="mb-4 px-4 py-2 rounded-lg transition duration-300"
+          style={{
+            background: "linear-gradient(135deg, var(--primary) 0%, var(--secondary) 100%)",
+            color: "var(--primary-foreground)",
+          }}
         >
           Upload Earnings Call Transcripts
         </button> */}
 
-        <div className="h-[55vh] overflow-y-auto bg-purple-50 shadow-md rounded-2xl p-6 space-y-4 border border-purple-200">
+        <div
+          className="h-[55vh] overflow-y-auto shadow-md rounded-2xl p-6 space-y-4"
+          style={{
+            background: "var(--muted)",
+            border: `1px solid var(--border)`,
+          }}
+        >
           {chats.map((chat, index) => (
             <div
               key={index}
               className={`w-full p-4 rounded-xl shadow-sm border transition-transform duration-300 ${
                 chat.role === "user"
-                  ? "bg-purple-100 text-purple-800"
-                  : "bg-white text-gray-700"
+                  ? "bg-gradient-to-r from-primary/10 to-secondary/10"
+                  : "bg-card"
               }`}
+              style={{
+                borderColor: "var(--border)",
+                color:
+                  chat.role === "user" ? "var(--primary)" : "var(--foreground)",
+              }}
             >
               <div className="prose ml-4 leading-relaxed font-medium break-words">
                 <ReactMarkdown
@@ -219,7 +256,10 @@ export default function AggregateDashboard() {
 
           {isLoading && (
             <div className="flex justify-center items-center mt-4">
-              <div className="animate-spin h-10 w-10 border-t-4 border-purple-500 rounded-full"></div>
+              <div
+                className="animate-spin h-10 w-10 rounded-full border-t-4"
+                style={{ borderTopColor: "var(--primary)" }}
+              ></div>
             </div>
           )}
           <div ref={messagesEndRef} />
@@ -464,34 +504,63 @@ const SelectWithSubmenu = ({
       <Menu as="div" className="relative" open={isOpen} onChange={setIsOpen}>
         <MenuButton
           onClick={() => setIsOpen(!isOpen)}
-          className={`${className} px-5 py-2 rounded-md bg-purple-100 text-purple-700 border border-purple-300 shadow-sm hover:bg-purple-200 transition duration-200 outline-none focus:ring-0 focus:ring-purple-400`}
+          className={`${className} px-5 py-2.5 rounded-xl transition-all duration-200 outline-none focus:ring-2 focus:ring-offset-0 group`}
+          style={{
+            background: isOpen
+              ? "rgba(37, 99, 235, 0.15)"
+              : "rgba(37, 99, 235, 0.08)",
+            color: "var(--primary)",
+            border: `1px solid ${isOpen ? "var(--primary)" : "rgba(37, 99, 235, 0.3)"}`,
+            boxShadow: isOpen ? "0 0 0 3px rgba(37, 99, 235, 0.1)" : "none",
+          }}
         >
-          <div className="flex items-center justify-between">
-            <span className="w-[12.5rem] truncate">
+          <div className="flex items-center justify-between gap-3">
+            <span
+              className="max-w-[12rem] truncate text-sm font-medium"
+              style={{ color: "var(--foreground)" }}
+            >
               {selected || "Select a question"}
             </span>
-            <ChevronDown size={20} className="text-purple-500" />
+            <ChevronDown
+              size={18}
+              style={{ color: "var(--primary)" }}
+              className={`transition-all duration-200 ${isOpen ? "rotate-180" : ""}`}
+            />
           </div>
         </MenuButton>
 
         {isOpen && (
-          <div className="absolute z-50 mt-2 w-64 rounded-lg bg-white shadow-lg border border-purple-200 overflow-hidden">
-            <div className="max-h-[55vh] overflow-y-auto">
+          <div
+            className="absolute z-50 mt-2 min-w-[16rem] rounded-xl shadow-xl overflow-hidden animate-in fade-in zoom-in-95 duration-200"
+            style={{
+              background: "var(--background)",
+              border: `1px solid var(--border)`,
+            }}
+          >
+            <div className="max-h-[55vh] overflow-y-auto py-1">
               {options?.map((option) => (
                 <div key={option.value} className="relative">
                   {option.submenu ? (
                     <>
-                      {/* Main Option */}
+                      {/* Main Option with Submenu Indicator */}
                       <button
                         ref={(el) =>
                           (parentOptionRef.current[option.value] = el)
                         }
                         onMouseEnter={() => openSubmenuWithDelay(option.value)}
                         onMouseLeave={closeSubmenuWithDelay}
-                        className="w-full text-left px-4 py-2 hover:bg-purple-100 font-medium text-purple-700 transition duration-150 text-sm"
+                        className="w-full text-left px-4 py-2.5 font-medium transition-all duration-150 text-sm flex items-center justify-between group"
+                        style={{
+                          color: "var(--foreground)",
+                        }}
                         title={option.label}
                       >
-                        {option.label}
+                        <span>{option.label}</span>
+                        <ChevronRight
+                          size={14}
+                          style={{ color: "var(--muted-foreground)" }}
+                          className="group-hover:translate-x-0.5 transition-transform duration-200"
+                        />
                       </button>
 
                       {/* Submenu */}
@@ -499,7 +568,7 @@ const SelectWithSubmenu = ({
                         createPortal(
                           <div
                             ref={submenuRef}
-                            className="absolute z-50 bg-white border border-purple-300 rounded-lg shadow-md overflow-y-auto max-w-[60vw] text-sm"
+                            className="absolute z-50 rounded-xl shadow-xl overflow-y-auto max-w-[80vw] min-w-[14rem] animate-in fade-in zoom-in-95 duration-150"
                             style={{
                               position: "fixed",
                               top:
@@ -510,26 +579,35 @@ const SelectWithSubmenu = ({
                                 parentOptionRef.current[
                                   option.value
                                 ]?.getBoundingClientRect().right || 0,
+                              background: "var(--background)",
+                              border: `1px solid var(--border)`,
                             }}
                             onMouseEnter={() =>
                               openSubmenuWithDelay(option.value)
                             }
                             onMouseLeave={closeSubmenuWithDelay}
                           >
-                            {option?.submenu?.map((subOption) => (
-                              <button
-                                key={subOption.value}
-                                onClick={() => {
-                                  handleSelect(option.value);
-                                  handleCategoryChange(option.value);
-                                  handleButtonClick(subOption.value);
-                                }}
-                                className="block w-full px-4 py-3 text-left text-purple-700 hover:bg-purple-100 transition duration-150"
-                                title={subOption.label}
-                              >
-                                {subOption.label}
-                              </button>
-                            ))}
+                            <div className="py-1">
+                              {option?.submenu?.map((subOption) => (
+                                <button
+                                  key={subOption.value}
+                                  onClick={() => {
+                                    handleSelect(option.value);
+                                    handleCategoryChange(option.value);
+                                    handleButtonClick(subOption.value);
+                                    setIsOpen(false);
+                                  }}
+                                  className="block w-full px-4 py-2.5 text-left transition-all duration-150 hover:scale-[1.02] text-sm"
+                                  style={{
+                                    color: "var(--foreground)",
+                                    background: "transparent",
+                                  }}
+                                  title={subOption.label}
+                                >
+                                  {subOption.label}
+                                </button>
+                              ))}
+                            </div>
                           </div>,
                           document.body,
                         )}
@@ -538,13 +616,31 @@ const SelectWithSubmenu = ({
                     <MenuItem>
                       {({ active }) => (
                         <button
-                          onClick={() => handleSelect(option.value)}
-                          className={`${
-                            active ? "bg-purple-100" : ""
-                          } block w-full px-4 py-3 text-left text-purple-700 hover:bg-purple-100 transition duration-150`}
+                          onClick={() => {
+                            handleSelect(option.value);
+                            setIsOpen(false);
+                          }}
+                          className={`block w-full px-4 py-2.5 text-left transition-all duration-150 text-sm ${
+                            active ? "scale-[1.02]" : ""
+                          }`}
+                          style={{
+                            background: active
+                              ? "rgba(37, 99, 235, 0.08)"
+                              : "transparent",
+                            color: active
+                              ? "var(--primary)"
+                              : "var(--foreground)",
+                          }}
                           title={option.label}
                         >
-                          {option.label}
+                          <div className="flex items-center gap-2">
+                            {option.icon && (
+                              <span style={{ color: "var(--primary)" }}>
+                                {option.icon}
+                              </span>
+                            )}
+                            <span>{option.label}</span>
+                          </div>
                         </button>
                       )}
                     </MenuItem>
@@ -568,25 +664,77 @@ function BusinessInsightsForm({
   return (
     <form
       onSubmit={onSubmit}
-      className="mt-6 flex items-center bg-white rounded-full border border-gray-300 shadow-md focus-within:border-purple-600 transition-all"
+      className="mt-6 flex items-center rounded-full shadow-lg transition-all duration-300 focus-within:shadow-xl relative group"
+      style={{
+        background: "var(--background)",
+        border: `1px solid var(--border)`,
+      }}
     >
+      {/* Animated border gradient on focus */}
+      <div
+        className="absolute inset-0 rounded-full opacity-0 group-focus-within:opacity-100 transition-opacity duration-300 pointer-events-none"
+        style={{
+          background:
+            "linear-gradient(135deg, var(--primary), var(--secondary), var(--tertiary))",
+          padding: "2px",
+          borderRadius: "9999px",
+          mask: "linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0)",
+          WebkitMask:
+            "linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0)",
+          WebkitMaskComposite: "xor",
+          maskComposite: "exclude",
+        }}
+      />
+
       {/* Input */}
       <input
         type="text"
         value={inputValue}
         onChange={onChange}
         placeholder="Ask about business insights..."
-        className="flex-1 px-4 py-3 bg-transparent text-gray-800 outline-none placeholder-gray-400 rounded-l-full"
+        className="flex-1 px-5 py-3.5 bg-transparent outline-none rounded-l-full text-sm relative z-10"
+        style={{
+          color: "var(--foreground)",
+        }}
       />
 
-      {/* Mic Button */}
+      {/* Character Counter (Optional) */}
+      {inputValue.length > 0 && (
+        <div
+          className="text-xs px-2 relative z-10"
+          style={{ color: "var(--muted-foreground)" }}
+        >
+          {inputValue.length}/500
+        </div>
+      )}
 
-      <VoiceRecorder onVoiceInput={onVoiceInput}></VoiceRecorder>
+      {/* Mic Button */}
+      <div className="relative z-10">
+        <VoiceRecorder onVoiceInput={onVoiceInput} />
+      </div>
+
+      {/* Divider */}
+      <div
+        className="w-px h-6 mx-1 relative z-10"
+        style={{ background: "var(--border)" }}
+      />
 
       {/* Send Button */}
       <button
         type="submit"
-        className="p-3 bg-purple-800 hover:bg-purple-600 transition duration-300 rounded-full text-white"
+        className="p-2.5 mr-1.5 transition-all duration-300 rounded-full hover:scale-105 active:scale-95 disabled:opacity-50 disabled:cursor-not-allowed disabled:hover:scale-100 relative z-10"
+        style={{
+          background: inputValue.trim()
+            ? "linear-gradient(135deg, var(--primary) 0%, var(--secondary) 100%)"
+            : "var(--muted)",
+          color: inputValue.trim()
+            ? "var(--primary-foreground)"
+            : "var(--muted-foreground)",
+          boxShadow: inputValue.trim()
+            ? "0 4px 12px rgba(37, 99, 235, 0.3)"
+            : "none",
+        }}
+        disabled={!inputValue.trim()}
       >
         <Send className="w-5 h-5" />
       </button>

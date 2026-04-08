@@ -18,15 +18,15 @@ const Pie = dynamic(() => import("react-chartjs-2").then((mod) => mod.Pie), {
 });
 const Doughnut = dynamic(
   () => import("react-chartjs-2").then((mod) => mod.Doughnut),
-  { ssr: false }
+  { ssr: false },
 );
 const Scatter = dynamic(
   () => import("react-chartjs-2").then((mod) => mod.Scatter),
-  { ssr: false }
+  { ssr: false },
 );
 const Bubble = dynamic(
   () => import("react-chartjs-2").then((mod) => mod.Bubble),
-  { ssr: false }
+  { ssr: false },
 );
 
 // 🛠️ Register Chart.js Components (Ensures Charts Work Properly)
@@ -58,12 +58,11 @@ const useRegisterChartJS = () => {
         Tooltip,
         Legend,
         Filler,
-        ArcElement
+        ArcElement,
       );
     });
   }, []);
 };
-
 
 // 🎨 Theme Colors
 const COLORS = [
@@ -88,8 +87,8 @@ interface Props {
   chartType: string;
   chartTitle: string;
   chartInsights: string;
-  chartData:any;
-  setChartData:any;
+  chartData: any;
+  setChartData: any;
   userPrompts: any;
   setUserPrompts: any;
 }
@@ -103,7 +102,7 @@ const DynamicChart = ({
   chartData,
   setChartData,
   userPrompts,
-  setUserPrompts
+  setUserPrompts,
 }: Props) => {
   const [isClient, setIsClient] = useState(false);
   const [isDrawerOpen, setIsDrawerOpen] = useState(false);
@@ -156,7 +155,7 @@ const DynamicChart = ({
         {/* 🔍 Expand Icon */}
         <button
           onClick={() => setIsDrawerOpen(true)}
-          className="absolute top-4 right-4 text-gray-500 hover:text-purple-800"
+          className="absolute top-4 right-4 text-gray-500 hover:text-blue-800"
         >
           <Maximize2Icon className="h-5 w-5" />
         </button>

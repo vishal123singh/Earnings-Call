@@ -3,7 +3,6 @@ import { Card, CardContent } from "@/components/ui/card";
 import { useEffect, useState } from "react";
 import DOMPurify from "dompurify";
 import FinancialMetricsCard from "@/components/ui/financial-metrics";
-import MarketMetrics from "@/components/ui/market-metrics";
 import ChatBox from "@/components/ui/chatbox";
 import "./styles.css";
 import { Inter } from "next/font/google";
@@ -11,8 +10,6 @@ import { useSelector } from "react-redux";
 import ProfitabilityCard from "@/components/ui/profitabilityCard";
 import LiquidityCard from "@/components/ui/liquidityCard";
 import EarningsCard from "@/components/ui/EarningsCard";
-import AnalystCard from "@/components/AnalystCard";
-// import TechnicalCard from "@/components/TechnicalCard";
 
 const inter = Inter({ subsets: ["latin"], weight: ["400"] });
 
@@ -39,7 +36,7 @@ export default function SentimentAnalysis() {
 
   useEffect(() => {
     if (selectedCompanies.length > 0 && selectedYear && selectedQuarter) {
-      getFinancialMetricsData();
+      //getFinancialMetricsData();
       getSentimentAnalysis();
     }
   }, [selectedCompanies, selectedYear, selectedQuarter]);
@@ -99,11 +96,11 @@ export default function SentimentAnalysis() {
   };
 
   return (
-    <div className="flex flex-col bg-purple-50 px-6 py-6 space-y-6 min-h-screen">
+    <div className="flex flex-col bg-background px-6 py-6 space-y-6 min-h-screen">
       {/* Financial & Market Metrics */}
       {isChartsLoading ? (
         <div className="flex justify-center items-center h-32 text-gray-400">
-          Loading charts...
+          Loading financial metrics...
         </div>
       ) : selectedCompanies?.length ? (
         <div className="grid grid-cols-1 lg:grid-cols-1 gap-6">
@@ -115,23 +112,16 @@ export default function SentimentAnalysis() {
             year={selectedYear}
             quarter={selectedQuarter}
           />
-          {/* <AnalystCard ticker={selectedCompanies[0]} /> */}
-          {/* <TechnicalCard ticker={selectedCompanies[0]} /> */}
-
-          {/* <MarketMetrics
-            financialMetricsData={financialMetricsData}
-            isLoading={isChartsLoading}
-          /> */}
         </div>
       ) : null}
 
       {/* Sentiment Analysis Card */}
       {isSentimentsLoading ? (
         <div className="flex justify-center items-center py-4">
-          <div className="animate-spin rounded-full h-12 w-12 border-t-4 border-purple-600"></div>
+          <div className="animate-spin rounded-full h-12 w-12 border-t-4 border-primary"></div>
         </div>
       ) : (
-        <Card className="bg-white shadow-md border border-[#e5e7eb] rounded-xl backdrop-blur-lg">
+        <Card className="bg-background shadow-md border border-[#e5e7eb] rounded-xl backdrop-blur-lg">
           <CardContent className="py-4">
             {content.trim().length ? (
               <FormattedContent text={content} />

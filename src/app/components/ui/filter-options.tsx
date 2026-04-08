@@ -49,60 +49,68 @@ const models: OptionType[] = [
   },
 ];
 
-// Custom Styles for Select
+// Custom Styles for Select using CSS variables
 const customStyles: StylesConfig<OptionType, true> = {
   control: (base, state) => ({
     ...base,
-    backgroundColor: "#fff",
-    borderColor: state.isFocused ? "#a855f7" : "#e5e7eb",
-    color: "#111827",
+    backgroundColor: "var(--background)",
+    borderColor: state.isFocused ? "var(--primary)" : "var(--border)",
+    color: "var(--foreground)",
     borderRadius: "0.75rem",
-    boxShadow: state.isFocused ? "0 0 12px rgba(168, 85, 247, 0.3)" : "none",
+    boxShadow: state.isFocused ? `0 0 12px rgba(37, 99, 235, 0.3)` : "none",
     transition: "border-color 0.2s ease, box-shadow 0.2s ease",
     "&:hover": {
-      borderColor: "#a855f7",
+      borderColor: "var(--primary)",
     },
   }),
   menu: (base) => ({
     ...base,
-    backgroundColor: "#fafafa",
+    backgroundColor: "var(--background)",
     borderRadius: "0.75rem",
     boxShadow: "0 4px 12px rgba(0, 0, 0, 0.1)",
   }),
   option: (base, state) => ({
     ...base,
     backgroundColor: state.isSelected
-      ? "#a855f7"
+      ? "var(--primary)"
       : state.isFocused
-        ? "#f3e8ff"
-        : "#ffffff",
-    color: state.isSelected ? "#ffffff" : "#111827",
+        ? "rgba(37, 99, 235, 0.1)"
+        : "var(--background)",
+    color: state.isSelected ? "var(--primary-foreground)" : "var(--foreground)",
     "&:hover": {
-      backgroundColor: "#f3e8ff",
-      color: "#111827",
+      backgroundColor: "rgba(37, 99, 235, 0.1)",
+      color: "var(--foreground)",
     },
     transition: "background-color 0.2s ease, color 0.2s ease",
   }),
   singleValue: (base) => ({
     ...base,
-    color: "#6b7280",
+    color: "var(--muted-foreground)",
   }),
   multiValue: (base) => ({
     ...base,
-    backgroundColor: "#f3e8ff",
+    backgroundColor: "rgba(37, 99, 235, 0.1)",
     borderRadius: "0.5rem",
   }),
   multiValueLabel: (base) => ({
     ...base,
-    color: "#9333ea",
+    color: "var(--primary)",
   }),
   multiValueRemove: (base) => ({
     ...base,
-    color: "#9333ea",
+    color: "var(--primary)",
     "&:hover": {
-      backgroundColor: "#f3e8ff",
-      color: "#9333ea",
+      backgroundColor: "rgba(37, 99, 235, 0.2)",
+      color: "var(--primary)",
     },
+  }),
+  placeholder: (base) => ({
+    ...base,
+    color: "var(--muted-foreground)",
+  }),
+  input: (base) => ({
+    ...base,
+    color: "var(--foreground)",
   }),
 };
 
@@ -208,11 +216,17 @@ const FilterOptions = () => {
     <div
       className={`transition-all duration-300 ${
         !collapsed ? "p-8 opacity-100 space-y-6" : "p-0 opacity-0"
-      } bg-white border border-gray-200 shadow-lg h-screen overflow-hidden`}
+      } h-full overflow-y-auto`}
+      style={{
+        background: "var(--sidebar)",
+      }}
     >
       {/* Company Multi-Select */}
       <div>
-        <label className="text-sm font-medium text-gray-800 block mb-2">
+        <label
+          className="text-sm font-medium block mb-2"
+          style={{ color: "var(--sidebar-foreground)" }}
+        >
           Company
         </label>
         <Select
@@ -233,14 +247,7 @@ const FilterOptions = () => {
           styles={customStyles}
           formatOptionLabel={(option: OptionType) => (
             <div className="flex items-center">
-              {/* {option.logo && (
-                <img
-                  src={option.logo}
-                  alt={option.label}
-                  className="w-6 h-6 mr-2 rounded-full"
-                />
-              )} */}
-              <span>{option.label}</span>
+              <span style={{ color: "var(--foreground)" }}>{option.label}</span>
             </div>
           )}
         />
@@ -248,7 +255,10 @@ const FilterOptions = () => {
 
       {/* Year Select */}
       <div>
-        <label className="text-sm font-medium text-gray-600 block mb-2">
+        <label
+          className="text-sm font-medium block mb-2"
+          style={{ color: "var(--sidebar-foreground)" }}
+        >
           Year
         </label>
         <Select
@@ -272,7 +282,10 @@ const FilterOptions = () => {
 
       {/* Quarter Select */}
       <div>
-        <label className="text-sm font-medium text-gray-600 block mb-2">
+        <label
+          className="text-sm font-medium block mb-2"
+          style={{ color: "var(--sidebar-foreground)" }}
+        >
           Quarter
         </label>
         <Select
@@ -298,7 +311,10 @@ const FilterOptions = () => {
 
       {/* Persona Select */}
       <div>
-        <label className="text-sm font-medium text-gray-600 block mb-2">
+        <label
+          className="text-sm font-medium block mb-2"
+          style={{ color: "var(--sidebar-foreground)" }}
+        >
           Persona
         </label>
         <Select
@@ -318,7 +334,10 @@ const FilterOptions = () => {
 
       {/* Model Select */}
       <div>
-        <label className="text-sm font-medium text-gray-600 block mb-2">
+        <label
+          className="text-sm font-medium block mb-2"
+          style={{ color: "var(--sidebar-foreground)" }}
+        >
           Model
         </label>
         <Select
@@ -337,6 +356,31 @@ const FilterOptions = () => {
           styles={customStyles}
         />
       </div>
+
+      {/* Apply Filters Button */}
+      <button
+        className="w-full py-2.5 rounded-lg font-semibold text-sm transition-all hover:translate-y-[-2px]"
+        style={{
+          background:
+            "linear-gradient(135deg, var(--primary) 0%, var(--secondary) 100%)",
+          color: "var(--primary-foreground)",
+          boxShadow: "0 4px 12px rgba(37, 99, 235, 0.25)",
+        }}
+      >
+        Apply Filters
+      </button>
+
+      {/* Reset Button */}
+      <button
+        className="w-full py-2.5 rounded-lg font-semibold text-sm transition-all hover:translate-y-[-2px]"
+        style={{
+          background: "transparent",
+          color: "var(--muted-foreground)",
+          border: `1px solid var(--border)`,
+        }}
+      >
+        Reset All
+      </button>
     </div>
   );
 };

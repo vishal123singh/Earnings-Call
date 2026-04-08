@@ -50,10 +50,8 @@ export default function EarningsCard({ ticker, year, quarter }: Props) {
   if (!data) return null;
 
   return (
-    <div className="bg-white p-4 rounded-xl shadow-md">
-      <h2 className="text-lg font-semibold text-purple-700">
-        {ticker} Earnings
-      </h2>
+    <div className="bg-background p-4 rounded-xl shadow-md">
+      <h2 className="text-lg font-semibold text-primary">{ticker} Earnings</h2>
       <div className="grid grid-cols-2 gap-2 mt-2">
         <Metric
           label="Revenue"

@@ -7,8 +7,9 @@ import { useSelector } from "react-redux";
 import { ParentContext } from "@/layout";
 
 const AIVoiceAssistant: React.FC = () => {
-    const { isVoiceAssistantOpen, setIsVoiceAssistantOpen } = useContext(ParentContext)
-  
+  const { isVoiceAssistantOpen, setIsVoiceAssistantOpen } =
+    useContext(ParentContext);
+
   const [isResponseOpen, setIsResponseOpen] = useState<boolean>(false);
   const [transcript, setTranscript] = useState<string>("");
   const [response, setResponse] = useState<string>("");
@@ -18,32 +19,28 @@ const AIVoiceAssistant: React.FC = () => {
   const [isLoading, setIsLoading] = useState<boolean>(false);
 
   const speechRef = useRef<SpeechSynthesisUtterance | null>(null);
-  const messageEndRef=useRef(null);
+  const messageEndRef = useRef(null);
 
-   // Correctly type the state with RootState
-   const selectedCompanies = useSelector(
-    (state: any) => state.sidebar.selectedCompanies
+  // Correctly type the state with RootState
+  const selectedCompanies = useSelector(
+    (state: any) => state.sidebar.selectedCompanies,
   );
-  const selectedYear = useSelector(
-    (state: any) => state.sidebar.selectedYear
-  );
+  const selectedYear = useSelector((state: any) => state.sidebar.selectedYear);
   const selectedQuarter = useSelector(
-    (state: any) => state.sidebar.selectedQuarter
+    (state: any) => state.sidebar.selectedQuarter,
   );
 
-  const selectedPersona = useSelector(
-    (state: any) => state.sidebar.persona
-  );
+  const selectedPersona = useSelector((state: any) => state.sidebar.persona);
 
   const selectedModal = useSelector(
-    (state: any) => state.sidebar.foundationModel
+    (state: any) => state.sidebar.foundationModel,
   );
 
-useEffect(()=>{
-if(messageEndRef.current){
-  (messageEndRef.current as any).scrollIntoView({behavior:"smooth"})
-}
-},[response])
+  useEffect(() => {
+    if (messageEndRef.current) {
+      (messageEndRef.current as any).scrollIntoView({ behavior: "smooth" });
+    }
+  }, [response]);
   // 🎙️ Load voices and greet when the modal opens
   useEffect(() => {
     if (isVoiceAssistantOpen) {
@@ -51,7 +48,6 @@ if(messageEndRef.current){
     } else {
       resetChat();
     }
-    
   }, [isVoiceAssistantOpen]);
   // 🎙️ Load available voices and greet
   const loadVoicesAndGreet = () => {
@@ -60,8 +56,8 @@ if(messageEndRef.current){
       const femaleVoice =
         voices.find((v) =>
           ["female", "Google UK English Female", "Google US English"].some(
-            (name) => v.name.includes(name)
-          )
+            (name) => v.name.includes(name),
+          ),
         ) || voices[0];
 
       setVoice(femaleVoice);
@@ -126,7 +122,13 @@ if(messageEndRef.current){
       const response = await fetch("/api/ai-voice-assistant", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ query ,selectedCompanies,selectedYear,selectedQuarter,selectedPersona}),
+        body: JSON.stringify({
+          query,
+          selectedCompanies,
+          selectedYear,
+          selectedQuarter,
+          selectedPersona,
+        }),
       });
 
       const reader = response.body?.getReader();
@@ -162,7 +164,10 @@ if(messageEndRef.current){
   };
 
   // 🔊 Text-to-Speech (Speak AI Response)
-  const speakResponse = (text: string, selectedVoice: SpeechSynthesisVoice | null) => {
+  const speakResponse = (
+    text: string,
+    selectedVoice: SpeechSynthesisVoice | null,
+  ) => {
     if (!("speechSynthesis" in window)) {
       alert("Text-to-speech is not supported in this browser.");
       return;
@@ -200,7 +205,6 @@ if(messageEndRef.current){
 
   return (
     <>
-     
       {/* Voice Assistant Modal */}
       <AnimatePresence>
         {isVoiceAssistantOpen && (
@@ -242,7 +246,7 @@ if(messageEndRef.current){
                   onClick={() => setIsListening(!isListening)}
                   className={`p-4 rounded-full bg-gradient-to-r ${
                     isListening
-                      ? "from-pink-500 to-purple-500"
+                      ? "from-pink-500 to-blue-500"
                       : "from-gray-300 to-gray-400"
                   } shadow-lg hover:shadow-xl transition-all duration-300`}
                 >
@@ -252,7 +256,7 @@ if(messageEndRef.current){
                 {isSpeaking && (
                   <SpeakerIcon
                     size={24}
-                    className="text-purple-500 animate-bounce"
+                    className="text-blue-500 animate-bounce"
                   />
                 )}
               </div>
@@ -261,8 +265,8 @@ if(messageEndRef.current){
         )}
       </AnimatePresence>
 
-     {/* AI Response Modal with Streaming */}
-     <AnimatePresence>
+      {/* AI Response Modal with Streaming */}
+      <AnimatePresence>
         {isResponseOpen && (
           <motion.div
             initial={{ y: 50, opacity: 0 }}
@@ -285,8 +289,8 @@ if(messageEndRef.current){
             {/* Markdown Response Streaming */}
             <div className="bg-gray-50 p-3 rounded-lg text-sm text-gray-700 min-h-[60px] mb-4 max-h-[420px] overflow-y-auto">
               {isLoading && response === "" ? (
-                <div className="flex items-center justify-center text-purple-500">
-                  <div className="animate-spin h-5 w-5 border-t-2 border-purple-500 rounded-full mr-2"></div>
+                <div className="flex items-center justify-center text-blue-500">
+                  <div className="animate-spin h-5 w-5 border-t-2 border-blue-500 rounded-full mr-2"></div>
                   <span>Waiting for response...</span>
                 </div>
               ) : (

@@ -29,7 +29,7 @@ const SUGGESTIONS = [
 
 const Spinner = () => (
   <div className="flex justify-center items-center">
-    <div className="animate-spin rounded-full h-12 w-12 border-t-2 border-purple-600"></div>
+    <div className="animate-spin rounded-full h-12 w-12 border-t-2 border-blue-600"></div>
   </div>
 );
 
@@ -138,13 +138,13 @@ const ChartCreator = ({
     <div className="h-full">
       <div className="grid grid-cols-1 md:grid-cols-2 gap-6 h-full">
         <div className="flex flex-col space-y-4 h-[100%]">
-          <div className="flex-grow max-h-[50vh] overflow-y-auto border border-gray-200 bg-gradient-to-br from-white to-purple-50 rounded-2xl p-4 shadow-sm hover:shadow-lg transition-all duration-300">
+          <div className="flex-grow max-h-[50vh] overflow-y-auto border border-gray-200 bg-gradient-to-br from-white to-blue-50 rounded-2xl p-4 shadow-sm hover:shadow-lg transition-all duration-300">
             <div className="flex flex-wrap gap-3 max-w-full overflow-hidden">
               {SUGGESTIONS.map((suggestion) => (
                 <button
                   key={suggestion}
                   onClick={() => setPrompt(suggestion)}
-                  className="px-4 py-2 text-sm text-gray-700 bg-gradient-to-r from-gray-100 to-white border border-gray-300 rounded-full shadow-md hover:bg-gradient-to-br hover:from-purple-500 hover:to-pink-400 hover:text-white transition-all duration-300"
+                  className="px-4 py-2 text-sm text-gray-700 bg-gradient-to-r from-gray-100 to-white border border-gray-300 rounded-full shadow-md hover:bg-gradient-to-br hover:from-blue-500 hover:to-pink-400 hover:text-white transition-all duration-300"
                 >
                   {suggestion}
                 </button>
@@ -152,7 +152,7 @@ const ChartCreator = ({
             </div>
           </div>
           <form
-            className="w-full bg-gradient-to-r from-white to-purple-50 p-4 rounded-2xl shadow-md hover:shadow-lg transition-all duration-300"
+            className="w-full bg-gradient-to-r from-white to-blue-50 p-4 rounded-2xl shadow-md hover:shadow-lg transition-all duration-300"
             onSubmit={(e) => {
               e.preventDefault();
               handleGenerateChart();
@@ -164,7 +164,7 @@ const ChartCreator = ({
                 placeholder="Enter chart prompt..."
                 value={prompt}
                 onChange={(e) => setPrompt(e.target.value)}
-                className="flex-1 p-3 bg-white border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-purple-500 text-gray-700 placeholder-gray-400 shadow-sm"
+                className="flex-1 p-3 bg-white border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 text-gray-700 placeholder-gray-400 shadow-sm"
               />
 
               <button
@@ -172,7 +172,7 @@ const ChartCreator = ({
                 className={`px-6 py-3 text-white rounded-lg transition-all duration-300 ${
                   isLoading
                     ? "bg-gray-400 cursor-not-allowed"
-                    : "bg-gradient-to-br from-purple-600 to-pink-500 hover:from-purple-500 hover:to-pink-400"
+                    : "bg-gradient-to-br from-blue-600 to-pink-500 hover:from-blue-500 hover:to-pink-400"
                 }`}
                 disabled={isLoading}
               >
@@ -207,7 +207,7 @@ const ChartCreator = ({
           </form>
         </div>
 
-        <div className="flex flex-col border border-gray-200 rounded-2xl p-4 h-[60vh] overflow-y-auto bg-gradient-to-br from-white to-purple-50 shadow-sm hover:shadow-lg transition-all duration-300">
+        <div className="flex flex-col border border-gray-200 rounded-2xl p-4 h-[60vh] overflow-y-auto bg-gradient-to-br from-white to-blue-50 shadow-sm hover:shadow-lg transition-all duration-300">
           {/* <div ref={messagesEndRef} /> */}
           {isLoading && (
             <div className="absolute z-[50] flex my-4 self-center">

@@ -73,17 +73,17 @@ export default function Transcript() {
   };
 
   return (
-    <div className="flex flex-col px-6 py-6 space-y-6 bg-purple-50 min-h-screen">
+    <div className="flex flex-col px-6 py-6 space-y-6 bg-blue-50 min-h-screen">
       {isTranscriptLoading ? (
         <div className="flex justify-center items-center py-6">
-          <div className="animate-spin rounded-full h-12 w-12 border-t-4 border-purple-600"></div>
+          <div className="animate-spin rounded-full h-12 w-12 border-t-4 border-blue-600"></div>
         </div>
       ) : transcriptData ? (
         <Card className="bg-white shadow-md border border-gray-200 rounded-xl max-w-[75vw] m-auto">
           <CardContent className="py-6">
             <div className="prose ml-6 text-gray-700">
               {/* Company & Event Details */}
-              <h2 className="text-3xl font-bold text-purple-600 drop-shadow-md">
+              <h2 className="text-3xl font-bold text-blue-600 drop-shadow-md">
                 {transcriptData.metadata?.company || "Company Name"}
               </h2>
               <p className="text-lg text-gray-500">
@@ -100,7 +100,7 @@ export default function Transcript() {
               {/* Participants & Topics */}
               <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
                 <div className="mb-4">
-                  <h3 className="text-lg font-semibold text-purple-600">
+                  <h3 className="text-lg font-semibold text-blue-600">
                     Corporate Participants:
                   </h3>
                   <ul className="list-disc list-inside text-gray-600 mt-2">
@@ -115,7 +115,7 @@ export default function Transcript() {
                 </div>
 
                 <div className="mb-4">
-                  <h3 className="text-lg font-semibold text-purple-600">
+                  <h3 className="text-lg font-semibold text-blue-600">
                     Analysts:
                   </h3>
                   <ul className="list-disc list-inside text-gray-600 mt-2">
@@ -135,13 +135,13 @@ export default function Transcript() {
                     <p className="text-sm text-gray-500">
                       Presentation Speeches
                     </p>
-                    <p className="text-2xl font-bold text-purple-600">
+                    <p className="text-2xl font-bold text-blue-600">
                       {transcriptData.stats.presentation_speeches || 0}
                     </p>
                   </div>
                   <div>
                     <p className="text-sm text-gray-500">Q&A Speeches</p>
-                    <p className="text-2xl font-bold text-purple-600">
+                    <p className="text-2xl font-bold text-blue-600">
                       {transcriptData.stats.qa_speeches || 0}
                     </p>
                   </div>
@@ -151,7 +151,7 @@ export default function Transcript() {
               {/* Presentation Section */}
               {transcriptData.presentation?.length > 0 && (
                 <div className="mb-8">
-                  <h3 className="text-xl font-semibold text-purple-600 mb-4">
+                  <h3 className="text-xl font-semibold text-blue-600 mb-4">
                     Presentation
                   </h3>
                   <div className="space-y-4">
@@ -178,7 +178,7 @@ export default function Transcript() {
               {/* Q&A Section */}
               {transcriptData.qa_session?.length > 0 && (
                 <div>
-                  <h3 className="text-xl font-semibold text-purple-600 mb-4">
+                  <h3 className="text-xl font-semibold text-blue-600 mb-4">
                     Question & Answer Session
                   </h3>
                   <div className="space-y-4">

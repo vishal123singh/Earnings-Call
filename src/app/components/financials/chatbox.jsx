@@ -122,7 +122,7 @@ const ChatBox = forwardRef(
                   <div
                     className={`max-w-[80%] rounded-lg px-3 py-2 ${
                       message.sender === "user"
-                        ? "bg-purple-600 text-white"
+                        ? "bg-blue-600 text-white"
                         : "bg-gray-100 text-gray-800"
                     }`}
                   >
@@ -170,12 +170,12 @@ const ChatBox = forwardRef(
               onChange={handleInputChange}
               onBlur={handleBlur}
               placeholder="Type your message..."
-              className="flex-1 border border-gray-300 rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-purple-500 focus:border-transparent"
+              className="flex-1 border border-gray-300 rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
               disabled={isWaitingForResponse}
             />
             <button
               type="submit"
-              className="bg-purple-600 hover:bg-purple-700 text-white px-4 py-2 rounded-lg text-sm font-medium transition-colors disabled:opacity-50"
+              className="bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded-lg text-sm font-medium transition-colors disabled:opacity-50"
               disabled={isWaitingForResponse || !inputMessage.trim()}
             >
               Send
@@ -187,6 +187,6 @@ const ChatBox = forwardRef(
   },
 );
 
-ChatBox.displayName = 'ChatBox';
+ChatBox.displayName = "ChatBox";
 
 export default ChatBox;

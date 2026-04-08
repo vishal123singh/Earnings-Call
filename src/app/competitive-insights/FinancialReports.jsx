@@ -29,17 +29,20 @@ import {
   Refresh,
   ChevronLeft,
   ChevronRight,
+  HouseOutlined,
+  Money,
 } from "@mui/icons-material";
 import axios from "axios";
 import { useDispatch, useSelector } from "react-redux";
 import { setFilterConfig } from "../../../store/sidebarSlice";
 import { companies, quarters, years } from "../../../public/data";
+import { DollarSign } from "lucide-react";
 
 // Report sections configuration
 const reportSections = [
-  { name: "Income Statement", value: "income_statement", icon: "💰" },
-  { name: "Balance Sheet", value: "balance_sheet", icon: "🏦" },
-  { name: "Cash Flow", value: "cash_flow", icon: "💵" },
+  { name: "Income Statement", value: "income_statement", icon: <DollarSign /> },
+  { name: "Balance Sheet", value: "balance_sheet", icon: <HouseOutlined /> },
+  { name: "Cash Flow", value: "cash_flow", icon: <Money /> },
 ];
 
 const periodTypes = [
@@ -100,7 +103,6 @@ export default function FinancialReports() {
     try {
       const response = await axios.get(`/api/scrape-yf?ticker=${ticker}`);
       setApiResponse(response.data);
-      // Reset selections
       setSelectedYear(null);
       setCurrentPage(0);
     } catch (err) {
@@ -159,20 +161,14 @@ export default function FinancialReports() {
     );
   }
 
-  // Get available years (keys of the section data)
   const availableYears = Object.keys(sectionData).filter(
     (year) => sectionData[year] && Object.keys(sectionData[year]).length > 0,
   );
 
-  // Auto-select first available year if none selected
   const displayYear = selectedYear || availableYears[0];
   const yearData = sectionData[displayYear] || {};
 
-  // Convert to rows and headers format
   const metrics = Object.keys(yearData);
-  const headers = [displayYear];
-
-  // For comparison view (show multiple years)
   const itemsPerPage = 5;
   const totalPages = Math.ceil(metrics.length / itemsPerPage);
   const displayedMetrics = metrics.slice(
@@ -181,25 +177,22 @@ export default function FinancialReports() {
   );
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-gray-50 to-blue-50">
+    <div className="min-h-screen bg-background">
       {/* Header */}
-      <div className="bg-gradient-to-r from-blue-700 to-purple-700 text-white shadow-lg">
+      <div className="bg-primary text-white shadow-lg">
         <div className="max-w-7xl mx-auto px-4 py-6">
           <div className="flex justify-between items-center flex-wrap gap-4">
             <div>
               <Typography variant="h3" className="font-bold">
                 {responseTicker} Financial Reports
               </Typography>
-              <Typography variant="body1" className="text-blue-100 mt-1">
+              <Typography variant="body1" className="text-primary-light mt-1">
                 Last updated: {new Date(data.fetched_at).toLocaleString()}
               </Typography>
             </div>
             <div className="flex gap-2">
               {cached && (
-                <Chip
-                  label="Cached Data"
-                  className="bg-yellow-500 text-white"
-                />
+                <Chip label="Cached Data" className="bg-warning text-white" />
               )}
               <Tooltip title="Refresh">
                 <IconButton
@@ -225,57 +218,59 @@ export default function FinancialReports() {
       <div className="max-w-7xl mx-auto px-4 py-6">
         {/* Controls */}
         <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-6">
-          <Paper className="p-4">
+          <Paper className="p-4 border-border">
             <FormControl fullWidth>
               <InputLabel>Financial Statement</InputLabel>
-              <select
+              <Select
                 value={selectedSection}
                 onChange={(e) => {
                   setSelectedSection(e.target.value);
                   setSelectedYear(null);
                   setCurrentPage(0);
                 }}
-                className="w-full p-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
+                className="bg-card"
               >
                 {reportSections.map((section) => (
-                  <option key={section.value} value={section.value}>
+                  <MenuItem key={section.value} value={section.value}>
                     {section.icon} {section.name}
-                  </option>
+                  </MenuItem>
                 ))}
-              </select>
+              </Select>
             </FormControl>
           </Paper>
 
-          <Paper className="p-4">
+          <Paper className="p-4 border-border">
             <FormControl fullWidth>
               <InputLabel>Fiscal Year</InputLabel>
-              <select
+              <Select
                 value={displayYear}
                 onChange={(e) => setSelectedYear(e.target.value)}
-                className="w-full p-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
+                className="bg-card"
               >
                 {availableYears.map((year) => (
-                  <option key={year} value={year}>
+                  <MenuItem key={year} value={year}>
                     {year.split(" ")[0]}
-                  </option>
+                  </MenuItem>
                 ))}
-              </select>
+              </Select>
             </FormControl>
           </Paper>
 
-          <Paper className="p-4">
+          <Paper className="p-4 border-border">
             <div className="flex items-center gap-2 h-full">
               <div className="flex-1">
-                <Typography variant="caption" className="text-gray-500">
+                <Typography variant="caption" className="text-muted-foreground">
                   Total Metrics
                 </Typography>
-                <Typography variant="h6">{metrics.length}</Typography>
+                <Typography variant="h6" className="text-foreground">
+                  {metrics.length}
+                </Typography>
               </div>
               <div className="flex-1">
-                <Typography variant="caption" className="text-gray-500">
+                <Typography variant="caption" className="text-muted-foreground">
                   Reporting Year
                 </Typography>
-                <Typography variant="h6">
+                <Typography variant="h6" className="text-foreground">
                   {displayYear?.split(" ")[0]}
                 </Typography>
               </div>
@@ -283,7 +278,7 @@ export default function FinancialReports() {
           </Paper>
         </div>
 
-        {/* Key Metrics Cards - Top 4 metrics by absolute value */}
+        {/* Key Metrics Cards */}
         {metrics.length > 0 && (
           <KeyMetricsCards
             yearData={yearData}
@@ -301,8 +296,8 @@ export default function FinancialReports() {
             ticker={responseTicker}
           />
         ) : (
-          <Paper className="p-8 text-center">
-            <Typography variant="h6" color="textSecondary">
+          <Paper className="p-8 text-center border-border">
+            <Typography variant="h6" className="text-muted-foreground">
               No data available for this period
             </Typography>
           </Paper>
@@ -314,11 +309,11 @@ export default function FinancialReports() {
             <IconButton
               onClick={() => setCurrentPage((prev) => Math.max(0, prev - 1))}
               disabled={currentPage === 0}
-              className="bg-white shadow"
+              className="bg-card border-border shadow"
             >
               <ChevronLeft />
             </IconButton>
-            <Typography>
+            <Typography className="text-foreground">
               Page {currentPage + 1} of {totalPages}
             </Typography>
             <IconButton
@@ -326,7 +321,7 @@ export default function FinancialReports() {
                 setCurrentPage((prev) => Math.min(totalPages - 1, prev + 1))
               }
               disabled={currentPage === totalPages - 1}
-              className="bg-white shadow"
+              className="bg-card border-border shadow"
             >
               <ChevronRight />
             </IconButton>
@@ -340,9 +335,9 @@ export default function FinancialReports() {
 // Key Metrics Cards Component
 const KeyMetricsCards = ({ yearData, metrics, year }) => {
   const getTrendColor = (value) => {
-    if (value > 0) return "text-green-600";
-    if (value < 0) return "text-red-600";
-    return "text-gray-600";
+    if (value > 0) return "text-success";
+    if (value < 0) return "text-destructive";
+    return "text-muted-foreground";
   };
 
   const formatMetricValue = (value) => {
@@ -363,10 +358,13 @@ const KeyMetricsCards = ({ yearData, metrics, year }) => {
         const isPositive = typeof value === "number" && value > 0;
 
         return (
-          <Paper key={idx} className="p-4 hover:shadow-lg transition-shadow">
+          <Paper
+            key={idx}
+            className="p-4 hover:shadow-lg transition-shadow border-border bg-card"
+          >
             <Typography
               variant="body2"
-              className="text-gray-500 mb-2 truncate"
+              className="text-muted-foreground mb-2 truncate"
               title={metric}
             >
               {metric.replace(/([A-Z])/g, " $1").trim()}
@@ -379,9 +377,9 @@ const KeyMetricsCards = ({ yearData, metrics, year }) => {
             </Typography>
             <div className="flex items-center gap-1">
               {isPositive ? (
-                <TrendingUp className="text-green-600" fontSize="small" />
+                <TrendingUp className="text-success" fontSize="small" />
               ) : (
-                <TrendingDown className="text-red-600" fontSize="small" />
+                <TrendingDown className="text-destructive" fontSize="small" />
               )}
               <Typography variant="caption" className={getTrendColor(value)}>
                 {year?.split(" ")[0]}
@@ -400,12 +398,10 @@ const FinancialTable = ({ yearData, metrics, title, ticker }) => {
   const [sortDirection, setSortDirection] = useState("asc");
   const [searchTerm, setSearchTerm] = useState("");
 
-  // Filter metrics based on search
   const filteredMetrics = metrics.filter((metric) =>
     metric.toLowerCase().includes(searchTerm.toLowerCase()),
   );
 
-  // Sort metrics
   const sortedMetrics = [...filteredMetrics];
   if (sortColumn !== null) {
     sortedMetrics.sort((a, b) => {
@@ -440,14 +436,14 @@ const FinancialTable = ({ yearData, metrics, title, ticker }) => {
   };
 
   return (
-    <Paper className="overflow-hidden">
-      <div className="bg-gradient-to-r from-blue-600 to-purple-600 p-4">
+    <Paper className="overflow-hidden border-border bg-card">
+      <div className="bg-primary p-4">
         <div className="flex justify-between items-center flex-wrap gap-4">
           <div>
-            <Typography variant="h6" className="text-white">
+            <Typography variant="h6" className="text-primary-foreground">
               {title}
             </Typography>
-            <Typography variant="caption" className="text-blue-100">
+            <Typography variant="caption" className="text-primary-light">
               Ticker: {ticker}
             </Typography>
           </div>
@@ -457,12 +453,12 @@ const FinancialTable = ({ yearData, metrics, title, ticker }) => {
               placeholder="Search metrics..."
               value={searchTerm}
               onChange={(e) => setSearchTerm(e.target.value)}
-              className="px-3 py-1 rounded-lg text-gray-800 placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-blue-300"
+              className="px-3 py-1 rounded-lg bg-input text-foreground placeholder:text-muted-foreground focus:outline-none focus:ring-2 focus:ring-ring"
             />
             <Tooltip title="Export to CSV">
               <IconButton
                 onClick={exportToCSV}
-                className="bg-white/10 text-white hover:bg-white/20"
+                className="bg-primary-foreground/10 text-primary-foreground hover:bg-primary-foreground/20"
               >
                 <Download />
               </IconButton>
@@ -474,11 +470,13 @@ const FinancialTable = ({ yearData, metrics, title, ticker }) => {
       <TableContainer className="overflow-x-auto" style={{ maxHeight: 600 }}>
         <Table stickyHeader>
           <TableHead>
-            <TableRow className="bg-gray-50">
-              <TableCell className="font-bold">Metric</TableCell>
+            <TableRow className="bg-muted">
+              <TableCell className="font-bold text-foreground">
+                Metric
+              </TableCell>
               <TableCell
                 align="right"
-                className="font-bold cursor-pointer hover:bg-gray-100"
+                className="font-bold text-foreground cursor-pointer hover:bg-muted-foreground/10"
                 onClick={() => {
                   if (sortColumn === 0) {
                     setSortDirection(sortDirection === "asc" ? "desc" : "asc");
@@ -505,17 +503,17 @@ const FinancialTable = ({ yearData, metrics, title, ticker }) => {
               return (
                 <TableRow
                   key={idx}
-                  className="hover:bg-gray-50 transition-colors"
+                  className="hover:bg-muted/50 transition-colors"
                   sx={{
                     "&:nth-of-type(even)": {
-                      backgroundColor: "#f9fafb",
+                      backgroundColor: "var(--muted)",
                     },
                   }}
                 >
                   <TableCell
                     component="th"
                     scope="row"
-                    className="font-medium text-gray-900"
+                    className="font-medium text-foreground"
                   >
                     <div className="break-words max-w-md">
                       {metric.replace(/([A-Z])/g, " $1").trim()}
@@ -523,7 +521,7 @@ const FinancialTable = ({ yearData, metrics, title, ticker }) => {
                   </TableCell>
                   <TableCell
                     align="right"
-                    className={`font-mono ${isNegative ? "text-red-600" : "text-gray-900"}`}
+                    className={`font-mono ${isNegative ? "text-destructive" : "text-foreground"}`}
                   >
                     {formatCellValue(value)}
                   </TableCell>
@@ -534,8 +532,8 @@ const FinancialTable = ({ yearData, metrics, title, ticker }) => {
         </Table>
       </TableContainer>
 
-      <div className="p-4 bg-gray-50 border-t">
-        <Typography variant="caption" className="text-gray-500">
+      <div className="p-4 bg-muted border-t border-border">
+        <Typography variant="caption" className="text-muted-foreground">
           Showing {sortedMetrics.length} of {metrics.length} metrics | Values in
           USD
         </Typography>

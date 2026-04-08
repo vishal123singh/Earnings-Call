@@ -51,8 +51,8 @@ export default function FinancialMetricsCard({ ticker }: Props) {
   if (!metrics) return null;
 
   return (
-    <div className="bg-white p-4 rounded-xl shadow-md">
-      <h2 className="text-lg font-semibold text-purple-700">
+    <div className="bg-background p-4 rounded-xl shadow-md">
+      <h2 className="text-lg font-semibold text-primary">
         {ticker} Market & Valuation
       </h2>
       <div className="grid grid-cols-2 md:grid-cols-3 gap-2 mt-2">

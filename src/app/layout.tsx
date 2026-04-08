@@ -1,90 +1,155 @@
-'use client';
-import { Sora } from "next/font/google";
-import { useContext, useEffect, useState } from 'react';
-import { CssBaseline, IconButton, Box, AppBar, Toolbar, Tabs, Tab, Button, Avatar } from '@mui/material';
-import './globals.css';
-import Sidebar from './components/sidebar';
+"use client";
+
+import { Sora, Roboto, Poppins } from "next/font/google";
+import { useEffect, useState, createContext } from "react";
+import {
+  CssBaseline,
+  Box,
+  Snackbar,
+  Alert,
+  ThemeProvider,
+} from "@mui/material";
+import "./globals.css";
+import Sidebar from "./components/sidebar";
 import { Provider, useDispatch, useSelector } from "react-redux";
 import { store } from "../../store/store";
-import { useRouter } from "next/navigation";
-import { usePathname } from "next/navigation";
-import { PanelRightClose, PanelRightOpen } from "lucide-react";
-import { createContext } from "react";
+import { useRouter, usePathname } from "next/navigation";
 import LoginModal from "./components/auth/login";
 import SignupModal from "./components/auth/register";
 import { setIsUserLoggedIn } from "../../store/userSlice";
-import { Snackbar, Alert } from '@mui/material';
 import AIVoiceAssistant from "./components/AIVoiceAssistant";
 import Navbar from "./components/navbar";
 
-const sora = Sora({ subsets: ['latin'], weight: ["400"] });
+import { onAuthStateChanged, signOut } from "firebase/auth";
+import { auth } from "@/lib/firebase";
 
-export const ParentContext = createContext();
+import { createTheme } from "@mui/material/styles";
+
+const theme = createTheme({
+  typography: {
+    fontFamily: [
+      "Poppins",
+      "Roboto",
+      "Inter",
+      "system-ui",
+      "-apple-system",
+      "BlinkMacSystemFont",
+      "Segoe UI",
+      "Roboto",
+      "sans-serif",
+    ].join(","),
+    h1: {
+      fontFamily: "Poppins, sans-serif",
+      fontWeight: 700,
+    },
+    h2: {
+      fontFamily: "Poppins, sans-serif",
+      fontWeight: 600,
+    },
+    body1: {
+      fontFamily: "Poppins, sans-serif",
+    },
+  },
+});
+
+const poppins = Poppins({ subsets: ["latin"], weight: ["400"] });
+
+export const ParentContext = createContext<any>(null);
 
 function LayoutContent({ children }: { children: React.ReactNode }) {
-  const [collapsed, setCollapsed] = useState<boolean>(false);
+  const [collapsed, setCollapsed] = useState(false);
   const pathname = usePathname();
-  const [isLoginOpen, setIsLoginOpen] = useState<boolean>(false);
-  const [isSignupOpen, setIsSignupOpen] = useState<boolean>(false);
-
   const router = useRouter();
-  const isUserLoggedIn = useSelector((state) => state.user.isUserLoggedIn);
+
   const dispatch = useDispatch();
+  const isUserLoggedIn = useSelector((state: any) => state.user.isUserLoggedIn);
 
-  const [snackbarOpen, setSnackbarOpen] = useState<boolean>(false);
-  const [snackbarMessage, setSnackbarMessage] = useState<string>('');
-  const [snackbarSeverity, setSnackbarSeverity] = useState<'success' | 'error'>('success');
+  const [authChecked, setAuthChecked] = useState(false); // ✅ important
 
-  const [isVoiceAssistantOpen, setIsVoiceAssistantOpen] = useState<boolean>(false);
+  const [isLoginOpen, setIsLoginOpen] = useState(false);
+  const [isSignupOpen, setIsSignupOpen] = useState(false);
 
-  // Check user login status
+  const [snackbarOpen, setSnackbarOpen] = useState(false);
+  const [snackbarMessage, setSnackbarMessage] = useState("");
+  const [snackbarSeverity, setSnackbarSeverity] = useState<"success" | "error">(
+    "success",
+  );
+
+  const [isVoiceAssistantOpen, setIsVoiceAssistantOpen] = useState(false);
+
+  // ✅ Protected routes (FIXED POSITION)
+  const protectedRoutes = [
+    "/insights",
+    "/sentiment-analysis",
+    "/competitive-insights",
+    "/transcript",
+  ];
+
+  // ✅ Firebase Auth Listener
   useEffect(() => {
-    const token = localStorage.getItem("token");
-    if (token) {
-      dispatch(setIsUserLoggedIn(true));
-    }
-    return () => resetState()
+    const unsubscribe = onAuthStateChanged(auth, (user) => {
+      dispatch(setIsUserLoggedIn(!!user));
+      setAuthChecked(true); // ✅ mark auth checked
+    });
+
+    return () => unsubscribe();
   }, [dispatch]);
 
-  const resetState = () => {
-    setSnackbarOpen(false);
-    setSnackbarMessage('');
-    setSnackbarSeverity('success');
-  };
+  // ✅ Route Protection (FIXED)
+  useEffect(() => {
+    if (!authChecked) return; // wait for firebase
+
+    const isProtected = protectedRoutes.includes(pathname);
+
+    if (isProtected && !isUserLoggedIn) {
+      setIsLoginOpen(true); // better UX
+      router.push("/"); // optional redirect
+    }
+  }, [pathname, isUserLoggedIn, authChecked]);
 
   const handleToggleSidebar = () => setCollapsed(!collapsed);
 
-  const handleLogout = () => {
-    localStorage.clear();
+  const handleLogout = async () => {
+    await signOut(auth);
+
+    document.cookie = "token=; path=/; max-age=0";
+
     dispatch(setIsUserLoggedIn(false));
-    setSnackbarMessage('Logged out successfully');
-    setSnackbarSeverity('success');
+    setSnackbarMessage("Logged out successfully");
+    setSnackbarSeverity("success");
     setSnackbarOpen(true);
-    setTimeout(() => {
-      router.push("/");
-    }, 500);
-  };
-  const handleSnackbarClose = () => {
-    setSnackbarOpen(false);
+    router.push("/");
   };
 
   return (
-    <ParentContext.Provider value={{ isLoginOpen, isSignupOpen, setIsLoginOpen, setIsSignupOpen, handleToggleSidebar, pathname, collapsed, isVoiceAssistantOpen, setIsVoiceAssistantOpen }}>
+    <ParentContext.Provider
+      value={{
+        isLoginOpen,
+        isSignupOpen,
+        setIsLoginOpen,
+        setIsSignupOpen,
+        handleToggleSidebar,
+        pathname,
+        collapsed,
+        isVoiceAssistantOpen,
+        setIsVoiceAssistantOpen,
+      }}
+    >
       <Box
         sx={{
           display: "flex",
           height: "100vh",
           width: "100vw",
           overflow: pathname === "/insights" ? "hidden" : "auto",
-          flexDirection: ["column", "row"], // Mobile first responsive fix
+          flexDirection: ["column", "row"],
         }}
       >
         {/* Sidebar */}
-        {["/insights", "/sentiment-analysis", "/competitive-insights", "/transcript"].includes(pathname) && (
+        {protectedRoutes.includes(pathname) && (
           <Sidebar collapsed={collapsed} />
         )}
 
-        {/* Main Content */}
+        {/* Main */}
         <Box
           sx={{
             flexGrow: 1,
@@ -95,34 +160,42 @@ function LayoutContent({ children }: { children: React.ReactNode }) {
             overflow: "hidden",
           }}
         >
-          {/* Navbar */}
           <Navbar handleLogout={handleLogout} />
 
-          {/* Page Content */}
           <Box
             component="main"
             sx={{
               flexGrow: 1,
-              overflowY: [""].includes(pathname) ? "hidden" : "auto",
-              padding: ["8px", "16px"], // Reduced padding on small screens
+              overflowY: "auto",
+              padding: ["8px", "16px"],
             }}
           >
-            {children}
+            {/* ✅ Prevent flicker */}
+            {!authChecked ? null : children}
+
             <AIVoiceAssistant />
 
             {/* Snackbar */}
             <Snackbar
               open={snackbarOpen}
               autoHideDuration={4000}
-              onClose={handleSnackbarClose}
-              anchorOrigin={{ vertical: 'top', horizontal: 'center' }}
+              onClose={() => setSnackbarOpen(false)}
+              anchorOrigin={{ vertical: "top", horizontal: "center" }}
             >
-              <Alert onClose={handleSnackbarClose} severity={snackbarSeverity} sx={{ width: '100%' }}>
-                {snackbarMessage}
-              </Alert>
+              <Alert severity={snackbarSeverity}>{snackbarMessage}</Alert>
             </Snackbar>
-            <LoginModal isOpen={isLoginOpen} onClose={() => setIsLoginOpen(false)} setIsSignupOpen={setIsSignupOpen} />
-            <SignupModal isOpen={isSignupOpen} onClose={() => setIsSignupOpen(false)} setIsLoginOpen={setIsLoginOpen} />
+
+            <LoginModal
+              isOpen={isLoginOpen}
+              onClose={() => setIsLoginOpen(false)}
+              setIsSignupOpen={setIsSignupOpen}
+            />
+
+            <SignupModal
+              isOpen={isSignupOpen}
+              onClose={() => setIsSignupOpen(false)}
+              setIsLoginOpen={setIsLoginOpen}
+            />
           </Box>
         </Box>
       </Box>
@@ -130,16 +203,21 @@ function LayoutContent({ children }: { children: React.ReactNode }) {
   );
 }
 
-export default function RootLayout({ children }: { children: React.ReactNode }) {
+export default function RootLayout({
+  children,
+}: {
+  children: React.ReactNode;
+}) {
   return (
     <html lang="en">
-      <body className={`${sora.className} antialiased`}>
+      <body className={`${poppins.className} antialiased`}>
         <Provider store={store}>
           <CssBaseline />
-          <LayoutContent>{children}</LayoutContent>
+          <ThemeProvider theme={theme}>
+            <LayoutContent>{children}</LayoutContent>
+          </ThemeProvider>
         </Provider>
       </body>
     </html>
   );
 }
-

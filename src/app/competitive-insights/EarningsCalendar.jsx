@@ -10,23 +10,22 @@ import {
   Briefcase,
 } from "lucide-react";
 import { useSelector } from "react-redux";
-import { companyLogos } from "../../../public/data";
 import { CircularProgress } from "@mui/material";
 
-// 🗓️ Get today's date in YYYY-MM-DD format
+// Get today's date in YYYY-MM-DD format
 const getTodayDate = () => {
   const today = new Date();
   return today.toISOString().split("T")[0];
 };
 
-// 🎯 Individual Earnings Card Component
+//  Individual Earnings Card Component
 const EarningsCard = ({ item }) => {
   return (
     <motion.div
       whileHover={{ scale: 1.05 }}
       className="bg-white rounded-2xl shadow-md p-4 border border-gray-200 hover:shadow-lg transition"
     >
-      <h3 className="text-lg font-semibold text-purple-600">{item.company}</h3>
+      <h3 className="text-lg font-semibold text-blue-600">{item.company}</h3>
       <h5 className="text-lg font-semibold text-gray-600">
         ({item.symbol || item.ticker})
       </h5>
@@ -48,13 +47,13 @@ const EarningsCard = ({ item }) => {
       </p>
       <p className="text-gray-700">
         EPS Reported:{" "}
-        <span className="font-bold text-purple-500">
+        <span className="font-bold text-blue-500">
           {item.epsReported || "N/A"}
         </span>
       </p>
       <p className="text-gray-700">
         Surprise:{" "}
-        <span className="font-bold text-purple-500">
+        <span className="font-bold text-blue-500">
           {item.surprize || "N/A"}
         </span>
       </p>
@@ -62,22 +61,17 @@ const EarningsCard = ({ item }) => {
   );
 };
 
-// 🏢 Company-wise Earnings Card
+// Company-wise Earnings Card
 const CompanyEarningsCard = ({ item }) => {
   return (
     <motion.div
       whileHover={{ scale: 1.05 }}
       className="bg-white rounded-2xl shadow-md p-4 border border-gray-200 hover:shadow-lg transition"
     >
-      <h3 className="text-lg font-semibold text-purple-600">{item.name}</h3>
+      <h3 className="text-lg font-semibold text-blue-600">{item.name}</h3>
       <h5 className="text-lg font-semibold text-gray-600">({item.symbol})</h5>
       <div className="flex items-center gap-2 mb-2">
-        {/* <img
-          src={companyLogos[item.symbol]}
-          alt={item.name || "Company Logo"}
-          className="w-5 h-5"
-        /> */}
-        <h3 className="text-lg font-semibold text-purple-600">{item.name}</h3>
+        <h3 className="text-lg font-semibold text-blue-600">{item.name}</h3>
       </div>
 
       <p className="text-gray-700">
@@ -94,13 +88,13 @@ const CompanyEarningsCard = ({ item }) => {
       </p>
       <p className="text-gray-700">
         EPS Estimate:{" "}
-        <span className="font-bold text-purple-500">
+        <span className="font-bold text-blue-500">
           {item.estimate || "N/A"}
         </span>
       </p>
       <p className="text-gray-700">
         Currency:{" "}
-        <span className="font-bold text-purple-500">
+        <span className="font-bold text-blue-500">
           {item.currency || "USD"}
         </span>
       </p>
@@ -108,29 +102,31 @@ const CompanyEarningsCard = ({ item }) => {
   );
 };
 
-// 🎉 Main Earnings Calendar Component
+//  Main Earnings Calendar Component
 const EarningsCalendar = () => {
   const [data, setData] = useState([]); // Full data
   const [search, setSearch] = useState(""); // Search input
-  const [dateRange, setDateRange] = useState(getTodayDate()); // ✅ Pre-select today's date
-  const [symbol, setSymbol] = useState("AAPL"); // ✅ Default to AAPL
-  const [page, setPage] = useState(1); // ✅ Current page
-  const [size] = useState(25); // ✅ Fixed size per page
+  const [dateRange, setDateRange] = useState(getTodayDate()); // Pre-select today's date
+  const [symbol, setSymbol] = useState("AAPL"); //  Default to AAPL
+  const [page, setPage] = useState(1); // Current page
+  const [size] = useState(25); // Fixed size per page
   const [loading, setLoading] = useState(false); // Loading indicator
-  const [activeTab, setActiveTab] = useState("company"); // ✅ Active tab: "date" or "company"
+  const [activeTab, setActiveTab] = useState("company"); // Active tab: "date" or "company"
   const selectedCompanies = useSelector(
     (state) => state.sidebar.selectedCompanies,
-  ); // 🎯 Fetch Earnings Data Dynamically Based on Tab
+  );
+
+  //  Fetch Earnings Data Dynamically Based on Tab
   const fetchData = async (newPage = 1) => {
     setLoading(true);
     try {
       let endpoint = "";
 
       if (activeTab === "company") {
-        // 📡 Fetch Company-wise Calendar Data
+        //  Fetch Company-wise Calendar Data
         endpoint = `/api/earnings-calendar-company`;
       } else {
-        // 📡 Fetch Date-wise Calendar Data
+        //  Fetch Date-wise Calendar Data
         endpoint = `/api/earnings-calendar-date?date=${dateRange}&page=${newPage}&size=${size}`;
       }
       let res;
@@ -148,7 +144,7 @@ const EarningsCalendar = () => {
 
       if (result.success) {
         setData(result.data);
-        setPage(newPage); // ✅ Update current page
+        setPage(newPage); //  Update current page
       } else {
         console.error("Error fetching earnings data:", result.error);
       }
@@ -158,9 +154,9 @@ const EarningsCalendar = () => {
     setLoading(false);
   };
 
-  // 📚 Initial Data Fetch when Tab, Symbol, or Date Changes
+  //  Initial Data Fetch when Tab, Symbol, or Date Changes
   useEffect(() => {
-    // ✅ Reset to page 1 when params change
+    //  Reset to page 1 when params change
     console.log("🔄 Fetching data...");
 
     if (selectedCompanies.length > 0) {
@@ -180,14 +176,14 @@ const EarningsCalendar = () => {
   });
 
   return (
-    <div className="p-6 bg-white min-h-screen flex flex-col">
+    <div className="p-6 bg-background min-h-screen flex flex-col">
       {/* 🟣 Tab Buttons */}
       <div className="flex items-center bg-gray-100 shadow-sm w-fit mb-4">
         <button
           onClick={() => setActiveTab("company")}
           className={`flex items-center gap-2 px-6 py-2  font-medium transition-all duration-300 ${
             activeTab === "company"
-              ? "bg-purple-700 text-white shadow-md"
+              ? "bg-primary text-white shadow-md"
               : "text-gray-700 hover:bg-gray-200"
           }`}
         >
@@ -197,7 +193,7 @@ const EarningsCalendar = () => {
           onClick={() => setActiveTab("date")}
           className={`flex items-center gap-2 px-6 py-2  font-medium transition-all duration-300 ${
             activeTab === "date"
-              ? "bg-purple-700 text-white shadow-md"
+              ? "bg-blue-700 text-white shadow-md"
               : "text-gray-700 hover:bg-gray-200"
           }`}
         >
@@ -213,7 +209,7 @@ const EarningsCalendar = () => {
             <input
               type="text"
               placeholder="Search by company"
-              className="p-3 pl-10 border border-gray-300 rounded-xl w-full focus:outline-purple-500"
+              className="p-3 pl-10 border border-gray-300 rounded-xl w-full focus:outline-blue-500"
               value={search}
               onChange={(e) => setSearch(e.target.value)}
             />
@@ -227,7 +223,7 @@ const EarningsCalendar = () => {
             />
             <input
               type="date"
-              className="p-3 pl-10 border border-gray-300 rounded-xl w-full focus:outline-purple-500"
+              className="p-3 pl-10 border border-gray-300 rounded-xl w-full focus:outline-blue-500"
               value={dateRange}
               onChange={(e) => setDateRange(e.target.value)}
             />
@@ -243,7 +239,7 @@ const EarningsCalendar = () => {
         }}
       >
         {loading ? (
-          <div className="flex justify-center items-center h-40 text-purple-500">
+          <div className="flex justify-center items-center h-40 text-blue-500">
             <CircularProgress size={32} sx={{ color: "inherit" }} />
           </div>
         ) : filteredData.length === 0 ? (

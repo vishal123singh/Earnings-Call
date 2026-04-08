@@ -1,6 +1,6 @@
-'use client';
+"use client";
 
-import { useState } from 'react';
+import { useState } from "react";
 import EarningsCalendar from "./EarningsCalendar";
 import FinancialReports from "./FinancialReports";
 import FinancialAnalysisDashboard from "@/components/financials/FinancialAnalysisDashboard";
@@ -39,7 +39,7 @@ const Dashboard = () => {
       id: "financial-analysis",
       label: "Financial Analysis",
       component: (
-        <FinancialAnalysisDashboard 
+        <FinancialAnalysisDashboard
           financialState={financialState}
           setFinancialState={setFinancialState}
           chatState={chatState}
@@ -56,7 +56,7 @@ const Dashboard = () => {
   const [activeTab, setActiveTab] = useState(TABS[0].id);
 
   return (
-    <div className="w-full min-h-screen bg-purple-50 text-gray-800 p-6">
+    <div className="w-full min-h-screen bg-blue-50 text-gray-800 p-6">
       {/* Tabs */}
       <div className="flex space-x-4 border-b border-gray-300 mb-6">
         {TABS.map((tab) => (
@@ -65,8 +65,8 @@ const Dashboard = () => {
             onClick={() => setActiveTab(tab.id)}
             className={`py-2 px-4 text-sm font-medium ${
               activeTab === tab.id
-                ? "border-b-2 border-purple-600 text-purple-600"
-                : "text-gray-500 hover:text-purple-600"
+                ? "border-b-2 border-blue-600 text-blue-600"
+                : "text-gray-500 hover:text-blue-600"
             }`}
           >
             {tab.label}

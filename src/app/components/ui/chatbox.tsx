@@ -28,7 +28,7 @@ interface ChatBoxProps {
   showChat2?: boolean;
   chartId?: string;
   userPrompts?: any;
-  setUserPrompts?: any
+  setUserPrompts?: any;
 }
 
 function ChatBox({
@@ -40,7 +40,7 @@ function ChatBox({
   showChat2 = false,
   chartId,
   userPrompts,
-  setUserPrompts
+  setUserPrompts,
 }: ChatBoxProps) {
   const [input, setInput] = useState("");
   const [loading, setLoading] = useState(false);
@@ -51,14 +51,14 @@ function ChatBox({
     useContext(ParentContext);
 
   const selectedCompanies = useSelector(
-    (state: any) => state?.sidebar.selectedCompanies
+    (state: any) => state?.sidebar.selectedCompanies,
   );
   const selectedYear = useSelector((state: any) => state?.sidebar.selectedYear);
   const selectedQuarter = useSelector(
-    (state: any) => state?.sidebar.selectedQuarter
+    (state: any) => state?.sidebar.selectedQuarter,
   );
   const selectedModel = useSelector(
-    (state: any) => state?.sidebar.foundationModel
+    (state: any) => state?.sidebar.foundationModel,
   );
   const selectedPersona = useSelector((state: any) => state?.sidebar.persona);
 
@@ -68,7 +68,7 @@ function ChatBox({
   const messagesEndRef = useRef(null);
 
   useEffect(() => {
-    console.log("chats", chats)
+    console.log("chats", chats);
     if (messagesEndRef.current) {
       (messagesEndRef.current as any).scrollIntoView({ behavior: "smooth" });
     }
@@ -136,7 +136,6 @@ function ChatBox({
       setLoading(true);
       let length = chats.length;
 
-
       if (showChat1) {
         setChats((prev: Chat[]) => [
           ...prev,
@@ -147,55 +146,57 @@ function ChatBox({
         ]);
         setInput("");
         if (messagesEndRef.current) {
-          (messagesEndRef.current as any).scrollIntoView({ behavior: "smooth" });
-        }
-      const res = await fetch(apiUrl, {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({
-          inputText: input,
-          chats: chats,
-          context: "",
-          persona: selectedPersona,
-          foundationModel: selectedModel,
-          previousPrompts,
-          selectedCompanies,
-          selectedQuarter,
-          selectedYear,
-        }),
-      });
-
-      const reader = res.body?.getReader();
-      if (!reader) return;
-
-      const decoder = new TextDecoder();
-      let resultText = "";
-
-      while (true) {
-        const { done, value } = await reader.read();
-        if (done) {
-          setLoading(false);
-          setPreviousPrompts((prev: string[]) => [...prev, input]);
-          break;
-        }
-        resultText += decoder.decode(value, { stream: true });
-        const sanitizedMarkdown = DOMPurify.sanitize(resultText);
-        setChats((prev) => {
-          let temp = [...prev];
-          temp[length + 1] = {
-            role: "assistant",
-            content: sanitizedMarkdown,
-          };
-          return temp;
-        });
-        if (messagesEndRef.current) {
           (messagesEndRef.current as any).scrollIntoView({
             behavior: "smooth",
           });
         }
-      }
+        const res = await fetch(apiUrl, {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({
+            inputText: input,
+            chats: chats,
+            context: "",
+            persona: selectedPersona,
+            foundationModel: selectedModel,
+            previousPrompts,
+            selectedCompanies,
+            selectedQuarter,
+            selectedYear,
+          }),
+        });
+
+        const reader = res.body?.getReader();
+        if (!reader) return;
+
+        const decoder = new TextDecoder();
+        let resultText = "";
+
+        while (true) {
+          const { done, value } = await reader.read();
+          if (done) {
+            setLoading(false);
+            setPreviousPrompts((prev: string[]) => [...prev, input]);
+            break;
+          }
+          resultText += decoder.decode(value, { stream: true });
+          const sanitizedMarkdown = DOMPurify.sanitize(resultText);
+          setChats((prev) => {
+            let temp = [...prev];
+            temp[length + 1] = {
+              role: "assistant",
+              content: sanitizedMarkdown,
+            };
+            return temp;
+          });
+          if (messagesEndRef.current) {
+            (messagesEndRef.current as any).scrollIntoView({
+              behavior: "smooth",
+            });
+          }
+        }
       } else {
-        await handleGenerateChart()
+        await handleGenerateChart();
       }
     } catch (error) {
       console.log(error);
@@ -223,7 +224,7 @@ function ChatBox({
         return;
       }
       let length = chats.length;
-      console.log("input", input)
+      console.log("input", input);
       setChats((prev) => [
         ...prev,
         {
@@ -280,7 +281,6 @@ function ChatBox({
       console.error("Error:", error);
     } finally {
       setLoading(false);
-
     }
   };
   return (
@@ -291,7 +291,7 @@ function ChatBox({
             <button
               ref={buttonRef}
               onClick={handleOpenChat}
-              className="fixed bottom-4 right-4 bg-[#DA6486] text-white p-4 rounded-full shadow-lg hover:bg-[#E88FA7] hover:scale-110 transition-transform"
+              className="fixed bottom-4 right-4 bg-primary text-white p-4 rounded-full shadow-lg hover:bg-primary-dark hover:scale-110 transition-transform"
             >
               <MessageCircle size={28} />
             </button>
@@ -384,7 +384,7 @@ function ChatBox({
 
           {/* Messages */}
           <div className="h-[calc(100vh-120px)] overflow-y-auto p-4 space-y-3 bg-gray-50 relative">
-              {chats.map((msg, i) => (
+            {chats.map((msg, i) => (
               <div
                 key={i}
                 className={`p-3 rounded-xl text-sm max-w-[75%] shadow ${
@@ -398,8 +398,8 @@ function ChatBox({
                     remarkPlugins={[remarkGfm]}
                     rehypePlugins={[rehypeRaw]}
                   >
-                      {msg.role === "user" ? msg.content : msg.content.insights}
-                    </ReactMarkdown>
+                    {msg.role === "user" ? msg.content : msg.content.insights}
+                  </ReactMarkdown>
                 </div>
                 {loading && (
                   <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2">

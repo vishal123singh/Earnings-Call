@@ -86,11 +86,6 @@ const quarters = ["1st", "2nd", "3rd", "4th"];
 
 const companies = [
   {
-    name: "SoFi Technologies Inc.",
-    ticker: "SOFI",
-    logo: "https://logo.clearbit.com/sofi.com",
-  },
-  {
     name: "Morgan Stanley",
     ticker: "MS",
     logo: "https://logo.clearbit.com/morganstanley.com",
@@ -109,6 +104,11 @@ const companies = [
     name: "Ameris Bancorp",
     ticker: "ABCB",
     logo: "https://logo.clearbit.com/amerisbank.com",
+  },
+  {
+    name: "SoFi Technologies Inc.",
+    ticker: "SOFI",
+    logo: "https://logo.clearbit.com/sofi.com",
   },
   {
     name: "Associated Banc-Corp",

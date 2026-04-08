@@ -198,7 +198,7 @@ const FinancialAnalysisDashboard = ({
   // Compute whether all selected companies have data loaded
   const canGenerateGraph =
     selectedCompanies.length > 0 &&
-    selectedCompanies.every((ticker) => companyData[ticker]);
+    selectedCompanies.every((ticker) => companyData[ticker]?.data);
 
   const generateGraph = async () => {
     // Prevent graph generation if company data is not fully loaded
@@ -361,7 +361,7 @@ const FinancialAnalysisDashboard = ({
                   </label>
                   <input
                     type="text"
-                    className="w-full border border-gray-300 rounded-lg p-3 text-sm focus:ring-2 focus:ring-purple-500 focus:border-transparent"
+                    className="w-full border border-gray-300 rounded-lg p-3 text-sm focus:ring-2 focus:ring-blue-500 focus:border-transparent"
                     placeholder="E.g., 'Compare quarterly revenue growth'"
                     value={graphPrompt}
                     onChange={(e) =>
@@ -374,7 +374,7 @@ const FinancialAnalysisDashboard = ({
                   className={`w-full py-3 px-4 rounded-lg font-medium transition-colors ${
                     isLoading || !canGenerateGraph
                       ? "bg-gray-300 text-gray-500 cursor-not-allowed"
-                      : "bg-purple-600 hover:bg-purple-700 text-white shadow-md hover:shadow-lg"
+                      : "bg-blue-600 hover:bg-blue-700 text-white shadow-md hover:shadow-lg"
                   }`}
                   onClick={generateGraph}
                   disabled={isLoading || !canGenerateGraph}
@@ -440,7 +440,7 @@ const FinancialAnalysisDashboard = ({
               <div className="h-full flex items-center justify-center">
                 <div className="text-center">
                   <svg
-                    className="animate-spin h-10 w-10 text-purple-600 mx-auto"
+                    className="animate-spin h-10 w-10 text-blue-600 mx-auto"
                     xmlns="http://www.w3.org/2000/svg"
                     fill="none"
                     viewBox="0 0 24 24"
