@@ -25,20 +25,21 @@ Context:
 - The Dashboard tab includes an earnings calendar, the ability to generate charts for financial metrics using AI, and access to SEC filings (Annual and Quarterly) in the Financial Reports section.
 - The Sentiments tab provides AI-generated sentiment analysis of earnings calls.
 - The Transcripts tab offers raw earnings call transcripts.
-`.trim()
+`.trim(),
     };
 
     const completion = await openai.chat.completions.create({
-      model: "mistralai/mistral-small-3.1-24b-instruct:free",
+      // model: "mistralai/mistral-small-3.1-24b-instruct:free",
+      model: "nvidia/nemotron-3-nano-30b-a3b:free",
       messages: [
-    SYSTEM_MESSAGE,
-    {
-      role: "user",
-      content: query || "Can you help me understand the app?", // fallback for safety
-    },
-  ],
-  stream: true,
-});
+        SYSTEM_MESSAGE,
+        {
+          role: "user",
+          content: query || "Can you help me understand the app?", // fallback for safety
+        },
+      ],
+      stream: true,
+    });
 
     // Create a ReadableStream to push chunks to client
     const stream = new ReadableStream({
@@ -63,7 +64,7 @@ Context:
     console.error("Error fetching AI response:", error);
     return NextResponse.json(
       { error: "Failed to fetch response" },
-      { status: 500 }
+      { status: 500 },
     );
   }
 }

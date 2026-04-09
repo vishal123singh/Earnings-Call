@@ -36,7 +36,7 @@ export default function SentimentAnalysis() {
 
   useEffect(() => {
     if (selectedCompanies.length > 0 && selectedYear && selectedQuarter) {
-      //getFinancialMetricsData();
+      getFinancialMetricsData();
       getSentimentAnalysis();
     }
   }, [selectedCompanies, selectedYear, selectedQuarter]);
