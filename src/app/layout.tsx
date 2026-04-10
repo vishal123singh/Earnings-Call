@@ -13,7 +13,7 @@ import "./globals.css";
 import Sidebar from "./components/sidebar";
 import { Provider, useDispatch, useSelector } from "react-redux";
 import { store } from "../../store/store";
-import { useRouter, usePathname } from "next/navigation";
+import { useRouter, usePathname, useSearchParams } from "next/navigation";
 import LoginModal from "./components/auth/login";
 import SignupModal from "./components/auth/register";
 import { setIsUserLoggedIn } from "../../store/userSlice";
@@ -60,6 +60,7 @@ function LayoutContent({ children }: { children: React.ReactNode }) {
   const [collapsed, setCollapsed] = useState(false);
   const pathname = usePathname();
   const router = useRouter();
+  const searchParams = useSearchParams();
 
   const dispatch = useDispatch();
   const isUserLoggedIn = useSelector((state: any) => state.user.isUserLoggedIn);
@@ -95,17 +96,12 @@ function LayoutContent({ children }: { children: React.ReactNode }) {
     return () => unsubscribe();
   }, [dispatch]);
 
-  // ✅ Route Protection (FIXED)
   useEffect(() => {
-    if (!authChecked) return; // wait for firebase
-
-    const isProtected = protectedRoutes.includes(pathname);
-
-    if (isProtected && !isUserLoggedIn) {
-      setIsLoginOpen(true); // better UX
-      router.push("/"); // optional redirect
+    console.log(searchParams);
+    if (searchParams.get("login") === "true") {
+      setIsLoginOpen(true);
     }
-  }, [pathname, isUserLoggedIn, authChecked]);
+  }, [searchParams]);
 
   const handleToggleSidebar = () => setCollapsed(!collapsed);
 

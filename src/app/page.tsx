@@ -24,11 +24,15 @@ import {
 import { motion, useAnimation, useInView } from "framer-motion";
 import { Button } from "./components/ui/button";
 import { useSelector } from "react-redux";
+import { DemoModal } from "./components/Demo";
+import { useRouter } from "next/navigation";
 
 export default function LandingPage() {
+  const router = useRouter();
+
   return (
     <div className="min-h-screen bg-gradient-to-br from-blue-50 via-indigo-50 to-purple-50">
-      <HeroSection />
+      <HeroSection router={router} />
       <FeaturesSection />
       <HowItWorksSection />
       <CompaniesCarousel />
@@ -36,134 +40,157 @@ export default function LandingPage() {
       <AIAssistantDemo />
       {/* <TestimonialsSection /> */}
       {/* <PricingSection /> */}
-      <CTASection />
+      <CTASection router={router} />
       <Footer />
     </div>
   );
 }
 
-// Hero Section
-const HeroSection = () => {
+const HeroSection = ({ router }) => {
+  const [openDemo, setOpenDemo] = useState(false);
   return (
-    <section className="pt-20 sm:pt-24 md:pt-28 lg:pt-32 pb-12 sm:pb-16 md:pb-20 px-4 sm:px-6 relative overflow-hidden">
-      {/* Background animated elements - hidden on mobile, visible on larger screens */}
-      <div className="absolute top-0 right-0 w-48 sm:w-64 md:w-80 lg:w-96 h-48 sm:h-64 md:h-80 lg:h-96 bg-primary/20 rounded-full filter blur-3xl opacity-20 animate-pulse hidden sm:block"></div>
-      <div className="absolute bottom-0 left-0 w-48 sm:w-64 md:w-80 lg:w-96 h-48 sm:h-64 md:h-80 lg:h-96 bg-secondary/20 rounded-full filter blur-3xl opacity-20 animate-pulse hidden sm:block"></div>
+    <section className="relative pt-28 pb-20 px-6 overflow-hidden bg-background">
+      {/* background glow system */}
+      <div className="absolute -top-32 -right-32 w-[500px] h-[500px] bg-primary/20 rounded-full blur-3xl opacity-30" />
+      <div className="absolute -bottom-32 -left-32 w-[500px] h-[500px] bg-secondary/20 rounded-full blur-3xl opacity-30" />
 
       <div className="max-w-7xl mx-auto relative">
-        <div className="grid lg:grid-cols-2 gap-8 md:gap-12 items-center">
-          {/* Left Content */}
+        <div className="grid lg:grid-cols-2 gap-16 items-center">
+          {/* LEFT */}
           <motion.div
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.6 }}
-            className="text-center lg:text-left"
           >
-            <div className="inline-flex items-center px-3 py-1 rounded-full bg-primary/10 text-primary text-xs sm:text-sm font-medium mb-4 sm:mb-6 mx-auto lg:mx-0">
-              <Sparkles className="w-3 h-3 sm:w-4 sm:h-4 mr-1 sm:mr-2" />
+            {/* badge */}
+            <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-primary/10 text-primary text-sm font-medium mb-6 border border-primary/20">
+              <Sparkles className="w-4 h-4" />
               AI-Powered Financial Intelligence
             </div>
 
-            <h1 className="text-3xl sm:text-4xl md:text-5xl lg:text-6xl font-bold mb-4 sm:mb-6 bg-gradient-to-r from-foreground via-primary to-primary/70 bg-clip-text text-transparent">
-              Decode Earnings Calls in Seconds with AI
+            {/* headline */}
+            <h1 className="text-5xl md:text-6xl font-bold leading-tight mb-6">
+              Decode Earnings Calls
+              <span className="block text-gradient-primary">
+                in Seconds with AI
+              </span>
             </h1>
 
-            <p className="text-base sm:text-lg md:text-xl text-muted-foreground mb-6 sm:mb-8 px-2 sm:px-0">
-              Stop spending hours reviewing transcripts. Get instant insights on
-              company performance, market trends, and investment opportunities
-              through our intelligent AI assistant.
+            {/* subtext */}
+            <p className="text-lg text-muted-foreground mb-8 leading-relaxed max-w-xl">
+              Stop reading hours of transcripts. Get instant insights on
+              revenue, sentiment, risks, and market impact — powered by advanced
+              AI models.
             </p>
 
-            {/* Buttons */}
-            <div className="flex flex-col sm:flex-row gap-3 sm:gap-4 justify-center lg:justify-start">
-              <button className="bg-primary text-primary-foreground px-6 sm:px-8 py-2.5 sm:py-3 rounded-lg font-semibold hover:shadow-xl transition-all hover:scale-105 flex items-center justify-center gap-2 text-sm sm:text-base">
-                Let's Get Started
-                <ArrowRight className="w-4 h-4 sm:w-5 sm:h-5" />
+            {/* CTA */}
+            <div className="flex flex-col sm:flex-row gap-4">
+              <button
+                onClick={() => router.push("/insights")}
+                className="cursor-pointer btn-premium px-6 py-3 rounded-xl flex items-center gap-2"
+              >
+                Get Started
+                <ArrowRight className="w-4 h-4" />
               </button>
+
+              {/* <button
+                onClick={() => setOpenDemo(true)}
+                className="px-6 py-3 rounded-xl border border-border hover:bg-muted transition"
+              >
+                View Demo
+              </button> */}
+
+              <DemoModal open={openDemo} setOpen={setOpenDemo} />
             </div>
 
-            {/* Trust indicators */}
-            <div className="flex flex-col sm:flex-row items-center gap-4 sm:gap-6 mt-6 sm:mt-8">
+            {/* TRUST STRIP */}
+            <div className="mt-10 flex items-center gap-6 flex-wrap">
+              {/* avatars */}
               <div className="flex -space-x-2">
                 {[1, 2, 3, 4].map((i) => (
                   <div
                     key={i}
-                    className="w-8 h-8 sm:w-10 sm:h-10 rounded-full bg-gradient-to-br from-primary to-secondary border-2 border-background flex items-center justify-center text-background text-xs sm:text-sm font-bold"
+                    className="w-9 h-9 rounded-full bg-gradient-to-br from-primary to-secondary border-2 border-background flex items-center justify-center text-xs font-bold text-white"
                   >
                     {String.fromCharCode(64 + i)}
                   </div>
                 ))}
               </div>
-              <div className="text-center sm:text-left">
-                <div className="flex items-center gap-1 justify-center sm:justify-start">
+
+              {/* rating */}
+              <div>
+                <div className="flex items-center gap-1">
                   {[...Array(5)].map((_, i) => (
                     <Star
                       key={i}
-                      className="w-3 h-3 sm:w-4 sm:h-4 fill-yellow-500 text-yellow-500"
+                      className="w-4 h-4 fill-yellow-500 text-yellow-500"
                     />
                   ))}
                 </div>
-                <p className="text-xs sm:text-sm text-muted-foreground mt-1">
+                <p className="text-sm text-muted-foreground">
                   Trusted by 10,000+ investors
                 </p>
               </div>
             </div>
           </motion.div>
 
-          {/* Right Content - Chat Interface */}
+          {/* RIGHT - AI TERMINAL */}
           <motion.div
-            initial={{ opacity: 0, scale: 0.9 }}
+            initial={{ opacity: 0, scale: 0.95 }}
             animate={{ opacity: 1, scale: 1 }}
             transition={{ duration: 0.6, delay: 0.2 }}
-            className="relative mt-8 lg:mt-0"
+            className="relative"
           >
-            <div className="bg-card rounded-xl sm:rounded-2xl shadow-2xl overflow-hidden border border-border">
-              <div className="bg-gradient-primary p-3 sm:p-4">
-                <div className="flex items-center gap-2 text-primary-foreground">
-                  <Mic className="w-4 h-4 sm:w-5 sm:h-5" />
-                  <span className="font-semibold text-sm sm:text-base">
-                    AI Voice Assistant
+            <div className="card-premium overflow-hidden">
+              {/* header */}
+              <div className="flex items-center justify-between px-4 py-3 bg-gradient-to-r from-primary to-secondary text-white">
+                <div className="flex items-center gap-2">
+                  <Mic className="w-4 h-4" />
+                  <span className="text-sm font-medium">
+                    AI Financial Assistant
                   </span>
+                </div>
+
+                <div className="flex items-center gap-2 text-xs opacity-90">
+                  <span className="w-2 h-2 bg-green-300 rounded-full animate-pulse" />
+                  LIVE
                 </div>
               </div>
 
-              <div className="p-4 sm:p-6">
-                {/* Chat Messages - Scrollable on mobile */}
-                <div className="space-y-3 sm:space-y-4 max-h-[300px] sm:max-h-[400px] overflow-y-auto">
-                  <ChatBubble
-                    type="user"
-                    message="What were JPM's key earnings drivers this quarter?"
-                  />
-                  <ChatBubble
-                    type="ai"
-                    message="JPMorgan Chase saw strong performance driven by 23% increase in investment banking fees and record net interest income of $24.5B. Consumer banking showed resilience with 15% growth in credit card spending."
-                  />
-                  <ChatBubble
-                    type="user"
-                    message="How does this compare to previous quarter?"
-                  />
-                  <ChatBubble
-                    type="ai"
-                    message="QoQ comparison shows 8% revenue growth, driven primarily by trading revenues (+32%) and wealth management (+12%). NIM expanded by 15 basis points to 2.85%."
-                  />
-                </div>
+              {/* chat area */}
+              <div className="p-5 space-y-4 max-h-[420px] overflow-y-auto bg-background">
+                <ChatBubble
+                  type="user"
+                  message="What drove JPM earnings this quarter?"
+                />
 
-                {/* Input Area */}
-                <div className="mt-4 flex flex-col sm:flex-row gap-2">
-                  <input
-                    type="text"
-                    placeholder="Ask about earnings..."
-                    className="flex-1 px-3 sm:px-4 py-2 border border-input rounded-lg focus:outline-none focus:ring-2 focus:ring-primary bg-background text-foreground text-sm sm:text-base"
-                  />
-                  <button className="bg-primary text-primary-foreground px-4 sm:px-6 py-2 rounded-lg hover:bg-primary/90 transition-colors text-sm sm:text-base">
-                    Send
-                  </button>
-                </div>
+                <ChatBubble
+                  type="ai"
+                  message="JPM reported strong results driven by +23% investment banking growth and record net interest income of $24.5B."
+                />
+
+                <ChatBubble type="user" message="Compare with last quarter" />
+
+                <ChatBubble
+                  type="ai"
+                  message="Revenue grew 8% QoQ, led by trading (+32%) and wealth management (+12%)."
+                />
+              </div>
+
+              {/* input */}
+              <div className="p-4 border-t border-border flex gap-2 bg-muted/30">
+                <input
+                  className="flex-1 px-4 py-2 rounded-lg bg-background border border-border text-sm focus:outline-none focus:ring-2 focus:ring-primary"
+                  placeholder="Ask about earnings..."
+                />
+                <button className="btn-premium px-4 py-2 rounded-lg text-sm">
+                  Send
+                </button>
               </div>
             </div>
 
-            {/* Decorative element */}
-            <div className="absolute -top-2 -right-2 sm:-top-4 sm:-right-4 w-16 h-16 sm:w-24 sm:h-24 bg-destructive rounded-full filter blur-2xl opacity-30 pointer-events-none"></div>
+            {/* floating glow */}
+            <div className="absolute -top-6 -right-6 w-32 h-32 bg-primary/30 blur-3xl rounded-full" />
           </motion.div>
         </div>
       </div>
@@ -185,77 +212,81 @@ const ChatBubble = ({ type, message }) => (
   </div>
 );
 
-// Features Section
 const FeaturesSection = () => {
   const features = [
     {
-      icon: <Brain className="w-8 h-8" />,
+      icon: <Brain className="w-6 h-6" />,
       title: "AI-Powered Assistant",
       description:
-        "Chat-based interface for asking questions about earnings calls. Get instant, accurate answers.",
-      gradient: "from-primary to-primary/70",
+        "Chat-based interface for asking questions about earnings calls.",
+      gradient: "from-primary to-secondary",
     },
     {
-      icon: <Mic className="w-8 h-8" />,
+      icon: <Mic className="w-6 h-6" />,
       title: "Voice Assistant",
       description:
-        "Hands-free interaction using AI voice input/output. Ask questions naturally.",
-      gradient: "from-secondary to-secondary/70",
+        "Hands-free interaction using natural voice commands and responses.",
+      gradient: "from-secondary to-tertiary",
     },
     {
-      icon: <BarChart3 className="w-8 h-8" />,
+      icon: <BarChart3 className="w-6 h-6" />,
       title: "Real-time Metrics",
       description:
-        "Track key financial indicators across multiple companies with live updates.",
-      gradient: "from-chart-1 to-chart-1/70",
+        "Live financial indicators across global companies and markets.",
+      gradient: "from-chart-1 to-primary",
     },
     {
-      icon: <TrendingUp className="w-8 h-8" />,
+      icon: <TrendingUp className="w-6 h-6" />,
       title: "Sentiment Analysis",
       description:
-        "Analyze emotional tone and sentiment in earnings transcripts instantly.",
-      gradient: "from-destructive to-destructive/70",
+        "Detect emotional tone and investor sentiment from transcripts.",
+      gradient: "from-destructive to-accent",
     },
     {
-      icon: <LineChart className="w-8 h-8" />,
+      icon: <LineChart className="w-6 h-6" />,
       title: "Performance Charts",
-      description:
-        "Dynamic charts and visualizations of financial data and trends.",
-      gradient: "from-chart-2 to-chart-2/70",
+      description: "Interactive charts for financial trends and comparisons.",
+      gradient: "from-chart-2 to-chart-3",
     },
     {
-      icon: <Users className="w-8 h-8" />,
+      icon: <Users className="w-6 h-6" />,
       title: "Competitive Insights",
-      description: "Compare financial metrics across competitors side-by-side.",
-      gradient: "from-chart-3 to-chart-3/70",
+      description:
+        "Benchmark companies side-by-side for smarter investment decisions.",
+      gradient: "from-chart-3 to-secondary",
     },
     {
-      icon: <Calendar className="w-8 h-8" />,
+      icon: <Calendar className="w-6 h-6" />,
       title: "Earnings Calendar",
       description:
-        "Track upcoming earnings announcements and never miss a call.",
-      gradient: "from-chart-4 to-chart-4/70",
+        "Never miss earnings calls with smart scheduling and alerts.",
+      gradient: "from-chart-4 to-accent",
     },
     {
-      icon: <FileText className="w-8 h-8" />,
+      icon: <FileText className="w-6 h-6" />,
       title: "Transcript Management",
-      description: "Search and access historical earnings transcripts easily.",
-      gradient: "from-chart-5 to-chart-5/70",
+      description:
+        "Search and analyze historical earnings call transcripts instantly.",
+      gradient: "from-chart-5 to-primary",
     },
   ];
 
   return (
-    <section id="features" className="py-20 px-4 bg-background">
+    <section id="features" className="py-24 px-6 bg-background">
       <div className="max-w-7xl mx-auto">
-        <div className="text-center mb-12">
-          <h2 className="text-4xl font-bold mb-4 bg-gradient-to-r from-foreground to-foreground/70 bg-clip-text text-transparent">
+        {/* Header */}
+        <div className="text-center mb-16">
+          <h2 className="text-4xl md:text-5xl font-bold mb-5 text-gradient-primary p-2">
             Powerful Features for Financial Intelligence
           </h2>
-          <p className="text-xl text-muted-foreground max-w-3xl mx-auto">
+
+          <p className="text-lg text-muted-foreground max-w-3xl mx-auto">
             Everything you need to decode earnings calls and make informed
             investment decisions
           </p>
         </div>
+
+        {/* Grid */}
         <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-6">
           {features.map((feature, index) => (
             <FeatureCard key={index} {...feature} index={index} />
@@ -272,9 +303,7 @@ const FeatureCard = ({ icon, title, description, gradient, index }) => {
   const inView = useInView(ref);
 
   useEffect(() => {
-    if (inView) {
-      controls.start("visible");
-    }
+    if (inView) controls.start("visible");
   }, [controls, inView]);
 
   return (
@@ -283,49 +312,73 @@ const FeatureCard = ({ icon, title, description, gradient, index }) => {
       initial="hidden"
       animate={controls}
       variants={{
-        hidden: { opacity: 0, y: 20 },
-        visible: { opacity: 1, y: 0, transition: { delay: index * 0.1 } },
+        hidden: { opacity: 0, y: 25 },
+        visible: {
+          opacity: 1,
+          y: 0,
+          transition: { delay: index * 0.08 },
+        },
       }}
-      className="group bg-card rounded-2xl p-6 shadow-lg hover:shadow-2xl transition-all duration-300 hover:-translate-y-1 border border-border"
+      className="group relative card-premium p-6 overflow-hidden hover:-translate-y-2 transition-all duration-300"
     >
+      {/* top glow line */}
       <div
-        className={`w-16 h-16 rounded-xl bg-gradient-to-r ${gradient} text-white flex items-center justify-center mb-4 group-hover:scale-110 transition-transform`}
+        className={`absolute top-0 left-0 right-0 h-[3px] bg-gradient-to-r ${gradient} opacity-70`}
+      />
+
+      {/* background number */}
+      <span className="absolute -top-4 -right-2 text-6xl font-bold text-muted/10 select-none">
+        {String(index + 1).padStart(2, "0")}
+      </span>
+
+      {/* icon orb */}
+      <div
+        className={`w-12 h-12 rounded-xl flex items-center justify-center mb-5 bg-gradient-to-r ${gradient} text-white shadow-lg group-hover:scale-110 transition-transform`}
       >
         {icon}
       </div>
-      <h3 className="text-xl font-semibold mb-2 text-foreground">{title}</h3>
-      <p className="text-muted-foreground">{description}</p>
+
+      {/* title */}
+      <h3 className="text-lg font-semibold mb-2 group-hover:text-primary transition-colors">
+        {title}
+      </h3>
+
+      {/* description */}
+      <p className="text-sm text-muted-foreground leading-relaxed">
+        {description}
+      </p>
+
+      {/* hover glow */}
+      <div className="absolute inset-0 opacity-0 group-hover:opacity-100 transition bg-gradient-to-br from-primary/5 via-transparent to-secondary/5" />
     </motion.div>
   );
 };
 
-// How It Works Section
 const HowItWorksSection = () => {
   const steps = [
     {
-      icon: <FileText className="w-8 h-8" />,
+      icon: <FileText className="w-6 h-6" />,
       title: "Select Transcript",
       description: "Choose from our library of earnings call transcripts",
       step: "01",
     },
     {
-      icon: <Brain className="w-8 h-8" />,
+      icon: <Brain className="w-6 h-6" />,
       title: "AI Analysis",
       description:
-        "Our AI processes the transcript, extracting key insights and sentiment",
+        "AI extracts insights, sentiment, risks, and financial signals",
       step: "02",
     },
     {
-      icon: <MessageSquare className="w-8 h-8" />,
-      title: "Interactive Q&A",
-      description: "Ask questions naturally through chat or voice interface",
+      icon: <MessageSquare className="w-6 h-6" />,
+      title: "Ask Questions",
+      description: "Chat or use voice to explore earnings data naturally",
       step: "03",
     },
     {
-      icon: <TrendingUp className="w-8 h-8" />,
+      icon: <TrendingUp className="w-6 h-6" />,
       title: "Get Insights",
-      description:
-        "Receive actionable insights, comparisons, and recommendations",
+      description: "Receive actionable insights, comparisons, and predictions",
       step: "04",
     },
   ];
@@ -333,42 +386,55 @@ const HowItWorksSection = () => {
   return (
     <section
       id="how-it-works"
-      className="py-20 px-4 bg-gradient-to-br from-primary/5 via-secondary/5 to-primary/5"
+      className="py-24 px-6 bg-gradient-to-br from-primary/5 via-background to-secondary/5"
     >
       <div className="max-w-7xl mx-auto">
-        <div className="text-center mb-12">
-          <h2 className="text-4xl font-bold mb-4 text-foreground">
+        {/* Header */}
+        <div className="text-center mb-16">
+          <h2 className="text-4xl md:text-5xl font-bold mb-4 text-gradient-primary">
             How It Works
           </h2>
-          <p className="text-xl text-muted-foreground">
-            Get insights in 4 simple steps
+          <p className="text-lg text-muted-foreground">
+            From raw earnings calls → actionable financial intelligence
           </p>
         </div>
-        <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-8">
+
+        {/* Steps */}
+        <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-6 relative">
           {steps.map((step, index) => (
             <motion.div
               key={index}
-              initial={{ opacity: 0, scale: 0.9 }}
-              whileInView={{ opacity: 1, scale: 1 }}
-              transition={{ delay: index * 0.1 }}
-              className="relative"
+              initial={{ opacity: 0, y: 30 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              transition={{ delay: index * 0.12 }}
+              className="relative group"
             >
-              <div className="text-center">
-                <div className="w-20 h-20 mx-auto bg-gradient-to-r from-primary to-primary/70 rounded-2xl flex items-center justify-center text-white mb-4 relative">
+              <div className="card-premium p-6 h-full relative overflow-hidden">
+                {/* background step number */}
+                <span className="absolute -top-6 -right-2 text-7xl font-bold text-muted/10 select-none">
+                  {step.step}
+                </span>
+
+                {/* icon orb */}
+                <div className="w-12 h-12 rounded-xl flex items-center justify-center bg-gradient-to-r from-primary to-secondary text-white shadow-lg mb-5 group-hover:scale-110 transition-transform">
                   {step.icon}
-                  <div className="absolute -top-2 -right-2 w-8 h-8 bg-destructive rounded-full flex items-center justify-center text-sm font-bold text-destructive-foreground">
-                    {step.step}
-                  </div>
                 </div>
-                <h3 className="text-xl font-semibold mb-2 text-foreground">
-                  {step.title}
-                </h3>
-                <p className="text-muted-foreground">{step.description}</p>
+
+                {/* title */}
+                <h3 className="text-lg font-semibold mb-2">{step.title}</h3>
+
+                {/* description */}
+                <p className="text-sm text-muted-foreground leading-relaxed">
+                  {step.description}
+                </p>
+
+                {/* subtle glow line on hover */}
+                <div className="absolute inset-x-0 top-0 h-[2px] bg-gradient-to-r from-primary via-secondary to-tertiary opacity-0 group-hover:opacity-100 transition" />
               </div>
+
+              {/* connector (desktop only) */}
               {index < steps.length - 1 && (
-                <div className="hidden lg:block absolute top-10 left-full w-full h-0.5 bg-gradient-to-r from-primary/30 to-primary/30">
-                  <ChevronRight className="absolute right-0 top-1/2 transform -translate-y-1/2 text-primary/50" />
-                </div>
+                <div className="hidden lg:block absolute top-1/2 right-[-20px] w-10 h-[2px] bg-gradient-to-r from-primary/40 to-transparent" />
               )}
             </motion.div>
           ))}
@@ -378,66 +444,94 @@ const HowItWorksSection = () => {
   );
 };
 
-// Metrics Showcase
 const MetricsShowcase = () => {
   const metrics = [
-    { label: "Revenue Growth", value: "+23.5%", trend: "up", color: "green" },
-    { label: "Net Income", value: "$12.4B", trend: "up", color: "green" },
-    { label: "EPS", value: "$3.45", trend: "up", color: "green" },
-    { label: "ROE", value: "18.2%", trend: "up", color: "green" },
-    { label: "Debt/Equity", value: "1.45", trend: "down", color: "green" },
-    { label: "P/E Ratio", value: "12.3x", trend: "neutral", color: "yellow" },
+    { label: "Revenue Growth", value: "+23.5%", trend: "up" },
+    { label: "Net Income", value: "$12.4B", trend: "up" },
+    { label: "EPS", value: "$3.45", trend: "up" },
+    { label: "ROE", value: "18.2%", trend: "up" },
+    { label: "Debt/Equity", value: "1.45", trend: "down" },
+    { label: "P/E Ratio", value: "12.3x", trend: "neutral" },
   ];
 
   return (
-    <section className="py-20 px-4 bg-gradient-to-r from-primary via-primary/90 to-primary/80 text-primary-foreground">
-      <div className="max-w-7xl mx-auto">
-        <div className="text-center mb-12">
-          <h2 className="text-4xl font-bold mb-4">
+    <section className="py-24 px-6 bg-gradient-to-r from-primary via-primary/90 to-primary/80 text-primary-foreground relative overflow-hidden">
+      {/* subtle glow overlay */}
+      <div className="absolute inset-0 opacity-20 bg-[radial-gradient(circle_at_20%_20%,white,transparent_60%)]" />
+
+      <div className="max-w-7xl mx-auto relative">
+        {/* Header */}
+        <div className="text-center mb-14">
+          <h2 className="text-4xl md:text-5xl font-bold mb-4 tracking-tight">
             Real-time Financial Metrics
           </h2>
-          <p className="text-xl text-primary-foreground/80">
+          <p className="text-primary-foreground/80 text-lg">
             Live data from major financial institutions
           </p>
         </div>
+
+        {/* Grid */}
         <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
-          {metrics.map((metric, index) => (
-            <motion.div
-              key={index}
-              initial={{ opacity: 0, scale: 0.9 }}
-              whileInView={{ opacity: 1, scale: 1 }}
-              transition={{ delay: index * 0.1 }}
-              className="bg-white/10 backdrop-blur-sm rounded-xl p-6 border border-white/20"
-            >
-              <p className="text-primary-foreground/80 mb-2">{metric.label}</p>
-              <p className="text-3xl font-bold mb-2">{metric.value}</p>
-              {metric.trend === "up" && (
-                <div className="flex items-center gap-1 text-green-400">
-                  <TrendingUp className="w-4 h-4" /> +12% vs last quarter
+          {metrics.map((metric, index) => {
+            const isUp = metric.trend === "up";
+            const isDown = metric.trend === "down";
+
+            return (
+              <div
+                key={index}
+                className="group relative rounded-2xl p-6 bg-white/10 backdrop-blur-md border border-white/20 shadow-lg transition-all duration-300 hover:-translate-y-1 hover:bg-white/15"
+              >
+                {/* top glow line */}
+                <div className="absolute top-0 left-0 right-0 h-[2px] bg-gradient-to-r from-transparent via-white/40 to-transparent opacity-0 group-hover:opacity-100 transition" />
+
+                {/* Label */}
+                <p className="text-primary-foreground/70 text-sm mb-2">
+                  {metric.label}
+                </p>
+
+                {/* Value */}
+                <p className="text-3xl font-bold mb-3 tracking-tight">
+                  {metric.value}
+                </p>
+
+                {/* Trend badge */}
+                <div
+                  className={`inline-flex items-center gap-2 px-3 py-1 rounded-full text-xs font-medium border
+                    ${
+                      isUp
+                        ? "bg-emerald-500/20 text-emerald-200 border-emerald-400/30"
+                        : isDown
+                          ? "bg-red-500/20 text-red-200 border-red-400/30"
+                          : "bg-yellow-500/20 text-yellow-200 border-yellow-400/30"
+                    }
+                  `}
+                >
+                  {isUp && "▲"}
+                  {isDown && "▼"}
+                  {!isUp && !isDown && "●"}
+
+                  {isUp && "+12% vs last quarter"}
+                  {isDown && "-8% vs last quarter"}
+                  {!isUp && !isDown && "Stable vs last quarter"}
                 </div>
-              )}
-              {metric.trend === "down" && (
-                <div className="flex items-center gap-1 text-red-400">
-                  <TrendingUp className="w-4 h-4 transform rotate-180" /> -8% vs
-                  last quarter
-                </div>
-              )}
-            </motion.div>
-          ))}
+              </div>
+            );
+          })}
         </div>
       </div>
     </section>
   );
 };
 
-// AI Assistant Demo
 const AIAssistantDemo = () => {
   const [isListening, setIsListening] = useState(false);
   const [transcript, setTranscript] = useState("");
+
   const isUserLoggedIn = useSelector((state: any) => state.user.isUserLoggedIn);
 
   const { setIsLoginOpen, isVoiceAssistantOpen, setIsVoiceAssistantOpen } =
     useContext(ParentContext);
+
   const [isOpen, setIsOpen] = useState(false);
 
   const handleSwitchToVoice = () => {
@@ -450,73 +544,125 @@ const AIAssistantDemo = () => {
   };
 
   return (
-    <section className="py-20 px-4 bg-background">
-      <div className="max-w-7xl mx-auto">
-        <div className="grid lg:grid-cols-2 gap-12 items-center">
-          <div>
-            <h2 className="text-4xl font-bold mb-4 text-foreground">
-              AI Voice Assistant
-            </h2>
-            <p className="text-xl text-muted-foreground mb-6">
-              Interact with earnings call data naturally using voice commands.
-              Ask questions, get summaries, and compare companies hands-free.
-            </p>
-            <div className="space-y-4">
-              <Feature icon={<Mic />} text="Voice-controlled interface" />
-              <Feature
-                icon={<MessageSquare />}
-                text="Natural language understanding"
-              />
-              <Feature icon={<Brain />} text="Contextual responses" />
-              <Feature icon={<Zap />} text="Real-time answers" />
+    <section className="py-24 px-6 bg-background">
+      <div className="max-w-7xl mx-auto grid lg:grid-cols-2 gap-16 items-center">
+        {/* LEFT CONTENT */}
+        <div>
+          <h2 className="text-4xl md:text-5xl font-bold mb-5 text-gradient-cool">
+            AI Voice Assistant
+          </h2>
+
+          <p className="text-lg text-muted-foreground mb-8 leading-relaxed">
+            Interact with earnings call data naturally using voice commands. Ask
+            questions, get summaries, and compare companies hands-free.
+          </p>
+
+          <div className="space-y-4">
+            <Feature icon={<Mic />} text="Voice-controlled interface" />
+            <Feature
+              icon={<MessageSquare />}
+              text="Natural language understanding"
+            />
+            <Feature
+              icon={<Brain />}
+              text="Context-aware financial intelligence"
+            />
+            <Feature icon={<Zap />} text="Real-time AI responses" />
+          </div>
+
+          {/* CTA */}
+          <button
+            onClick={() => setIsOpen(true)}
+            className="mt-8 btn-premium px-6 py-3 rounded-xl flex items-center gap-3"
+          >
+            Try Voice Assistant
+            <Mic className="w-5 h-5" />
+          </button>
+
+          <ChatStep
+            isOpen={isOpen}
+            setIsOpen={setIsOpen}
+            onExploreMore={() => !isUserLoggedIn && setIsLoginOpen(true)}
+            handleSwitchToVoice={handleSwitchToVoice}
+            isUserLoggedIn={isUserLoggedIn}
+          />
+        </div>
+
+        {/* RIGHT AI PANEL */}
+        <div className="relative">
+          <div className="card-premium p-8 relative overflow-hidden">
+            {/* AI glow background */}
+            <div className="absolute inset-0 opacity-10 bg-[radial-gradient(circle_at_30%_20%,#2563eb,transparent_60%)]" />
+
+            {/* HEADER */}
+            <div className="flex items-center justify-between mb-8 relative">
+              <div className="flex items-center gap-2">
+                <span className="w-2 h-2 rounded-full bg-emerald-500 animate-pulse" />
+                <span className="text-sm text-muted-foreground">
+                  AI Listening
+                </span>
+              </div>
+
+              <span className="text-xs px-3 py-1 rounded-full bg-primary/10 text-primary border border-primary/20">
+                LIVE
+              </span>
             </div>
 
-            <Button
-              onClick={() => setIsOpen(true)}
-              className="group mt-6 rounded-full w-full sm:w-[60vw] md:w-[40vw] lg:w-[20vw] max-w-[280px] py-3 sm:py-4 lg:py-5 px-4 sm:px-6 bg-primary text-primary-foreground font-semibold shadow-lg shadow-primary/30 transition-transform transform hover:scale-105 flex items-center justify-center gap-2"
-            >
-              Try Voice Assistant <Mic className="w-5 h-5" />
-              <motion.div
-                initial={{ x: 0 }}
-                whileHover={{ x: 8 }}
-                transition={{ type: "spring", stiffness: 150, damping: 12 }}
-                className="group-hover:translate-x-2"
-              >
-                <ArrowRight className="w-4 sm:w-5 h-4 sm:h-5" />
-              </motion.div>
-            </Button>
-            <ChatStep
-              isOpen={isOpen}
-              setIsOpen={setIsOpen}
-              onExploreMore={() => !isUserLoggedIn && setIsLoginOpen(true)}
-              handleSwitchToVoice={handleSwitchToVoice}
-              isUserLoggedIn={isUserLoggedIn}
-            />
-          </div>
-          <div className="bg-gradient-primary rounded-2xl p-8 shadow-2xl">
+            {/* BIG MIC ORB */}
             <div className="flex items-center justify-center mb-6">
               <div
-                className={`w-32 h-32 rounded-full bg-gradient-to-r from-primary to-primary/70 flex items-center justify-center cursor-pointer transition-all ${
-                  isListening ? "animate-pulse scale-110" : "hover:scale-105"
-                }`}
                 onClick={toggleListening}
+                className={`relative w-36 h-36 rounded-full flex items-center justify-center cursor-pointer transition-all duration-300
+                ${
+                  isListening
+                    ? "animate-pulse-glow scale-110"
+                    : "hover:scale-105"
+                }
+                bg-gradient-to-r from-primary via-secondary to-tertiary shadow-lg`}
               >
-                <Mic className="w-12 h-12 text-white" />
+                <Mic className="w-14 h-14 text-white" />
+
+                {/* outer ring */}
+                <div className="absolute inset-0 rounded-full border border-white/20 scale-110" />
               </div>
             </div>
-            <div className="text-center text-white mb-4">
-              {isListening ? "Listening..." : "Click to start speaking"}
+
+            {/* STATUS */}
+            <div className="text-center mb-6">
+              <p className="font-medium">
+                {isListening
+                  ? "Listening to your question..."
+                  : "Tap to start speaking"}
+              </p>
+              <p className="text-xs text-muted-foreground mt-1">
+                Powered by AI financial intelligence
+              </p>
             </div>
+
+            {/* TRANSCRIPT */}
             {transcript && (
-              <div className="bg-white/10 rounded-lg p-4 text-white">
-                <p className="text-sm">You said:</p>
-                <p className="mt-1">{transcript}</p>
+              <div className="mb-6 p-4 rounded-xl bg-muted border border-border">
+                <p className="text-xs text-muted-foreground mb-1">You said</p>
+                <p className="text-sm font-medium">{transcript}</p>
               </div>
             )}
-            <div className="mt-6 space-y-2">
-              <Suggestion text="What were JPM's earnings this quarter?" />
-              <Suggestion text="Compare MSFT and SOFI performance" />
-              <Suggestion text="Summarize the CEO's outlook" />
+
+            {/* SUGGESTIONS */}
+            <div className="space-y-2">
+              <p className="text-xs text-muted-foreground mb-2">Try asking:</p>
+
+              {[
+                "What were JPM earnings this quarter?",
+                "Compare MSFT vs SOFI performance",
+                "Summarize CEO outlook",
+              ].map((q, i) => (
+                <button
+                  key={i}
+                  className="w-full text-left px-4 py-2 rounded-lg border border-border bg-background hover:bg-muted transition text-sm"
+                >
+                  {q}
+                </button>
+              ))}
             </div>
           </div>
         </div>
@@ -710,7 +856,7 @@ const PricingSection = () => {
 };
 
 // CTA Section
-const CTASection = () => {
+const CTASection = ({ router }) => {
   return (
     <section className="py-20 px-4 bg-gradient-to-r from-primary to-primary/80">
       <div className="max-w-4xl mx-auto text-center text-primary-foreground">
@@ -721,7 +867,10 @@ const CTASection = () => {
           Join thousands of investors who use AI to gain competitive advantage
         </p>
         <div className="flex flex-col sm:flex-row gap-4 justify-center">
-          <button className="bg-background text-foreground px-8 py-3 rounded-lg font-semibold hover:shadow-xl transition-all flex items-center justify-center gap-2">
+          <button
+            onClick={() => router.push("/insights")}
+            className="bg-background text-foreground px-8 py-3 rounded-lg font-semibold hover:shadow-xl transition-all flex items-center justify-center gap-2"
+          >
             Let's Get Started <ArrowRight className="w-5 h-5" />
           </button>
         </div>
@@ -765,18 +914,13 @@ const Footer = () => {
             <h4 className="text-foreground font-semibold mb-4">Company</h4>
             <ul className="space-y-2">
               <li>
-                <a href="#" className="hover:text-foreground transition">
+                <a href="/about" className="hover:text-foreground transition">
                   About
-                </a>
-              </li>
-              <li>
-                <a href="#" className="hover:text-foreground transition">
-                  Blog
                 </a>
               </li>
 
               <li>
-                <a href="#" className="hover:text-foreground transition">
+                <a href="/contact" className="hover:text-foreground transition">
                   Contact
                 </a>
               </li>
@@ -786,22 +930,34 @@ const Footer = () => {
             <h4 className="text-foreground font-semibold mb-4">Legal</h4>
             <ul className="space-y-2">
               <li>
-                <a href="#" className="hover:text-foreground transition">
+                <a
+                  href="/privacy-policy"
+                  className="hover:text-foreground transition"
+                >
                   Privacy Policy
                 </a>
               </li>
               <li>
-                <a href="#" className="hover:text-foreground transition">
+                <a
+                  href="/terms-of-service"
+                  className="hover:text-foreground transition"
+                >
                   Terms of Service
                 </a>
               </li>
               <li>
-                <a href="#" className="hover:text-foreground transition">
+                <a
+                  href="/security"
+                  className="hover:text-foreground transition"
+                >
                   Security
                 </a>
               </li>
               <li>
-                <a href="#" className="hover:text-foreground transition">
+                <a
+                  href="/compliance"
+                  className="hover:text-foreground transition"
+                >
                   Compliance
                 </a>
               </li>
