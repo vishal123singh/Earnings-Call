@@ -23,10 +23,10 @@ const EarningsCard = ({ item }) => {
   return (
     <motion.div
       whileHover={{ scale: 1.05 }}
-      className="bg-white rounded-2xl shadow-md p-4 border border-gray-200 hover:shadow-lg transition"
+      className="bg-white rounded-2xl shadow-md p-4 border border-gray-200 hover:shadow-lg transition text-sm"
     >
-      <h3 className="text-lg font-semibold text-blue-600">{item.company}</h3>
-      <h5 className="text-lg font-semibold text-gray-600">
+      <h3 className="text-md font-semibold text-blue-600">{item.company}</h3>
+      <h5 className="text-md font-semibold text-gray-600">
         ({item.symbol || item.ticker})
       </h5>
       <p className="text-gray-700">
@@ -66,13 +66,10 @@ const CompanyEarningsCard = ({ item }) => {
   return (
     <motion.div
       whileHover={{ scale: 1.05 }}
-      className="bg-white rounded-2xl shadow-md p-4 border border-gray-200 hover:shadow-lg transition"
+      className="bg-white rounded-2xl shadow-md p-4 border border-gray-200 hover:shadow-lg transition text-sm"
     >
-      <h3 className="text-lg font-semibold text-blue-600">{item.name}</h3>
-      <h5 className="text-lg font-semibold text-gray-600">({item.symbol})</h5>
-      <div className="flex items-center gap-2 mb-2">
-        <h3 className="text-lg font-semibold text-blue-600">{item.name}</h3>
-      </div>
+      <h3 className="text-md font-semibold text-blue-600">{item.name}</h3>
+      <h5 className="text-md font-semibold text-gray-600">({item.symbol})</h5>
 
       <p className="text-gray-700">
         Report Date:{" "}
@@ -157,7 +154,6 @@ const EarningsCalendar = () => {
   //  Initial Data Fetch when Tab, Symbol, or Date Changes
   useEffect(() => {
     //  Reset to page 1 when params change
-    console.log("🔄 Fetching data...");
 
     if (selectedCompanies.length > 0) {
       fetchData(1);
@@ -233,7 +229,7 @@ const EarningsCalendar = () => {
 
       {/* 📊 Scrollable Cards Container */}
       <div
-        className="flex-1 overflow-y-auto"
+        className="flex-1 overflow-y-auto px-2 py-4"
         style={{
           maxHeight: "calc(100vh - 220px)", // Restrict max height to viewport
         }}

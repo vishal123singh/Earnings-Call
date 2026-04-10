@@ -20,6 +20,7 @@ const ChatStep = ({
   setIsOpen,
   onExploreMore,
   handleSwitchToVoice,
+  isUserLoggedIn,
 }) => {
   const [inputText, setInputText] = useState("");
   const [messages, setMessages] = useState([]);
@@ -369,7 +370,7 @@ const ChatStep = ({
                 </motion.div>
               ))}
 
-              {isFinalResponseDone && (
+              {isFinalResponseDone && !isUserLoggedIn && (
                 <motion.div
                   key="explore-container"
                   initial={{ y: 30, opacity: 0 }}

@@ -333,7 +333,7 @@ const FilterOptions = () => {
       </div>
 
       {/* Model Select */}
-      <div>
+      {/* <div>
         <label
           className="text-sm font-medium block mb-2"
           style={{ color: "var(--sidebar-foreground)" }}
@@ -355,10 +355,10 @@ const FilterOptions = () => {
           placeholder={filterConfig.selectProps.model.placeholder}
           styles={customStyles}
         />
-      </div>
+      </div> */}
 
       {/* Apply Filters Button */}
-      <button
+      {/* <button
         className="w-full py-2.5 rounded-lg font-semibold text-sm transition-all hover:translate-y-[-2px]"
         style={{
           background:
@@ -368,10 +368,10 @@ const FilterOptions = () => {
         }}
       >
         Apply Filters
-      </button>
+      </button> */}
 
       {/* Reset Button */}
-      <button
+      {/* <button
         className="w-full py-2.5 rounded-lg font-semibold text-sm transition-all hover:translate-y-[-2px]"
         style={{
           background: "transparent",
@@ -380,7 +380,7 @@ const FilterOptions = () => {
         }}
       >
         Reset All
-      </button>
+      </button> */}
     </div>
   );
 };

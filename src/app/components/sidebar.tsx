@@ -21,7 +21,7 @@ const Sidebar = () => {
     >
       {!collapsed && (
         <Box
-          className="space-y-4 h-full overflow-y-auto"
+          className="space-y-2 h-full overflow-y-auto"
           style={{
             background: "var(--sidebar)",
           }}

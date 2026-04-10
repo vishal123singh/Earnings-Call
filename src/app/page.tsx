@@ -23,6 +23,7 @@ import {
 } from "lucide-react";
 import { motion, useAnimation, useInView } from "framer-motion";
 import { Button } from "./components/ui/button";
+import { useSelector } from "react-redux";
 
 export default function LandingPage() {
   return (
@@ -303,9 +304,8 @@ const HowItWorksSection = () => {
   const steps = [
     {
       icon: <FileText className="w-8 h-8" />,
-      title: "Upload or Select Transcript",
-      description:
-        "Choose from our library of earnings call transcripts or upload your own",
+      title: "Select Transcript",
+      description: "Choose from our library of earnings call transcripts",
       step: "01",
     },
     {
@@ -434,6 +434,7 @@ const MetricsShowcase = () => {
 const AIAssistantDemo = () => {
   const [isListening, setIsListening] = useState(false);
   const [transcript, setTranscript] = useState("");
+  const isUserLoggedIn = useSelector((state: any) => state.user.isUserLoggedIn);
 
   const { setIsLoginOpen, isVoiceAssistantOpen, setIsVoiceAssistantOpen } =
     useContext(ParentContext);
@@ -487,8 +488,9 @@ const AIAssistantDemo = () => {
             <ChatStep
               isOpen={isOpen}
               setIsOpen={setIsOpen}
-              onExploreMore={() => setIsLoginOpen(true)}
+              onExploreMore={() => !isUserLoggedIn && setIsLoginOpen(true)}
               handleSwitchToVoice={handleSwitchToVoice}
+              isUserLoggedIn={isUserLoggedIn}
             />
           </div>
           <div className="bg-gradient-primary rounded-2xl p-8 shadow-2xl">

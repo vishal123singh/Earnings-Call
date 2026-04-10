@@ -173,7 +173,7 @@ const FinancialAnalysisDashboard = ({
   };
 
   const prepareCompanyDataForGraph = (ticker) => {
-    if (!selectedGraph || !companyData[ticker] || !companyData[ticker].data) {
+    if (!selectedGraph || !companyData[ticker]?.data) {
       return null;
     }
 
@@ -181,13 +181,26 @@ const FinancialAnalysisDashboard = ({
     const preparedData = {};
 
     requirements.statements.forEach((statementType) => {
-      if (companyData[ticker].data[statementType]?.[periodType]) {
+      // Convert camelCase to snake_case for API response
+      let apiKey;
+      switch (statementType) {
+        case "incomeStatement":
+          apiKey = "income_statement";
+          break;
+        case "balanceSheet":
+          apiKey = "balance_sheet";
+          break;
+        case "cashFlow":
+          apiKey = "cash_flow";
+          break;
+        default:
+          apiKey = statementType;
+      }
+
+      if (companyData[ticker].data[apiKey] && periodType === "annual") {
+        // The data is already organized by year, just pass it directly
         preparedData[statementType] = {
-          [periodType]: {
-            headers:
-              companyData[ticker].data[statementType][periodType].headers,
-            rows: companyData[ticker].data[statementType][periodType],
-          },
+          [periodType]: companyData[ticker].data[apiKey],
         };
       }
     });
