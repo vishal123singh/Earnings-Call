@@ -19,7 +19,7 @@ import SignupModal from "./components/auth/register";
 import { setIsUserLoggedIn } from "../../store/userSlice";
 import AIVoiceAssistant from "./components/AIVoiceAssistant";
 import Navbar from "./components/navbar";
-
+import { Suspense } from "react";
 import { onAuthStateChanged, signOut } from "firebase/auth";
 import { auth } from "@/lib/firebase";
 
@@ -211,7 +211,9 @@ export default function RootLayout({
         <Provider store={store}>
           <CssBaseline />
           <ThemeProvider theme={theme}>
-            <LayoutContent>{children}</LayoutContent>
+            <Suspense fallback={null}>
+              <LayoutContent>{children}</LayoutContent>
+            </Suspense>
           </ThemeProvider>
         </Provider>
       </body>
