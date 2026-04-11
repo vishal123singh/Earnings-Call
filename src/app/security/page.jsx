@@ -21,9 +21,9 @@ export default function SecurityPage() {
           <div className="card-premium p-6">
             <h2 className="text-xl font-semibold mb-3">1. Overview</h2>
             <p className="text-muted-foreground leading-relaxed">
-              Earnings Call Insights is built with a security-first approach. We
-              protect financial data, user interactions, and API usage using
-              modern encryption and cloud security standards.
+              InvestorEye is built with a security-first approach. We protect
+              financial data, user interactions, and API usage using modern
+              encryption and cloud security standards.
             </p>
           </div>
 

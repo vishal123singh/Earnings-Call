@@ -5,12 +5,8 @@ import {
   MessageCircle,
   Mic,
   SendHorizonalIcon,
-  SpeakerIcon,
-  Volume,
   Volume1,
-  VolumeIcon,
   VolumeOffIcon,
-  VolumeX,
 } from "lucide-react";
 import { useEffect, useState, useRef } from "react";
 import { X } from "lucide-react";
@@ -30,18 +26,18 @@ const ChatStep = ({
   const intervalRef = useRef(null);
   const [currentlyPlaying, setCurrentlyPlaying] = useState(null);
   const [isFinalResponseDone, setIsFinalResponseDone] = useState(false);
-  const chatRef = useRef(null); // Create a ref for the chat container
+  const chatRef = useRef(null);
 
   let audioInstance = useRef(null);
 
   // 🎧 Play/Stop Speech Using Web Speech API
   const toggleSpeech = (text, index) => {
     if (currentlyPlaying === index) {
-      stopSpeech(); // Stop if already playing
+      stopSpeech();
       setCurrentlyPlaying(null);
     } else {
-      stopSpeech(); // Stop any existing speech
-      playSpeech(text, index); // Play new text
+      stopSpeech();
+      playSpeech(text, index);
     }
   };
 
@@ -51,7 +47,6 @@ const ChatStep = ({
       const synth = window.speechSynthesis;
       const utterance = new SpeechSynthesisUtterance(text);
 
-      // Get available voices and select a female voice
       const voices = synth.getVoices();
       const femaleVoice = voices.find(
         (voice) =>
@@ -60,21 +55,19 @@ const ChatStep = ({
           voice.name.includes("US English Female"),
       );
 
-      // Use the selected female voice if available, otherwise fallback
       if (femaleVoice) {
         utterance.voice = femaleVoice;
       } else {
-        utterance.voice = voices[0]; // Fallback to default if no female voice found
+        utterance.voice = voices[0];
       }
 
-      utterance.rate = 1; // Adjust speed (1 is normal speed)
-      utterance.pitch = 1.2; // Slightly higher pitch for natural effect
+      utterance.rate = 1;
+      utterance.pitch = 1.2;
 
-      // Play and handle completion
       synth.speak(utterance);
       setCurrentlyPlaying(index);
 
-      utterance.onend = () => setCurrentlyPlaying(null); // Reset after speech ends
+      utterance.onend = () => setCurrentlyPlaying(null);
     } else {
       console.error("Speech Synthesis API not supported in this browser.");
     }
@@ -83,7 +76,7 @@ const ChatStep = ({
   // ⏹️ Stop Speech
   const stopSpeech = () => {
     if (typeof window !== "undefined" && "speechSynthesis" in window) {
-      window.speechSynthesis.cancel(); // Stop any ongoing speech
+      window.speechSynthesis.cancel();
       setCurrentlyPlaying(null);
     }
   };
@@ -166,7 +159,6 @@ const ChatStep = ({
     if (!prompt || isGenerating) return;
     setIsGenerating(true);
 
-    // Simulate AI response
     setTimeout(() => {
       typeResponse(
         `Here are the most common themes and questions that emerged:
@@ -227,7 +219,6 @@ const ChatStep = ({
   const handleSend = async (prompt) => {
     if (!prompt || isGenerating) return;
     setIsGenerating(true);
-    // Add the user's message to the chat and clear the input
     setMessages((prev) => [
       ...prev,
       { type: "user", text: prompt, isTyped: true },
@@ -235,7 +226,6 @@ const ChatStep = ({
     setInputText("");
 
     try {
-      // Call the API endpoint with the user input. Additional parameters can be added as needed.
       const res = await fetch("/api/ai-voice-assistant", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
@@ -249,7 +239,6 @@ const ChatStep = ({
       let done = false;
       let fullResponse = "";
 
-      // Add an empty bot message which we will update as we receive data.
       setMessages((prev) => [
         ...prev,
         { type: "bot", text: "", isTyped: true },
@@ -268,7 +257,6 @@ const ChatStep = ({
                 const data = JSON.parse(jsonStr);
                 const chunkText = data.text;
                 fullResponse += chunkText;
-                // Update the last message with the accumulated text.
                 setMessages((prev) => {
                   const updated = [...prev];
                   updated[updated.length - 1] = {
@@ -305,70 +293,114 @@ const ChatStep = ({
 
   return (
     <>
-      {/* Chat Drawer */}
-      <AnimatePresence>
+      {/* Chat Drawer - Enhanced */}
+      <AnimatePresence mode="wait">
         {isOpen && (
           <motion.div
             ref={chatRef}
-            initial={{ x: "100%" }}
-            animate={{ x: 0 }}
-            exit={{ x: "100%" }}
+            initial={{ x: "100%", opacity: 0 }}
+            animate={{ x: 0, opacity: 1 }}
+            exit={{ x: "100%", opacity: 0 }}
             transition={{ type: "spring", stiffness: 120, damping: 20 }}
-            className="fixed top-0 right-0 w-[360px] h-screen bg-background shadow-2xl flex flex-col border-l border-border z-[5000]"
+            className="fixed top-0 right-0 w-[400px] h-screen bg-gradient-to-b from-gray-50 to-white dark:from-gray-900 dark:to-gray-950 shadow-2xl flex flex-col border-l border-gray-200 dark:border-gray-800 z-[5000]"
           >
-            {/* Header */}
-            <div className="flex justify-between items-center p-4 bg-gradient-to-r from-primary to-primary/90 text-primary-foreground">
-              {/* Switch to Voice Assistant Button */}
+            {/* Header - Enhanced */}
+            <div className="relative flex justify-between items-center p-5 bg-gradient-to-r from-primary via-primary/90 to-secondary text-white">
+              {/* Decorative glow */}
+              <div className="absolute inset-0 bg-gradient-to-r from-white/10 to-transparent pointer-events-none" />
+
               <motion.button
                 onClick={handleSwitchToVoice}
-                whileHover={{
-                  scale: 1.05,
-                  backgroundColor: "var(--accent)",
-                  boxShadow: "0px 4px 15px rgba(26, 77, 140, 0.6)",
-                }}
-                whileTap={{ scale: 0.95 }}
-                className="bg-primary/80 text-primary-foreground text-sm font-medium px-4 py-2 rounded-lg shadow-md border border-primary-foreground/20 transition-all duration-300"
+                whileHover={{ scale: 1.02 }}
+                whileTap={{ scale: 0.98 }}
+                className="relative bg-white/20 backdrop-blur-sm text-white text-sm font-medium px-4 py-2 rounded-xl shadow-lg border border-white/30 transition-all duration-300 hover:bg-white/30"
               >
-                🎙️ Switch to Voice Assistant
+                🎙️ Switch to Voice
               </motion.button>
 
-              <button
+              <motion.button
                 onClick={closeChat}
-                className="ml-2 hover:opacity-80 transition-opacity"
+                whileHover={{ scale: 1.1, rotate: 90 }}
+                whileTap={{ scale: 0.9 }}
+                className="p-1.5 hover:bg-white/20 rounded-lg transition-all"
               >
-                <X size={24} />
-              </button>
+                <X size={20} />
+              </motion.button>
             </div>
 
-            {/* Chat Messages */}
-            <div className="flex-1 overflow-y-auto p-4 space-y-2 bg-muted/30">
-              {messages.map((msg, index) => (
+            {/* Chat Messages - Enhanced */}
+            <div className="flex-1 overflow-y-auto p-5 space-y-3 bg-gradient-to-b from-gray-50 to-white dark:from-gray-900 dark:to-gray-950">
+              <AnimatePresence mode="popLayout">
+                {messages.map((msg, index) => (
+                  <motion.div
+                    key={index}
+                    initial={{ opacity: 0, y: 10, scale: 0.95 }}
+                    animate={{ opacity: 1, y: 0, scale: 1 }}
+                    exit={{ opacity: 0, x: msg.type === "user" ? 20 : -20 }}
+                    transition={{ type: "spring", damping: 20 }}
+                    className={`flex ${msg.type === "user" ? "justify-end" : "justify-start"}`}
+                  >
+                    <div
+                      className={`max-w-[85%] ${msg.type === "user" ? "order-2" : "order-1"}`}
+                    >
+                      <div
+                        className={`p-3.5 rounded-2xl shadow-md ${
+                          msg.type === "user"
+                            ? "bg-gradient-to-r from-primary to-primary/90 text-white rounded-br-md"
+                            : "bg-white dark:bg-gray-800 text-gray-800 dark:text-gray-100 rounded-bl-md border border-gray-200 dark:border-gray-700"
+                        }`}
+                      >
+                        <span className="text-sm leading-relaxed">
+                          {msg.text}
+                        </span>
+                        {msg.isTyped && (
+                          <button
+                            onClick={() => toggleSpeech(msg.text, index)}
+                            className="inline-flex ml-2 align-middle"
+                          >
+                            {currentlyPlaying === index ? (
+                              <VolumeOffIcon className="w-3.5 h-3.5 text-current opacity-70 hover:opacity-100 transition-opacity" />
+                            ) : (
+                              <Volume1 className="w-3.5 h-3.5 text-current opacity-70 hover:opacity-100 transition-opacity" />
+                            )}
+                          </button>
+                        )}
+                      </div>
+                      <div
+                        className={`text-[10px] text-gray-400 mt-1 ${msg.type === "user" ? "text-right" : "text-left"}`}
+                      >
+                        {msg.type === "user" ? "You" : "Earnings Assistant"}
+                      </div>
+                    </div>
+                  </motion.div>
+                ))}
+              </AnimatePresence>
+
+              {/* Typing Indicator */}
+              {isGenerating && !isFinalResponseDone && (
                 <motion.div
-                  key={index}
                   initial={{ opacity: 0, y: 10 }}
                   animate={{ opacity: 1, y: 0 }}
-                  transition={{ duration: 0.2 }}
-                  className={`p-3 shadow-sm rounded-md max-w-[75%] text-sm ${
-                    msg.type === "user"
-                      ? "bg-primary text-primary-foreground ml-auto rounded-br-none"
-                      : "bg-card text-card-foreground mr-auto rounded-bl-none border border-border"
-                  }`}
+                  className="flex justify-start"
                 >
-                  {msg.text}
-                  {msg.isTyped &&
-                    (currentlyPlaying === index ? (
-                      <VolumeOffIcon
-                        onClick={() => stopSpeech()}
-                        className="inline-block ml-2 cursor-pointer text-primary-foreground/80 hover:text-primary-foreground transition-colors"
+                  <div className="bg-white dark:bg-gray-800 rounded-2xl rounded-bl-md px-4 py-3 shadow-md border border-gray-200 dark:border-gray-700">
+                    <div className="flex gap-1.5">
+                      <span
+                        className="w-2 h-2 bg-primary/60 rounded-full animate-bounce"
+                        style={{ animationDelay: "0ms" }}
                       />
-                    ) : (
-                      <Volume1
-                        onClick={() => toggleSpeech(msg.text, index)}
-                        className="inline-block ml-2 cursor-pointer text-primary-foreground/80 hover:text-primary-foreground transition-colors"
+                      <span
+                        className="w-2 h-2 bg-primary/60 rounded-full animate-bounce"
+                        style={{ animationDelay: "150ms" }}
                       />
-                    ))}
+                      <span
+                        className="w-2 h-2 bg-primary/60 rounded-full animate-bounce"
+                        style={{ animationDelay: "300ms" }}
+                      />
+                    </div>
+                  </div>
                 </motion.div>
-              ))}
+              )}
 
               {isFinalResponseDone && !isUserLoggedIn && (
                 <motion.div
@@ -385,11 +417,11 @@ const ChatStep = ({
                       onExploreMore();
                       setIsOpen(false);
                     }}
-                    className="py-3 px-6 bg-gradient-to-r from-primary to-primary/80 text-primary-foreground rounded-full shadow-md hover:shadow-lg transition-all hover:scale-105"
+                    className="py-3 px-8 bg-gradient-to-r from-primary to-secondary text-white rounded-full shadow-lg shadow-primary/25 hover:shadow-xl transition-all font-medium text-sm"
                     whileHover={{ scale: 1.05 }}
                     whileTap={{ scale: 0.95 }}
                   >
-                    Explore More
+                    Explore More →
                   </motion.button>
                 </motion.div>
               )}
@@ -397,68 +429,86 @@ const ChatStep = ({
               <div ref={messagesEndRef} />
             </div>
 
-            {/* Typing Input */}
-            <div className="p-4 border-t border-border bg-card">
+            {/* Input Area - Enhanced */}
+            <div className="p-5 border-t border-gray-200 dark:border-gray-800 bg-white/80 dark:bg-gray-900/80 backdrop-blur-sm">
               <AnimatePresence mode="popLayout">
-                <div className="flex flex-row gap-2">
-                  <motion.input
-                    type="text"
-                    value={inputText}
-                    onChange={(e) => setInputText(e.target.value)}
-                    onKeyDown={(e) =>
-                      e.key === "Enter" && handleSend(inputText)
-                    }
-                    placeholder="Ask a question..."
-                    disabled={isGenerating}
-                    className="flex-1 py-2 px-4 border border-input rounded-lg focus:outline-none focus:ring-2 focus:ring-primary bg-background text-foreground placeholder:text-muted-foreground disabled:opacity-50 disabled:cursor-not-allowed"
-                  />
+                <div className="flex flex-row gap-2 items-end">
+                  <div className="flex-1 relative">
+                    <input
+                      type="text"
+                      value={inputText}
+                      onChange={(e) => setInputText(e.target.value)}
+                      onKeyDown={(e) =>
+                        e.key === "Enter" &&
+                        !isGenerating &&
+                        handleSend(inputText)
+                      }
+                      placeholder={
+                        isGenerating ? "AI is thinking..." : "Ask a question..."
+                      }
+                      disabled={isGenerating}
+                      className="w-full py-2.5 px-4 pr-12 border border-gray-200 dark:border-gray-700 rounded-xl focus:outline-none focus:ring-2 focus:ring-primary/50 focus:border-transparent bg-white dark:bg-gray-800 text-gray-800 dark:text-gray-100 placeholder:text-gray-400 disabled:opacity-50 disabled:cursor-not-allowed transition-all"
+                    />
+                  </div>
+
                   <motion.button
-                    onClick={() => handleSend(inputText)}
+                    onClick={() => !isGenerating && handleSend(inputText)}
                     disabled={isGenerating}
-                    className={`p-2 rounded-lg transition-all ${
+                    className={`p-2.5 rounded-xl transition-all ${
                       isGenerating
-                        ? "text-muted-foreground cursor-not-allowed"
-                        : "text-primary hover:bg-primary/10"
+                        ? "bg-gray-100 dark:bg-gray-800 text-gray-400 cursor-not-allowed"
+                        : "bg-gradient-to-r from-primary to-secondary text-white shadow-md hover:shadow-lg"
                     }`}
-                    whileHover={{ scale: 1.1 }}
-                    whileTap={{ scale: 0.9 }}
+                    whileHover={!isGenerating ? { scale: 1.05 } : {}}
+                    whileTap={!isGenerating ? { scale: 0.95 } : {}}
                   >
-                    <Mic size={20} />
+                    <Mic size={18} />
                   </motion.button>
+
                   <motion.button
-                    onClick={() => handleSend(inputText)}
+                    onClick={() => !isGenerating && handleSend(inputText)}
                     disabled={isGenerating}
-                    className={`p-2 rounded-lg transition-all ${
+                    className={`p-2.5 rounded-xl transition-all ${
                       isGenerating
-                        ? "text-muted-foreground cursor-not-allowed"
-                        : "text-primary hover:bg-primary/10"
+                        ? "bg-gray-100 dark:bg-gray-800 text-gray-400 cursor-not-allowed"
+                        : "bg-gradient-to-r from-primary to-secondary text-white shadow-md hover:shadow-lg"
                     }`}
-                    whileHover={{ scale: 1.1 }}
-                    whileTap={{ scale: 0.9 }}
+                    whileHover={!isGenerating ? { scale: 1.05 } : {}}
+                    whileTap={!isGenerating ? { scale: 0.95 } : {}}
                   >
-                    <SendHorizonalIcon size={20} />
+                    <SendHorizonalIcon size={18} />
                   </motion.button>
+                </div>
+
+                <div className="flex gap-2 mt-3 text-[10px] text-gray-400 justify-center">
+                  <span>✨ AI-powered earnings insights</span>
+                  <span>🔊 Voice enabled</span>
                 </div>
               </AnimatePresence>
             </div>
+
+            {/* Decorative elements */}
+            <div className="absolute -top-20 -right-20 w-64 h-64 bg-primary/5 rounded-full blur-3xl pointer-events-none" />
+            <div className="absolute -bottom-20 -left-20 w-64 h-64 bg-secondary/5 rounded-full blur-3xl pointer-events-none" />
           </motion.div>
         )}
       </AnimatePresence>
 
-      {/* Chat Icon */}
+      {/* Chat Icon - Enhanced */}
       <motion.button
         initial={{ opacity: 0, scale: 0 }}
         animate={{ opacity: 1, scale: 1 }}
         exit={{ opacity: 0, scale: 0 }}
         transition={{ type: "spring", stiffness: 120, damping: 20 }}
         onClick={() => setIsOpen(true)}
-        className="fixed bottom-4 right-4 bg-gradient-to-r from-primary to-primary/80 hover:from-primary/90 hover:to-primary/70 text-primary-foreground p-4 rounded-full shadow-lg hover:shadow-xl transition-all z-50 group"
+        className="fixed bottom-6 right-6 bg-gradient-to-r from-primary to-secondary text-white p-4 rounded-full shadow-xl hover:shadow-2xl transition-all z-50 group"
         whileHover={{ scale: 1.1 }}
         whileTap={{ scale: 0.95 }}
       >
+        <div className="absolute inset-0 rounded-full bg-primary/30 opacity-75" />
         <MessageCircle
-          size={28}
-          className="group-hover:scale-110 transition-transform"
+          size={26}
+          className="group-hover:scale-110 transition-transform relative z-10"
         />
       </motion.button>
     </>

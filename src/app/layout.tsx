@@ -159,6 +159,7 @@ function LayoutContent({ children }: { children: React.ReactNode }) {
           <Navbar handleLogout={handleLogout} />
 
           <Box
+            id="main-scroll-container"
             component="main"
             sx={{
               flexGrow: 1,

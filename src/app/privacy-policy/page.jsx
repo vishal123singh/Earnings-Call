@@ -21,9 +21,9 @@ export default function PrivacyPolicyPage() {
           <div className="card-premium p-6">
             <h2 className="text-xl font-semibold mb-3">1. Overview</h2>
             <p className="text-muted-foreground leading-relaxed">
-              Earnings Call Insights is an AI-powered financial analytics
-              platform. We are committed to protecting your personal data and
-              ensuring transparency in how we use it.
+              InvestorEye is an AI-powered financial analytics platform. We are
+              committed to protecting your personal data and ensuring
+              transparency in how we use it.
             </p>
           </div>
 

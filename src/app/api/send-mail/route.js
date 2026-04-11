@@ -6,7 +6,10 @@ export async function POST(req) {
     const { to, subject, chatData } = await req.json();
     // ❗️ Validate request body
     if (!to || !subject || !chatData || !Array.isArray(JSON.parse(chatData))) {
-      return Response.json({ error: "Missing or invalid fields" }, { status: 400 });
+      return Response.json(
+        { error: "Missing or invalid fields" },
+        { status: 400 },
+      );
     }
 
     // 🎨 Format chat into HTML content
@@ -49,7 +52,7 @@ export async function POST(req) {
       subject,
       html: `
         <div style="font-family: Arial, sans-serif; line-height: 1.5; color: #333; background-color: #f9fafb; padding: 20px; border-radius: 12px;">
-          <h2 style="color: #6b46c1;">📊 Earnings Call Insights</h2>
+          <h2 style="color: #6b46c1;">📊 InvestorEye</h2>
           <p style="color: #4b5563;">Here’s the detailed conversation related to the earnings call:</p>
           ${chatHTML}
           <hr />
@@ -62,7 +65,10 @@ export async function POST(req) {
     const info = await transporter.sendMail(mailOptions);
 
     console.log("✅ Email sent successfully:", info.messageId);
-    return Response.json({ success: true, message: "Email sent successfully!" });
+    return Response.json({
+      success: true,
+      message: "Email sent successfully!",
+    });
   } catch (error) {
     console.error("❌ Error sending email:", error);
     return Response.json({ error: "Failed to send email" }, { status: 500 });

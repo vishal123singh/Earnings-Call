@@ -18,11 +18,13 @@ import {
   LogIn,
   UserPlus,
   Brain,
+  ChevronDown,
 } from "lucide-react";
 import { usePathname, useRouter } from "next/navigation";
-import { useContext, useEffect, useState } from "react";
+import { useContext, useEffect, useState, useRef, useMemo } from "react";
 import { useSelector } from "react-redux";
 import { motion, AnimatePresence } from "framer-motion";
+import Image from "next/image";
 
 // Modern Navbar Component
 const Navbar = ({ handleLogout }) => {
@@ -33,38 +35,81 @@ const Navbar = ({ handleLogout }) => {
   const isUserLoggedIn = useSelector((state) => state.user.isUserLoggedIn);
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   const [scrolled, setScrolled] = useState(false);
+  const [visible, setVisible] = useState(true);
   const [userName, setUserName] = useState("");
+  const [showUserMenu, setShowUserMenu] = useState(false);
 
-  useEffect(() => {
-    const handleScroll = () => {
-      setScrolled(window.scrollY > 20);
-    };
-    window.addEventListener("scroll", handleScroll);
-    return () => window.removeEventListener("scroll", handleScroll);
-  }, []);
+  const lastScrollY = useRef(0);
+  const scrollTimeout = useRef(null);
+
+  // useEffect(() => {
+  //   const container = document.getElementById("main-scroll-container");
+
+  //   if (!container) return;
+
+  //   const handleScroll = () => {
+  //     const currentY = container.scrollTop;
+  //     const delta = currentY - lastScrollY.current;
+
+  //     if (currentY < 80) {
+  //       setVisible(true);
+  //     } else if (delta > 5) {
+  //       setVisible(false);
+  //       setShowUserMenu(false);
+  //     } else if (delta < -5) {
+  //       setVisible(true);
+  //     }
+
+  //     lastScrollY.current = currentY;
+  //   };
+
+  //   container.addEventListener("scroll", handleScroll);
+
+  //   return () => {
+  //     container.removeEventListener("scroll", handleScroll);
+  //   };
+  // }, []);
 
   useEffect(() => {
     const user = JSON.parse(localStorage.getItem("user") || "{}");
     setUserName(user.name || user.email?.split("@")[0] || "User");
   }, [isUserLoggedIn]);
 
-  const navItems = [
-    { label: "Home", path: "/", icon: Home },
-    {
-      label: "Dashboard",
-      path: "/competitive-insights",
-      icon: LayoutDashboard,
-    },
-    { label: "Insights", path: "/insights", icon: TrendingUp },
-    {
-      label: "Sentiment Analysis",
-      path: "/sentiment-analysis",
-      icon: BarChart3,
-    },
-    { label: "Transcript", path: "/transcript", icon: FileText },
-  ];
+  // Close mobile menu on route change
+  useEffect(() => {
+    setMobileMenuOpen(false);
+    setShowUserMenu(false);
+  }, [pathname]);
+
+  const navItems = useMemo(
+    () => [
+      { label: "Home", path: "/", icon: Home },
+      {
+        label: "Dashboard",
+        path: "/competitive-insights",
+        icon: LayoutDashboard,
+      },
+      { label: "Insights", path: "/insights", icon: TrendingUp },
+      {
+        label: "Sentiment",
+        path: "/sentiment-analysis",
+        icon: BarChart3,
+        shortLabel: "Sentiment",
+      },
+      { label: "Transcript", path: "/transcript", icon: FileText },
+    ],
+    [],
+  );
 
   const isActive = (path) => pathname === path;
+
+  // Get responsive label based on screen size
+  const getNavLabel = (item) => {
+    if (typeof window !== "undefined" && window.innerWidth < 1024) {
+      return item.shortLabel || item.label;
+    }
+    return item.label;
+  };
 
   return (
     <>
@@ -76,23 +121,26 @@ const Navbar = ({ handleLogout }) => {
           boxShadow: scrolled
             ? "0 8px 32px rgba(0, 0, 0, 0.08)"
             : "0 2px 8px rgba(0, 0, 0, 0.04)",
-          padding: { xs: "0 12px", sm: "0 24px" },
+          padding: { xs: "0 8px", sm: "0 16px", md: "0 24px" },
           zIndex: 1201,
-          transition: "all 0.3s ease",
           borderBottom: "1px solid var(--border)",
+          transform: visible ? "translateY(0)" : "translateY(-110%)",
+          opacity: visible ? 1 : 0,
+          transition:
+            "transform 0.35s cubic-bezier(0.4, 0, 0.2, 1), opacity 0.25s ease",
         }}
       >
         <Toolbar
           sx={{
-            minHeight: { xs: "64px", sm: "70px" },
-            padding: { xs: 0, sm: "0 8px" },
+            minHeight: { xs: "56px", sm: "64px", md: "70px" },
+            padding: { xs: 0, sm: "0 4px", md: "0 8px" },
             display: "flex",
             justifyContent: "space-between",
-            gap: 2,
+            gap: { xs: 1, sm: 2 },
           }}
         >
           {/* Left Section - Logo & Sidebar Toggle */}
-          <div className="flex items-center gap-3">
+          <div className="flex items-center gap-1 sm:gap-2 md:gap-3">
             {/* Sidebar Toggle Button */}
             {[
               "/insights",
@@ -103,6 +151,7 @@ const Navbar = ({ handleLogout }) => {
               <motion.div
                 whileTap={{ scale: 0.95 }}
                 whileHover={{ scale: 1.05 }}
+                className="hidden sm:block"
               >
                 <IconButton
                   onClick={handleToggleSidebar}
@@ -111,7 +160,7 @@ const Navbar = ({ handleLogout }) => {
                       ? "rgba(37, 99, 235, 0.1)"
                       : "var(--muted)",
                     borderRadius: "12px",
-                    padding: "10px",
+                    padding: { xs: "6px", sm: "8px", md: "10px" },
                     transition: "all 0.3s ease",
                     "&:hover": {
                       backgroundColor: "rgba(37, 99, 235, 0.15)",
@@ -121,13 +170,13 @@ const Navbar = ({ handleLogout }) => {
                 >
                   {collapsed ? (
                     <PanelRightOpen
-                      size={22}
+                      size={20}
                       style={{ color: "var(--primary)" }}
                       strokeWidth={1.5}
                     />
                   ) : (
                     <PanelRightClose
-                      size={22}
+                      size={20}
                       style={{ color: "var(--muted-foreground)" }}
                       strokeWidth={1.5}
                     />
@@ -141,41 +190,25 @@ const Navbar = ({ handleLogout }) => {
               initial={{ opacity: 0, x: -20 }}
               animate={{ opacity: 1, x: 0 }}
               transition={{ duration: 0.5 }}
-              className="flex items-center gap-2 cursor-pointer group"
+              className="flex items-center cursor-pointer group flex-shrink-0"
               onClick={() => router.push("/")}
             >
               <div className="relative">
-                <div
-                  className="absolute inset-0 rounded-full blur-lg opacity-30 group-hover:opacity-50 transition-opacity"
-                  style={{
-                    background:
-                      "linear-gradient(135deg, var(--primary) 0%, var(--secondary) 50%, var(--tertiary) 100%)",
-                  }}
+                <div className="absolute inset-0 rounded-full blur-lg opacity-30 group-hover:opacity-50 transition-opacity" />
+                <Image
+                  src="/images/logo_3.png"
+                  alt="InvestorEye Logo"
+                  width={60}
+                  height={60}
+                  className="object-contain w-[60px] sm:w-[60px] md:w-[80px] lg:w-[80px] h-auto"
+                  priority
                 />
-                <Brain
-                  size={28}
-                  style={{ color: "var(--primary)" }}
-                  strokeWidth={1.5}
-                  className="relative"
-                />
-              </div>
-              <div className="hidden sm:block">
-                <span className="font-bold text-lg text-gradient-primary">
-                  EarningsCall
-                </span>
-                <span
-                  className="font-semibold text-lg"
-                  style={{ color: "var(--foreground)" }}
-                >
-                  {" "}
-                  Insights
-                </span>
               </div>
             </motion.div>
           </div>
 
-          {/* Desktop Navigation */}
-          <div className="hidden md:flex items-center gap-1">
+          {/* Desktop Navigation - Responsive spacing */}
+          <div className="hidden md:flex items-center gap-0.5 lg:gap-1 flex-wrap justify-center">
             {navItems.map((item, index) => (
               <motion.div
                 key={item.path}
@@ -191,11 +224,13 @@ const Navbar = ({ handleLogout }) => {
                       ? "var(--primary)"
                       : "var(--muted-foreground)",
                     fontWeight: 600,
-                    fontSize: "0.9rem",
+                    fontSize: { md: "0.8rem", lg: "0.9rem" },
                     textTransform: "none",
-                    padding: "8px 16px",
+                    padding: { md: "6px 8px", lg: "8px 12px", xl: "8px 16px" },
                     borderRadius: "12px",
                     transition: "all 0.3s ease",
+                    minWidth: "auto",
+                    whiteSpace: "nowrap",
                     "&:hover": {
                       backgroundColor: "rgba(37, 99, 235, 0.08)",
                       color: "var(--primary)",
@@ -203,8 +238,15 @@ const Navbar = ({ handleLogout }) => {
                     },
                   }}
                 >
-                  <item.icon size={18} className="mr-2" strokeWidth={1.5} />
-                  <span className="text-sm">{item.label}</span>
+                  <item.icon
+                    size={16}
+                    className="mr-1.5 lg:mr-2"
+                    strokeWidth={1.5}
+                  />
+                  <span className="hidden lg:inline text-sm">{item.label}</span>
+                  <span className="inline lg:hidden text-sm">
+                    {item.shortLabel || item.label}
+                  </span>
                   {isActive(item.path) && (
                     <motion.div
                       layoutId="activeTab"
@@ -224,51 +266,88 @@ const Navbar = ({ handleLogout }) => {
           </div>
 
           {/* Right Section - Auth Buttons & Avatar */}
-          <div className="flex items-center gap-2">
+          <div className="flex items-center gap-1 sm:gap-2 flex-shrink-0">
             {isUserLoggedIn ? (
               <motion.div
                 initial={{ opacity: 0, scale: 0.9 }}
                 animate={{ opacity: 1, scale: 1 }}
-                className="flex items-center gap-3"
+                className="flex items-center gap-1 sm:gap-2 md:gap-3"
               >
-                {/* User Info - Desktop */}
-                <div
-                  className="hidden sm:flex items-center gap-3 px-3 py-1.5 rounded-full"
-                  style={{
-                    background:
-                      "linear-gradient(135deg, var(--muted) 0%, var(--background) 100%)",
-                  }}
-                >
-                  <Avatar
-                    sx={{
-                      width: 34,
-                      height: 34,
+                {/* User Info with Dropdown - Desktop */}
+                <div className="relative hidden sm:block">
+                  <motion.div
+                    whileHover={{ scale: 1.02 }}
+                    whileTap={{ scale: 0.98 }}
+                    onClick={() => setShowUserMenu(!showUserMenu)}
+                    className="flex items-center gap-2 md:gap-3 px-2 md:px-3 py-1.5 rounded-full cursor-pointer transition-all"
+                    style={{
                       background:
-                        "linear-gradient(135deg, var(--primary) 0%, var(--secondary) 50%, var(--tertiary) 100%)",
-                      fontSize: "1rem",
-                      fontWeight: "bold",
-                      cursor: "pointer",
-                      transition: "all 0.3s ease",
-                      "&:hover": {
-                        transform: "scale(1.05)",
-                        boxShadow: "0 4px 12px rgba(37, 99, 235, 0.3)",
-                      },
+                        "linear-gradient(135deg, var(--muted) 0%, var(--background) 100%)",
+                      border: "1px solid var(--border)",
                     }}
                   >
-                    {userName.charAt(0).toUpperCase()}
-                  </Avatar>
-                  <span
-                    className="text-sm font-medium"
-                    style={{ color: "var(--foreground)" }}
-                  >
-                    {userName}
-                  </span>
+                    <Avatar
+                      sx={{
+                        width: { xs: 28, sm: 30, md: 34 },
+                        height: { xs: 28, sm: 30, md: 34 },
+                        background:
+                          "linear-gradient(135deg, var(--primary) 0%, var(--secondary) 50%, var(--tertiary) 100%)",
+                        fontSize: "0.9rem",
+                        fontWeight: "bold",
+                      }}
+                    >
+                      {userName.charAt(0).toUpperCase()}
+                    </Avatar>
+                    <span
+                      className="hidden md:inline text-sm font-medium"
+                      style={{ color: "var(--foreground)" }}
+                    >
+                      {userName.length > 12
+                        ? `${userName.slice(0, 10)}...`
+                        : userName}
+                    </span>
+                    <ChevronDown
+                      size={16}
+                      className={`hidden md:block transition-transform duration-200 ${
+                        showUserMenu ? "rotate-180" : ""
+                      }`}
+                      style={{ color: "var(--muted-foreground)" }}
+                    />
+                  </motion.div>
+
+                  {/* User Dropdown Menu */}
+                  <AnimatePresence>
+                    {showUserMenu && (
+                      <motion.div
+                        initial={{ opacity: 0, y: -10 }}
+                        animate={{ opacity: 1, y: 0 }}
+                        exit={{ opacity: 0, y: -10 }}
+                        className="absolute right-0 mt-2 w-48 rounded-xl shadow-lg overflow-hidden"
+                        style={{
+                          backgroundColor: "var(--background)",
+                          border: "1px solid var(--border)",
+                        }}
+                      >
+                        <div className="py-1">
+                          <button
+                            onClick={handleLogout}
+                            className="w-full px-4 py-2.5 text-left text-sm hover:bg-muted flex items-center gap-2 transition-colors"
+                            style={{ color: "var(--destructive)" }}
+                          >
+                            <LogOut size={16} />
+                            Sign Out
+                          </button>
+                        </div>
+                      </motion.div>
+                    )}
+                  </AnimatePresence>
                 </div>
 
-                {/* Logout Button - Desktop */}
+                {/* Logout Button - Desktop (simplified for smaller screens) */}
                 <motion.div
                   whileHover={{ scale: 1.05 }}
                   whileTap={{ scale: 0.95 }}
+                  className="hidden lg:block"
                 >
                   <Button
                     onClick={handleLogout}
@@ -277,10 +356,12 @@ const Navbar = ({ handleLogout }) => {
                       borderColor: "var(--primary)",
                       color: "var(--primary)",
                       borderRadius: "12px",
-                      padding: "8px 20px",
+                      padding: { md: "6px 12px", lg: "8px 20px" },
                       fontWeight: 600,
                       textTransform: "none",
+                      fontSize: { md: "0.8rem", lg: "0.875rem" },
                       transition: "all 0.3s ease",
+                      whiteSpace: "nowrap",
                       "&:hover": {
                         background:
                           "linear-gradient(135deg, var(--primary) 0%, var(--secondary) 100%)",
@@ -291,8 +372,8 @@ const Navbar = ({ handleLogout }) => {
                       },
                     }}
                   >
-                    <LogOut size={18} className="mr-2" />
-                    Logout
+                    <LogOut size={16} className="mr-1.5 lg:mr-2" />
+                    <span className="hidden xl:inline">Logout</span>
                   </Button>
                 </motion.div>
 
@@ -302,16 +383,17 @@ const Navbar = ({ handleLogout }) => {
                   sx={{
                     display: { xs: "flex", md: "none" },
                     borderRadius: "10px",
+                    padding: "8px",
                     backgroundColor: mobileMenuOpen
                       ? "rgba(37, 99, 235, 0.1)"
                       : "transparent",
                   }}
                 >
-                  {mobileMenuOpen ? <X size={22} /> : <Menu size={22} />}
+                  {mobileMenuOpen ? <X size={20} /> : <Menu size={20} />}
                 </IconButton>
               </motion.div>
             ) : (
-              <div className="flex items-center gap-2">
+              <div className="flex items-center gap-1 sm:gap-2">
                 {/* Login Button */}
                 <motion.div
                   whileHover={{ scale: 1.05 }}
@@ -325,7 +407,9 @@ const Navbar = ({ handleLogout }) => {
                       fontWeight: 600,
                       textTransform: "none",
                       borderRadius: "10px",
-                      padding: "8px 16px",
+                      padding: { xs: "6px 10px", sm: "8px 16px" },
+                      fontSize: { xs: "0.75rem", sm: "0.875rem" },
+                      minWidth: "auto",
                       transition: "all 0.3s ease",
                       "&:hover": {
                         backgroundColor: "rgba(37, 99, 235, 0.08)",
@@ -333,36 +417,46 @@ const Navbar = ({ handleLogout }) => {
                       },
                     }}
                   >
-                    <LogIn size={18} className="mr-2" />
-                    Login
+                    <LogIn size={16} className="mr-1 sm:mr-2" />
+                    <span className="hidden xs:inline">Login</span>
                   </Button>
                 </motion.div>
 
-                {/* Signup Button - Pure Tailwind Version */}
+                {/* Signup Button */}
                 <motion.button
                   onClick={() => setIsSignupOpen(true)}
                   whileHover={{ scale: 1.05 }}
                   whileTap={{ scale: 0.95 }}
-                  className="btn-premium bg-gradient-primary text-primary-foreground rounded-xl px-5 py-2 text-sm font-semibold capitalize shadow-lg transition-all duration-300 hover:shadow-xl hover:-translate-y-0.5 flex items-center gap-2"
+                  className="btn-premium bg-gradient-primary text-primary-foreground rounded-lg sm:rounded-xl px-3 sm:px-4 md:px-5 py-1.5 sm:py-2 text-xs sm:text-sm font-semibold capitalize shadow-lg transition-all duration-300 hover:shadow-xl hover:-translate-y-0.5 flex items-center gap-1 sm:gap-2 whitespace-nowrap"
                 >
-                  <UserPlus size={18} />
-                  Sign Up
+                  <UserPlus size={16} className="sm:w-[18px] sm:h-[18px]" />
+                  <span className="hidden xs:inline">Sign Up</span>
                 </motion.button>
+
                 {/* Mobile Menu Button */}
                 <IconButton
                   onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
                   sx={{
                     display: { xs: "flex", md: "none" },
                     borderRadius: "10px",
+                    padding: "8px",
                   }}
                 >
-                  <Menu size={22} />
+                  <Menu size={20} />
                 </IconButton>
               </div>
             )}
           </div>
         </Toolbar>
       </AppBar>
+
+      {/* Click outside handler for user menu */}
+      {showUserMenu && (
+        <div
+          className="fixed inset-0 z-40"
+          onClick={() => setShowUserMenu(false)}
+        />
+      )}
 
       {/* Mobile Menu Drawer */}
       <AnimatePresence>
@@ -383,27 +477,27 @@ const Navbar = ({ handleLogout }) => {
               animate={{ x: 0 }}
               exit={{ x: "100%" }}
               transition={{ type: "spring", damping: 25, stiffness: 200 }}
-              className="fixed right-0 top-0 bottom-0 w-80 shadow-2xl z-50 md:hidden flex flex-col"
+              className="fixed right-0 top-0 bottom-0 w-[85%] max-w-[320px] shadow-2xl z-50 md:hidden flex flex-col"
               style={{ backgroundColor: "var(--background)" }}
             >
               {/* Drawer Header */}
               <div
-                className="p-6 border-b"
+                className="p-4 sm:p-6 border-b"
                 style={{ borderColor: "var(--border)" }}
               >
                 <div className="flex items-center justify-between mb-4">
                   <div className="flex items-center gap-2">
                     <Brain
-                      size={28}
+                      size={24}
                       style={{ color: "var(--primary)" }}
                       strokeWidth={1.5}
                     />
-                    <span className="font-bold text-lg text-gradient-primary">
-                      EarningsCall Insights
+                    <span className="font-bold text-base sm:text-lg text-gradient-primary">
+                      InvestorEye
                     </span>
                   </div>
                   <IconButton onClick={() => setMobileMenuOpen(false)}>
-                    <X size={22} style={{ color: "var(--foreground)" }} />
+                    <X size={20} style={{ color: "var(--foreground)" }} />
                   </IconButton>
                 </div>
 
@@ -420,15 +514,16 @@ const Navbar = ({ handleLogout }) => {
                       sx={{
                         background:
                           "linear-gradient(135deg, var(--primary) 0%, var(--secondary) 50%, var(--tertiary) 100%)",
-                        width: 48,
-                        height: 48,
+                        width: 44,
+                        height: 44,
+                        fontSize: "1.1rem",
                       }}
                     >
                       {userName.charAt(0).toUpperCase()}
                     </Avatar>
-                    <div>
+                    <div className="flex-1 min-w-0">
                       <div
-                        className="font-semibold"
+                        className="font-semibold truncate"
                         style={{ color: "var(--foreground)" }}
                       >
                         {userName}
@@ -467,15 +562,15 @@ const Navbar = ({ handleLogout }) => {
                         : "4px solid transparent",
                     }}
                   >
-                    <item.icon size={20} strokeWidth={1.5} />
-                    <span className="font-medium">{item.label}</span>
+                    <item.icon size={18} strokeWidth={1.5} />
+                    <span className="font-medium text-sm">{item.label}</span>
                   </motion.div>
                 ))}
               </div>
 
               {/* Drawer Footer */}
               <div
-                className="p-6 border-t"
+                className="p-4 sm:p-6 border-t"
                 style={{ borderColor: "var(--border)" }}
               >
                 {!isUserLoggedIn ? (
@@ -493,6 +588,7 @@ const Navbar = ({ handleLogout }) => {
                         borderRadius: "12px",
                         padding: "10px",
                         fontWeight: 600,
+                        fontSize: "0.875rem",
                         "&:hover": {
                           backgroundColor: "rgba(37, 99, 235, 0.08)",
                         },
@@ -514,6 +610,7 @@ const Navbar = ({ handleLogout }) => {
                         borderRadius: "12px",
                         padding: "10px",
                         fontWeight: 600,
+                        fontSize: "0.875rem",
                         "&:hover": {
                           transform: "translateY(-2px)",
                         },
@@ -537,6 +634,7 @@ const Navbar = ({ handleLogout }) => {
                       borderRadius: "12px",
                       padding: "10px",
                       fontWeight: 600,
+                      fontSize: "0.875rem",
                       "&:hover": {
                         backgroundColor: "var(--destructive)",
                         color: "var(--destructive-foreground)",

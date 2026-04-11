@@ -163,26 +163,21 @@ export default function SignupModal({
         </button>
 
         {/* Header */}
-        <div className="flex flex-col items-center gap-2">
-          <BrainCog
-            size={28}
-            style={{ color: "var(--primary)" }}
-            strokeWidth={1.5}
-            className="relative"
+        <div className="flex flex-col items-center text-center gap-0 mb-6">
+          <Image
+            src="/images/logo_2.png"
+            alt="InvestorEye Logo"
+            width={120}
+            height={120}
+            className="object-contain"
+            priority
           />
-          <div className="hidden sm:block">
-            <span className="font-bold text-lg text-gradient-primary">
-              EarningsCall
-            </span>
-            <span
-              className="font-semibold text-lg"
-              style={{ color: "var(--foreground)" }}
-            >
-              {" "}
-              Insights
-            </span>
-          </div>
-          <h2 className="text-2xl font-semibold mb-6">Create an Account</h2>
+
+          {/* Tagline */}
+          <p className="text-sm text-muted-foreground">See Beyond Numbers</p>
+
+          {/* Heading */}
+          <h2 className="text-2xl font-semibold mt-2">Create an Account</h2>
         </div>
 
         {/* Form */}

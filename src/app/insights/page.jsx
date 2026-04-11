@@ -28,6 +28,7 @@ import VoiceRecorder from "@/components/ui/voice-input";
 import { createPortal } from "react-dom";
 import { Button } from "@/components/ui/button";
 import TranscriptSearch from "@/components/SearchTranscripts";
+import { AnimatePresence, motion } from "framer-motion";
 
 const options = Object.entries(suggestedQuestions).map(([category, data]) => ({
   label: category,
@@ -223,45 +224,257 @@ export default function AggregateDashboard() {
         </button> */}
 
         <div
-          className="h-[55vh] overflow-y-auto shadow-md rounded-2xl p-6 space-y-4"
+          className="h-[55vh] overflow-y-auto rounded-2xl p-5 space-y-4 scroll-smooth"
           style={{
-            background: "var(--muted)",
-            border: `1px solid var(--border)`,
+            background:
+              "linear-gradient(135deg, var(--muted) 0%, rgba(var(--muted-rgb), 0.8) 100%)",
+            border: "1px solid var(--border)",
+            boxShadow:
+              "inset 0 2px 4px rgba(0,0,0,0.02), 0 1px 2px rgba(0,0,0,0.05)",
           }}
         >
-          {chats.map((chat, index) => (
-            <div
-              key={index}
-              className={`w-full p-4 rounded-xl shadow-sm border transition-transform duration-300 ${
-                chat.role === "user"
-                  ? "bg-gradient-to-r from-primary/10 to-secondary/10"
-                  : "bg-card"
-              }`}
-              style={{
-                borderColor: "var(--border)",
-                color:
-                  chat.role === "user" ? "var(--primary)" : "var(--foreground)",
-              }}
-            >
-              <div className="prose ml-4 leading-relaxed font-medium break-words">
-                <ReactMarkdown
-                  remarkPlugins={[remarkGfm]}
-                  rehypePlugins={[rehypeRaw]}
-                >
-                  {chat.content}
-                </ReactMarkdown>
-              </div>
-            </div>
-          ))}
+          <AnimatePresence mode="popLayout">
+            {chats.map((chat, index) => (
+              <motion.div
+                key={index}
+                initial={{ opacity: 0, y: 20, scale: 0.95 }}
+                animate={{ opacity: 1, y: 0, scale: 1 }}
+                exit={{ opacity: 0, x: chat.role === "user" ? 20 : -20 }}
+                transition={{
+                  type: "spring",
+                  damping: 20,
+                  stiffness: 300,
+                  delay: index * 0.05,
+                }}
+                className={`group relative w-full rounded-2xl transition-all duration-300 ${
+                  chat.role === "user"
+                    ? "ml-auto max-w-[85%] sm:max-w-[75%]"
+                    : "max-w-[90%] sm:max-w-[80%]"
+                }`}
+              >
+                {/* Decorative gradient border on hover */}
+                <div
+                  className={`absolute inset-0 rounded-2xl opacity-0 group-hover:opacity-100 transition-opacity duration-300 ${
+                    chat.role === "user"
+                      ? "bg-gradient-to-r from-primary/20 to-secondary/20"
+                      : "bg-gradient-to-r from-primary/10 to-secondary/10"
+                  }`}
+                  style={{ filter: "blur(8px)" }}
+                />
 
+                {/* Message bubble */}
+                <div
+                  className={`relative p-4 rounded-2xl shadow-lg transition-all duration-300 ${
+                    chat.role === "user"
+                      ? "bg-gradient-to-br from-primary to-primary/90 text-white rounded-br-md"
+                      : "bg-white dark:bg-gray-800 text-gray-800 dark:text-gray-100 rounded-bl-md border border-gray-200 dark:border-gray-700"
+                  }`}
+                  style={{
+                    boxShadow:
+                      chat.role === "user"
+                        ? "0 4px 15px rgba(var(--primary-rgb), 0.3)"
+                        : "0 2px 8px rgba(0,0,0,0.05)",
+                  }}
+                >
+                  {/* Avatar / Icon */}
+                  <div className="absolute -left-3 -top-3 w-8 h-8 rounded-full bg-gradient-to-r from-primary to-secondary flex items-center justify-center shadow-md">
+                    {chat.role === "user" ? (
+                      <svg
+                        className="w-4 h-4 text-white"
+                        fill="none"
+                        stroke="currentColor"
+                        viewBox="0 0 24 24"
+                      >
+                        <path
+                          strokeLinecap="round"
+                          strokeLinejoin="round"
+                          strokeWidth={2}
+                          d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z"
+                        />
+                      </svg>
+                    ) : (
+                      <svg
+                        className="w-4 h-4 text-white"
+                        fill="none"
+                        stroke="currentColor"
+                        viewBox="0 0 24 24"
+                      >
+                        <path
+                          strokeLinecap="round"
+                          strokeLinejoin="round"
+                          strokeWidth={2}
+                          d="M9.663 17h4.673M12 3v1m6.364 1.636l-.707.707M21 12h-1M4 12H3m3.343-5.657l-.707-.707m2.828 9.9a5 5 0 117.072 0l-.548.547A3.374 3.374 0 0014 18.469V19a2 2 0 11-4 0v-.531c0-.895-.356-1.754-.988-2.386l-.548-.547z"
+                        />
+                      </svg>
+                    )}
+                  </div>
+
+                  {/* Timestamp */}
+                  <div
+                    className={`text-[10px] mb-2 opacity-60 ${
+                      chat.role === "user" ? "text-right" : "text-left"
+                    }`}
+                  >
+                    {new Date().toLocaleTimeString([], {
+                      hour: "2-digit",
+                      minute: "2-digit",
+                    })}
+                  </div>
+
+                  {/* Message content */}
+                  <div
+                    className={`prose prose-sm max-w-none break-words ${
+                      chat.role === "user"
+                        ? "prose-invert"
+                        : "dark:prose-invert"
+                    }`}
+                  >
+                    <ReactMarkdown
+                      remarkPlugins={[remarkGfm]}
+                      rehypePlugins={[rehypeRaw]}
+                      components={{
+                        p: ({ children }) => (
+                          <p className="leading-relaxed mb-2 last:mb-0">
+                            {children}
+                          </p>
+                        ),
+                        code: ({ children, className }) => {
+                          const isInline = !className;
+                          if (isInline) {
+                            return (
+                              <code className="px-1.5 py-0.5 rounded bg-black/10 dark:bg-white/10 text-sm font-mono">
+                                {children}
+                              </code>
+                            );
+                          }
+                          return (
+                            <code className="block p-3 rounded-lg bg-black/5 dark:bg-white/5 text-sm font-mono overflow-x-auto">
+                              {children}
+                            </code>
+                          );
+                        },
+                        pre: ({ children }) => (
+                          <pre className="rounded-lg overflow-x-auto">
+                            {children}
+                          </pre>
+                        ),
+                        ul: ({ children }) => (
+                          <ul className="list-disc list-inside space-y-1 my-2">
+                            {children}
+                          </ul>
+                        ),
+                        ol: ({ children }) => (
+                          <ol className="list-decimal list-inside space-y-1 my-2">
+                            {children}
+                          </ol>
+                        ),
+                        li: ({ children }) => (
+                          <li className="text-sm">{children}</li>
+                        ),
+                        a: ({ children, href }) => (
+                          <a
+                            href={href}
+                            target="_blank"
+                            rel="noopener noreferrer"
+                            className="underline hover:no-underline transition-colors"
+                          >
+                            {children}
+                          </a>
+                        ),
+                        blockquote: ({ children }) => (
+                          <blockquote className="border-l-4 border-primary pl-4 italic my-2">
+                            {children}
+                          </blockquote>
+                        ),
+                      }}
+                    >
+                      {chat.content}
+                    </ReactMarkdown>
+                  </div>
+
+                  {/* Interactive actions (optional) */}
+                  <div
+                    className={`flex gap-2 mt-3 pt-2 border-t ${
+                      chat.role === "user"
+                        ? "border-white/20 justify-end"
+                        : "border-gray-200 dark:border-gray-700 justify-start"
+                    }`}
+                  >
+                    <button className="opacity-50 hover:opacity-100 transition-opacity">
+                      <svg
+                        className="w-3.5 h-3.5"
+                        fill="none"
+                        stroke="currentColor"
+                        viewBox="0 0 24 24"
+                      >
+                        <path
+                          strokeLinecap="round"
+                          strokeLinejoin="round"
+                          strokeWidth={2}
+                          d="M8 10h.01M12 10h.01M16 10h.01M9 16H5a2 2 0 01-2-2V6a2 2 0 012-2h14a2 2 0 012 2v8a2 2 0 01-2 2h-5l-5 5v-5z"
+                        />
+                      </svg>
+                    </button>
+                    <button className="opacity-50 hover:opacity-100 transition-opacity">
+                      <svg
+                        className="w-3.5 h-3.5"
+                        fill="none"
+                        stroke="currentColor"
+                        viewBox="0 0 24 24"
+                      >
+                        <path
+                          strokeLinecap="round"
+                          strokeLinejoin="round"
+                          strokeWidth={2}
+                          d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15"
+                        />
+                      </svg>
+                    </button>
+                  </div>
+                </div>
+              </motion.div>
+            ))}
+          </AnimatePresence>
+
+          {/* Enhanced Loading Indicator */}
           {isLoading && (
-            <div className="flex justify-center items-center mt-4">
-              <div
-                className="animate-spin h-10 w-10 rounded-full border-t-4"
-                style={{ borderTopColor: "var(--primary)" }}
-              ></div>
-            </div>
+            <motion.div
+              initial={{ opacity: 0, scale: 0.9 }}
+              animate={{ opacity: 1, scale: 1 }}
+              exit={{ opacity: 0, scale: 0.9 }}
+              className="flex justify-start items-center mt-4"
+            >
+              <div className="bg-white dark:bg-gray-800 rounded-2xl rounded-bl-md px-5 py-3 shadow-md border border-gray-200 dark:border-gray-700">
+                <div className="flex gap-2 items-center">
+                  <div
+                    className="w-3 h-3 rounded-full animate-bounce"
+                    style={{
+                      backgroundColor: "var(--primary)",
+                      animationDelay: "0ms",
+                    }}
+                  />
+                  <div
+                    className="w-3 h-3 rounded-full animate-bounce"
+                    style={{
+                      backgroundColor: "var(--secondary)",
+                      animationDelay: "150ms",
+                    }}
+                  />
+                  <div
+                    className="w-3 h-3 rounded-full animate-bounce"
+                    style={{
+                      backgroundColor: "var(--primary)",
+                      animationDelay: "300ms",
+                    }}
+                  />
+                  <span className="ml-2 text-sm text-muted-foreground">
+                    AI is thinking...
+                  </span>
+                </div>
+              </div>
+            </motion.div>
           )}
+
           <div ref={messagesEndRef} />
         </div>
 

@@ -12,6 +12,7 @@ import {
   PointElement,
   LineElement,
   ArcElement,
+  Filler,
 } from "chart.js";
 import {
   Select,
@@ -22,7 +23,21 @@ import {
 } from "@/components/ui/select";
 import { useDispatch, useSelector } from "react-redux";
 import { motion, AnimatePresence } from "framer-motion";
-import { Expand, ChevronDown, ChevronUp, X } from "lucide-react";
+import {
+  Expand,
+  ChevronDown,
+  ChevronUp,
+  X,
+  TrendingUp,
+  BarChart3,
+  PieChart,
+  Loader2,
+  Sparkles,
+  MessageCircle,
+  Maximize2,
+  Download,
+  RefreshCw,
+} from "lucide-react";
 import ChatBox from "./chatbox";
 import PropTypes from "prop-types";
 import { setFilterConfig } from "../../../../store/sidebarSlice";
@@ -30,6 +45,7 @@ import { quarters, companies, years } from "../../../../public/data";
 import ChartContainer from "./ChartContainer";
 import MemoizedChatPanel from "./MemoizedChatPanel";
 
+// Register ChartJS components
 ChartJS.register(
   CategoryScale,
   LinearScale,
@@ -40,16 +56,21 @@ ChartJS.register(
   PointElement,
   LineElement,
   ArcElement,
+  Filler,
 );
 
 const graphRequirements = {
   "Revenue Trend": {
     statements: ["incomeStatement"],
     metrics: ["Total Revenue"],
+    icon: TrendingUp,
+    color: "from-blue-500 to-cyan-500",
   },
   "Net Income Comparison": {
     statements: ["incomeStatement"],
     metrics: ["Net Income Common Stockholders"],
+    icon: BarChart3,
+    color: "from-green-500 to-emerald-500",
   },
   "Asset Composition": {
     statements: ["balanceSheet"],
@@ -59,34 +80,50 @@ const graphRequirements = {
       "Securities and Investments",
       "Net PPE",
     ],
+    icon: PieChart,
+    color: "from-purple-500 to-pink-500",
   },
   "Debt-to-Equity Ratio": {
     statements: ["balanceSheet"],
     metrics: ["Total Debt", "Total Equity Gross Minority Interest"],
+    icon: BarChart3,
+    color: "from-orange-500 to-red-500",
   },
   "Loan Portfolio Growth": {
     statements: ["balanceSheet"],
     metrics: ["Gross Loan"],
+    icon: TrendingUp,
+    color: "from-teal-500 to-green-500",
   },
   "Interest Income vs Expense": {
     statements: ["incomeStatement"],
     metrics: ["Interest Income", "Interest Expense"],
+    icon: BarChart3,
+    color: "from-indigo-500 to-blue-500",
   },
   "Operating Cash Flow": {
     statements: ["cashFlow"],
     metrics: ["Operating Cash Flow"],
+    icon: TrendingUp,
+    color: "from-cyan-500 to-blue-500",
   },
   "EPS Comparison": {
     statements: ["incomeStatement"],
     metrics: ["Basic EPS", "Diluted EPS"],
+    icon: BarChart3,
+    color: "from-violet-500 to-purple-500",
   },
   "Efficiency Ratio": {
     statements: ["incomeStatement"],
     metrics: ["Non Interest Expense", "Total Revenue"],
+    icon: PieChart,
+    color: "from-rose-500 to-pink-500",
   },
   "Deposit Growth": {
     statements: ["balanceSheet"],
     metrics: ["Total Deposits"],
+    icon: TrendingUp,
+    color: "from-amber-500 to-orange-500",
   },
 };
 
@@ -181,7 +218,6 @@ const FinancialAnalysisDashboard = ({
     const preparedData = {};
 
     requirements.statements.forEach((statementType) => {
-      // Convert camelCase to snake_case for API response
       let apiKey;
       switch (statementType) {
         case "incomeStatement":
@@ -198,7 +234,6 @@ const FinancialAnalysisDashboard = ({
       }
 
       if (companyData[ticker].data[apiKey] && periodType === "annual") {
-        // The data is already organized by year, just pass it directly
         preparedData[statementType] = {
           [periodType]: companyData[ticker].data[apiKey],
         };
@@ -208,13 +243,11 @@ const FinancialAnalysisDashboard = ({
     return preparedData;
   };
 
-  // Compute whether all selected companies have data loaded
   const canGenerateGraph =
     selectedCompanies.length > 0 &&
     selectedCompanies.every((ticker) => companyData[ticker]?.data);
 
   const generateGraph = async () => {
-    // Prevent graph generation if company data is not fully loaded
     if (!canGenerateGraph) return;
     if (!selectedGraph || selectedCompanies.length === 0) return;
 
@@ -307,223 +340,268 @@ const FinancialAnalysisDashboard = ({
     );
   };
 
+  const currentGraphConfig = selectedGraph
+    ? graphRequirements[selectedGraph]
+    : null;
+
   return (
-    <div className="container mx-auto p-2 max-w-7xl">
+    <div className="container mx-auto p-6 max-w-7xl">
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 items-start">
-        {/* Configuration Panel */}
-        <div className="bg-white p-6 rounded-xl shadow-sm border border-gray-100 sticky top-6">
-          <div className="space-y-6">
-            <div className="space-y-2 z-[20]">
-              <label className="block text-sm font-medium text-gray-700">
+        {/* Configuration Panel - Enhanced */}
+        <div className="bg-gradient-to-br from-white to-gray-50 dark:from-gray-900 dark:to-gray-950 rounded-2xl shadow-xl border border-gray-200 dark:border-gray-800 sticky top-6 overflow-hidden">
+          {/* Decorative header */}
+          {/* <div className="h-2 bg-gradient-to-r from-blue-500 via-purple-500 to-pink-500" /> */}
+
+          <div className="p-6 space-y-6">
+            <div className="flex items-center gap-3 mb-2">
+              <div className="p-2 bg-gradient-to-br from-blue-500 to-purple-500 rounded-xl">
+                <Sparkles className="w-5 h-5 text-white" />
+              </div>
+              <h2 className="text-xl font-bold bg-gradient-to-r from-gray-900 to-gray-600 dark:from-white dark:to-gray-400 bg-clip-text text-transparent">
+                Chart Configuration
+              </h2>
+            </div>
+
+            <div className="space-y-2">
+              <label className="block text-sm font-semibold text-gray-700 dark:text-gray-300">
                 Graph Type
               </label>
               <Select
                 value={selectedGraph}
                 onValueChange={(val) => setGraphState({ selectedGraph: val })}
               >
-                <SelectTrigger className="w-full h-10">
+                <SelectTrigger className="w-full h-12 rounded-xl border-2 hover:border-blue-400 transition-colors">
                   <SelectValue placeholder="Select a graph type" />
                 </SelectTrigger>
-                <SelectContent className="bg-white rounded-md shadow-lg border border-gray-200">
-                  {Object.keys(graphRequirements).map((type) => (
-                    <SelectItem
-                      key={type}
-                      value={type}
-                      className="hover:bg-gray-50 cursor-pointer px-4 py-2"
-                    >
-                      {type}
-                    </SelectItem>
-                  ))}
+                <SelectContent className="bg-white dark:bg-gray-800 rounded-xl shadow-lg border border-gray-200 dark:border-gray-700">
+                  {Object.keys(graphRequirements).map((type) => {
+                    const config = graphRequirements[type];
+                    const Icon = config.icon;
+                    return (
+                      <SelectItem
+                        key={type}
+                        value={type}
+                        className="hover:bg-gray-50 dark:hover:bg-gray-700 cursor-pointer px-4 py-3"
+                      >
+                        <div className="flex items-center gap-3">
+                          <div
+                            className={`p-1.5 rounded-lg bg-gradient-to-r ${config.color}`}
+                          >
+                            <Icon className="w-4 h-4 text-white" />
+                          </div>
+                          <span>{type}</span>
+                        </div>
+                      </SelectItem>
+                    );
+                  })}
                 </SelectContent>
               </Select>
             </div>
 
             <div className="space-y-2">
-              <label className="block text-sm font-medium text-gray-700">
+              <label className="block text-sm font-semibold text-gray-700 dark:text-gray-300">
                 Period Type
               </label>
               <Select
                 value={periodType}
                 onValueChange={(val) => setGraphState({ periodType: val })}
               >
-                <SelectTrigger className="w-full h-10">
+                <SelectTrigger className="w-full h-12 rounded-xl border-2 hover:border-blue-400 transition-colors">
                   <SelectValue placeholder="Select period type" />
                 </SelectTrigger>
-                <SelectContent className="bg-white rounded-md shadow-lg border border-gray-200">
-                  <SelectItem
-                    value="annual"
-                    className="hover:bg-gray-50 cursor-pointer px-4 py-2"
-                  >
-                    Annual
+                <SelectContent className="bg-white dark:bg-gray-800 rounded-xl shadow-lg border border-gray-200 dark:border-gray-700">
+                  <SelectItem value="annual" className="py-3">
+                    <div className="flex items-center gap-2">
+                      <span className="text-lg">📅</span>
+                      <span>Annual</span>
+                    </div>
                   </SelectItem>
-                  <SelectItem
-                    value="quarterly"
-                    className="hover:bg-gray-50 cursor-pointer px-4 py-2"
-                  >
-                    Quarterly
+                  <SelectItem value="quarterly" className="py-3">
+                    <div className="flex items-center gap-2">
+                      <span className="text-lg">📊</span>
+                      <span>Quarterly</span>
+                    </div>
                   </SelectItem>
                 </SelectContent>
               </Select>
             </div>
 
             {selectedGraph && (
-              <div className="space-y-4 pt-2">
+              <motion.div
+                initial={{ opacity: 0, y: 20 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ duration: 0.3 }}
+                className="space-y-4 pt-2"
+              >
                 <div className="space-y-2">
-                  <label className="block text-sm font-medium text-gray-700">
+                  <label className="block text-sm font-semibold text-gray-700 dark:text-gray-300">
                     Customize your graph request
                   </label>
-                  <input
-                    type="text"
-                    className="w-full border border-gray-300 rounded-lg p-3 text-sm focus:ring-2 focus:ring-blue-500 focus:border-transparent"
-                    placeholder="E.g., 'Compare quarterly revenue growth'"
-                    value={graphPrompt}
-                    onChange={(e) =>
-                      setGraphState({ graphPrompt: e.target.value })
-                    }
-                  />
+                  <div className="relative">
+                    <input
+                      type="text"
+                      className="w-full border-2 border-gray-200 dark:border-gray-700 rounded-xl p-3.5 text-sm focus:ring-2 focus:ring-blue-500 focus:border-transparent bg-white dark:bg-gray-800 transition-all"
+                      placeholder="E.g., 'Compare quarterly revenue growth'"
+                      value={graphPrompt}
+                      onChange={(e) =>
+                        setGraphState({ graphPrompt: e.target.value })
+                      }
+                    />
+                    {graphPrompt && (
+                      <div className="absolute right-3 top-1/2 -translate-y-1/2 text-xs text-gray-400">
+                        {graphPrompt.length} chars
+                      </div>
+                    )}
+                  </div>
                 </div>
 
-                <button
-                  className={`w-full py-3 px-4 rounded-lg font-medium transition-colors ${
+                <motion.button
+                  whileHover={
+                    !isLoading && canGenerateGraph ? { scale: 1.02 } : {}
+                  }
+                  whileTap={
+                    !isLoading && canGenerateGraph ? { scale: 0.98 } : {}
+                  }
+                  className={`w-full py-3.5 px-4 rounded-xl font-semibold transition-all ${
                     isLoading || !canGenerateGraph
-                      ? "bg-gray-300 text-gray-500 cursor-not-allowed"
-                      : "bg-blue-600 hover:bg-blue-700 text-white shadow-md hover:shadow-lg"
+                      ? "bg-gray-200 dark:bg-gray-700 text-gray-500 dark:text-gray-400 cursor-not-allowed"
+                      : "bg-primary hover:from-blue-700 hover:to-purple-700 text-white shadow-lg hover:shadow-xl"
                   }`}
                   onClick={generateGraph}
                   disabled={isLoading || !canGenerateGraph}
                 >
                   {isLoading ? (
                     <span className="flex items-center justify-center gap-2">
-                      <svg
-                        className="animate-spin h-4 w-4 text-current"
-                        viewBox="0 0 24 24"
-                      >
-                        <circle
-                          className="opacity-25"
-                          cx="12"
-                          cy="12"
-                          r="10"
-                          stroke="currentColor"
-                          strokeWidth="4"
-                        ></circle>
-                        <path
-                          className="opacity-75"
-                          fill="currentColor"
-                          d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"
-                        ></path>
-                      </svg>
-                      Generating...
+                      <Loader2 className="animate-spin h-5 w-5" />
+                      Generating Visualization...
                     </span>
                   ) : !canGenerateGraph && selectedCompanies.length ? (
                     <span className="flex items-center justify-center gap-2">
-                      {/* indicator that company data is still loading */}
-                      <svg
-                        className="animate-spin h-4 w-4 text-current"
-                        viewBox="0 0 24 24"
-                      >
-                        <circle
-                          className="opacity-25"
-                          cx="12"
-                          cy="12"
-                          r="10"
-                          stroke="currentColor"
-                          strokeWidth="4"
-                        ></circle>
-                        <path
-                          className="opacity-75"
-                          fill="currentColor"
-                          d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"
-                        ></path>
-                      </svg>
-                      Waiting for company data...
+                      <Loader2 className="animate-spin h-5 w-5" />
+                      Loading Company Data...
                     </span>
                   ) : (
-                    "Generate Graph"
+                    <span className="flex items-center justify-center gap-2">
+                      <Sparkles className="w-5 h-5" />
+                      Generate Graph
+                    </span>
                   )}
-                </button>
-              </div>
+                </motion.button>
+              </motion.div>
             )}
           </div>
         </div>
 
-        {/* Right Side Container */}
-        <div className="space-y-4 relative z-10 bg-white p-2 rounded-md">
-          <div className="mb-6">
-            {isLoading ? (
-              <div className="h-full flex items-center justify-center">
-                <div className="text-center">
-                  <svg
-                    className="animate-spin h-10 w-10 text-blue-600 mx-auto"
-                    xmlns="http://www.w3.org/2000/svg"
-                    fill="none"
-                    viewBox="0 0 24 24"
-                  >
-                    <circle
-                      className="opacity-25"
-                      cx="12"
-                      cy="12"
-                      r="10"
-                      stroke="currentColor"
-                      strokeWidth="4"
-                    ></circle>
-                    <path
-                      className="opacity-75"
-                      fill="currentColor"
-                      d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"
-                    ></path>
-                  </svg>
-                  <p className="mt-3 text-gray-600 font-medium">
-                    Generating visualization...
-                  </p>
+        {/* Right Side Container - Enhanced */}
+        <div className="space-y-6 relative z-10">
+          {/* Chart Container */}
+          <div className="bg-gradient-to-br from-white to-gray-50 dark:from-gray-900 dark:to-gray-950 rounded-2xl shadow-xl border border-gray-200 dark:border-gray-800 overflow-hidden">
+            {/* <div className="h-2 bg-gradient-to-r from-green-500 to-blue-500" /> */}
+
+            <div className="p-6">
+              <div className="flex items-center justify-between mb-4">
+                <div className="flex items-center gap-2">
+                  {currentGraphConfig && (
+                    <div
+                      className={`p-2 rounded-lg bg-gradient-to-r ${currentGraphConfig.color}`}
+                    >
+                      {React.createElement(currentGraphConfig.icon, {
+                        className: "w-5 h-5 text-white",
+                      })}
+                    </div>
+                  )}
+                  <h3 className="text-lg font-semibold text-gray-800 dark:text-gray-200">
+                    {selectedGraph || "Select a graph to begin"}
+                  </h3>
                 </div>
-              </div>
-            ) : (
-              <>
-                <div className="relative">
-                  {graphData && (
+                {graphData && (
+                  <div className="flex gap-2">
                     <button
-                      className="absolute top-2 right-2 p-2 rounded-full hover:bg-gray-100 transition-colors z-10"
+                      className="p-2 rounded-lg hover:bg-gray-100 dark:hover:bg-gray-800 transition-colors"
                       onClick={() => setGraphState({ isDrawerOpen: true })}
                       aria-label="Expand graph"
                     >
-                      <Expand className="w-5 h-5 text-gray-600" />
+                      <Maximize2 className="w-4 h-4 text-gray-600 dark:text-gray-400" />
                     </button>
-                  )}
-                </div>
-                <div className="w-full h-96 flex items-center justify-center">
-                  <div className="w-full h-full relative">
-                    <ChartContainer graphData={graphData} />
-                  </div>
-                </div>
-
-                {graphData?.analysis && (
-                  <div className="mt-2">
-                    <h3 className="text-md font-semibold text-gray-800 mb-3">
-                      Analysis
-                    </h3>
-                    <div className="bg-gray-50/50 p-5 rounded-lg border border-gray-200">
-                      <p className="text-gray-700 leading-relaxed text-sm">
-                        {graphData.analysis}
-                      </p>
-                    </div>
+                    <button className="p-2 rounded-lg hover:bg-gray-100 dark:hover:bg-gray-800 transition-colors">
+                      <Download className="w-4 h-4 text-gray-600 dark:text-gray-400" />
+                    </button>
+                    <button
+                      onClick={generateGraph}
+                      className="p-2 rounded-lg hover:bg-gray-100 dark:hover:bg-gray-800 transition-colors"
+                    >
+                      <RefreshCw className="w-4 h-4 text-gray-600 dark:text-gray-400" />
+                    </button>
                   </div>
                 )}
-              </>
-            )}
+              </div>
+
+              {isLoading ? (
+                <div className="h-96 flex items-center justify-center">
+                  <div className="text-center">
+                    <div className="relative">
+                      <div className="w-20 h-20 border-4 border-blue-200 rounded-full animate-spin border-t-blue-600" />
+                      <div className="absolute inset-0 flex items-center justify-center">
+                        <Sparkles className="w-8 h-8 text-blue-600 animate-pulse" />
+                      </div>
+                    </div>
+                    <p className="mt-4 text-gray-600 dark:text-gray-400 font-medium">
+                      Analyzing financial data...
+                    </p>
+                    <p className="text-sm text-gray-400 mt-1">
+                      This may take a few seconds
+                    </p>
+                  </div>
+                </div>
+              ) : (
+                <>
+                  <div className="w-full h-96 flex items-center justify-center">
+                    <div className="w-full h-full relative">
+                      <ChartContainer graphData={graphData} />
+                    </div>
+                  </div>
+
+                  {graphData?.analysis && (
+                    <motion.div
+                      initial={{ opacity: 0, y: 20 }}
+                      animate={{ opacity: 1, y: 0 }}
+                      className="mt-6"
+                    >
+                      <div className="bg-gradient-to-r from-blue-50 to-indigo-50 dark:from-blue-950/30 dark:to-indigo-950/30 p-5 rounded-xl border border-blue-200 dark:border-blue-800">
+                        <div className="flex items-center gap-2 mb-3">
+                          <Sparkles className="w-4 h-4 text-blue-600" />
+                          <h4 className="font-semibold text-gray-800 dark:text-gray-200">
+                            AI Analysis
+                          </h4>
+                        </div>
+                        <p className="text-gray-700 dark:text-gray-300 leading-relaxed text-sm">
+                          {graphData.analysis}
+                        </p>
+                      </div>
+                    </motion.div>
+                  )}
+                </>
+              )}
+            </div>
           </div>
 
-          {/* Chat Container */}
+          {/* Chat Container - Enhanced */}
           <motion.div
-            className="bg-white rounded-xl shadow-sm border border-gray-100 overflow-hidden"
+            className="bg-gradient-to-br from-white to-gray-50 dark:from-gray-900 dark:to-gray-950 rounded-2xl shadow-xl border border-gray-200 dark:border-gray-800 overflow-hidden"
             initial={false}
-            animate={{ height: isChatOpen ? "auto" : "48px" }}
+            animate={{ height: isChatOpen ? "auto" : "56px" }}
             transition={{ type: "spring", damping: 25 }}
           >
             <button
-              className="w-full text-left font-medium text-gray-700 p-3 flex items-center justify-between"
+              className="w-full text-left font-medium p-4 flex items-center justify-between hover:bg-gray-50 dark:hover:bg-gray-800 transition-colors"
               onClick={() => setGraphState({ isChatOpen: !isChatOpen })}
             >
-              <span>Chat about this analysis</span>
+              <div className="flex items-center gap-2">
+                <MessageCircle className="w-5 h-5 text-blue-600" />
+                <span className="text-gray-700 dark:text-gray-300">
+                  Chat about this analysis
+                </span>
+              </div>
               {isChatOpen ? (
                 <ChevronDown className="w-5 h-5 text-gray-500" />
               ) : (
@@ -539,19 +617,21 @@ const FinancialAnalysisDashboard = ({
                   exit={{ opacity: 0, height: 0 }}
                   transition={{ duration: 0.2 }}
                 >
-                  <ChatBox
-                    ref={chatBoxRef}
-                    context={{
-                      graphType: selectedGraph,
-                      graphData: graphData,
-                      companies: selectedCompanies,
-                      periodType: periodType,
-                      companyData: companyData,
-                    }}
-                    chatState={chatState}
-                    setChatState={setChatState}
-                    onChartUpdate={handleChartUpdate}
-                  />
+                  <div className="border-t border-gray-200 dark:border-gray-700">
+                    <ChatBox
+                      ref={chatBoxRef}
+                      context={{
+                        graphType: selectedGraph,
+                        graphData: graphData,
+                        companies: selectedCompanies,
+                        periodType: periodType,
+                        companyData: companyData,
+                      }}
+                      chatState={chatState}
+                      setChatState={setChatState}
+                      onChartUpdate={handleChartUpdate}
+                    />
+                  </div>
                 </motion.div>
               )}
             </AnimatePresence>
@@ -559,22 +639,40 @@ const FinancialAnalysisDashboard = ({
         </div>
       </div>
 
-      {/* Expanded View Drawer */}
+      {/* Expanded View Drawer - Enhanced */}
       <AnimatePresence>
         {isDrawerOpen && (
           <motion.div
-            initial={{ x: "100%" }}
-            animate={{ x: 0 }}
-            exit={{ x: "100%" }}
+            initial={{ x: "100%", opacity: 0 }}
+            animate={{ x: 0, opacity: 1 }}
+            exit={{ x: "100%", opacity: 0 }}
             transition={{ type: "spring", stiffness: 300, damping: 30 }}
-            className="fixed inset-y-0 right-0 w-full max-w-4xl bg-white shadow-xl z-[5000] flex"
+            className="fixed inset-y-0 right-0 w-full max-w-5xl bg-white dark:bg-gray-900 shadow-2xl z-[5000] flex"
           >
             <div className="flex-1 flex flex-col overflow-hidden">
-              <div className="flex justify-between items-center p-4 border-b">
-                <h2 className="text-xl font-semibold">Detailed Analysis</h2>
+              <div className="flex justify-between items-center p-6 border-b border-gray-200 dark:border-gray-800 bg-gradient-to-r from-gray-50 to-white dark:from-gray-900 dark:to-gray-950">
+                <div className="flex items-center gap-3">
+                  {currentGraphConfig && (
+                    <div
+                      className={`p-2 rounded-xl bg-gradient-to-r ${currentGraphConfig.color}`}
+                    >
+                      {React.createElement(currentGraphConfig.icon, {
+                        className: "w-5 h-5 text-white",
+                      })}
+                    </div>
+                  )}
+                  <div>
+                    <h2 className="text-xl font-bold text-gray-800 dark:text-gray-200">
+                      {selectedGraph} Analysis
+                    </h2>
+                    <p className="text-sm text-gray-500 dark:text-gray-400 mt-1">
+                      Detailed view with AI chat assistance
+                    </p>
+                  </div>
+                </div>
                 <button
                   onClick={() => setGraphState({ isDrawerOpen: false })}
-                  className="p-2 rounded-full hover:bg-gray-100"
+                  className="p-2 rounded-xl hover:bg-gray-100 dark:hover:bg-gray-800 transition-colors"
                 >
                   <X className="w-5 h-5" />
                 </button>
@@ -582,48 +680,61 @@ const FinancialAnalysisDashboard = ({
 
               <div className="flex-1 flex overflow-hidden">
                 {/* Graph Panel */}
-                <div className="flex-1 p-4 overflow-auto">
+                <div className="flex-1 overflow-auto p-6">
                   {graphData && (
                     <>
-                      <div className="mb-4">
+                      <div className="mb-6">
                         <ChartErrorBoundary>
                           <ChartContainer graphData={graphData} />
                         </ChartErrorBoundary>
                       </div>
-                      <div className="mt-2">
-                        <h3 className="text-md font-semibold text-gray-800 mb-3">
-                          Analysis
-                        </h3>
-                        <div className="bg-gray-50/50 p-5 rounded-lg border border-gray-200">
-                          <p className="text-gray-700 leading-relaxed text-sm">
-                            {graphData.analysis}
-                          </p>
-                        </div>
-                      </div>
+                      {graphData?.analysis && (
+                        <motion.div
+                          initial={{ opacity: 0, y: 20 }}
+                          animate={{ opacity: 1, y: 0 }}
+                          className="mt-6"
+                        >
+                          <div className="bg-gradient-to-r from-blue-50 to-indigo-50 dark:from-blue-950/30 dark:to-indigo-950/30 p-6 rounded-xl border border-blue-200 dark:border-blue-800">
+                            <div className="flex items-center gap-2 mb-3">
+                              <Sparkles className="w-5 h-5 text-blue-600" />
+                              <h3 className="font-semibold text-gray-800 dark:text-gray-200">
+                                AI Analysis
+                              </h3>
+                            </div>
+                            <p className="text-gray-700 dark:text-gray-300 leading-relaxed">
+                              {graphData.analysis}
+                            </p>
+                          </div>
+                        </motion.div>
+                      )}
                     </>
                   )}
                 </div>
 
                 {/* Chat Panel */}
-                <div className="w-96 border-l border-gray-200 flex flex-col">
-                  <div className="p-4 border-b">
-                    <h3 className="font-medium">Chat with AI Analyst</h3>
-                    <p className="text-sm text-gray-500">
-                      Ask questions or request chart modifications
+                <div className="w-96 border-l border-gray-200 dark:border-gray-800 flex flex-col bg-gray-50 dark:bg-gray-950">
+                  <div className="p-5 border-b border-gray-200 dark:border-gray-800">
+                    <h3 className="font-semibold text-gray-800 dark:text-gray-200">
+                      AI Financial Analyst
+                    </h3>
+                    <p className="text-sm text-gray-500 dark:text-gray-400 mt-1">
+                      Ask questions or request modifications
                     </p>
                   </div>
-                  <MemoizedChatPanel
-                    context={{
-                      graphType: selectedGraph,
-                      graphData: graphData,
-                      companies: selectedCompanies,
-                      periodType: periodType,
-                      companyData: companyData,
-                    }}
-                    chatState={chatState}
-                    setChatState={setChatState}
-                    onChartUpdate={handleChartUpdate}
-                  />
+                  <div className="flex-1">
+                    <MemoizedChatPanel
+                      context={{
+                        graphType: selectedGraph,
+                        graphData: graphData,
+                        companies: selectedCompanies,
+                        periodType: periodType,
+                        companyData: companyData,
+                      }}
+                      chatState={chatState}
+                      setChatState={setChatState}
+                      onChartUpdate={handleChartUpdate}
+                    />
+                  </div>
                 </div>
               </div>
             </div>

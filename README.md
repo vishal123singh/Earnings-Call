@@ -1,10 +1,10 @@
-# Earnings Call Insights
+# InvestorEye
 
 An AI-powered platform for analyzing earnings call transcripts, extracting financial insights, and generating intelligent summaries with real-time data visualization.
 
 ## 🎯 Overview
 
-Earnings Call Insights is a comprehensive Next.js application that leverages artificial intelligence to decode earnings call transcripts in seconds. Rather than spending hours reviewing lengthy transcripts, users can get instant insights on company performance, market trends, and investment opportunities through an intuitive AI-powered interface.
+InvestorEye is a comprehensive Next.js application that leverages artificial intelligence to decode earnings call transcripts in seconds. Rather than spending hours reviewing lengthy transcripts, users can get instant insights on company performance, market trends, and investment opportunities through an intuitive AI-powered interface.
 
 ## ✨ Key Features
 

@@ -21,9 +21,9 @@ export default function CompliancePage() {
           <div className="card-premium p-6">
             <h2 className="text-xl font-semibold mb-3">1. Overview</h2>
             <p className="text-muted-foreground leading-relaxed">
-              Earnings Call Insights is designed with compliance-first
-              architecture, ensuring responsible handling of financial data,
-              AI-generated insights, and third-party integrations.
+              InvestorEye is designed with compliance-first architecture,
+              ensuring responsible handling of financial data, AI-generated
+              insights, and third-party integrations.
             </p>
           </div>
 

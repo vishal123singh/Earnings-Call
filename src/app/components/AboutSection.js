@@ -5,7 +5,7 @@ export default function AboutPage() {
       <section className="py-24 px-6 text-center hero-gradient">
         <div className="max-w-4xl mx-auto">
           <h1 className="text-5xl font-bold tracking-tight mb-6 p-2 text-gradient-primary">
-            About Earnings Call Insights
+            About InvestorEye
           </h1>
 
           <p className="text-xl text-muted-foreground leading-relaxed">

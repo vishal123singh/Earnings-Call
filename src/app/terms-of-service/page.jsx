@@ -23,9 +23,9 @@ export default function TermsOfServicePage() {
               1. Acceptance of Terms
             </h2>
             <p className="text-muted-foreground leading-relaxed">
-              By accessing or using Earnings Call Insights, you agree to be
-              bound by these Terms of Service and our Privacy Policy. If you do
-              not agree, you must not use the platform.
+              By accessing or using InvestorEye, you agree to be bound by these
+              Terms of Service and our Privacy Policy. If you do not agree, you
+              must not use the platform.
             </p>
           </div>
 
@@ -35,9 +35,9 @@ export default function TermsOfServicePage() {
               2. Description of Service
             </h2>
             <p className="text-muted-foreground leading-relaxed">
-              Earnings Call Insights provides AI-powered financial analysis,
-              including earnings call summarization, sentiment analysis, market
-              insights, and data visualization tools.
+              InvestorEye provides AI-powered financial analysis, including
+              earnings call summarization, sentiment analysis, market insights,
+              and data visualization tools.
             </p>
           </div>
 
