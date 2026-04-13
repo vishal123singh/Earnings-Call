@@ -141,9 +141,7 @@ function LayoutContent({ children }: { children: React.ReactNode }) {
         }}
       >
         {/* Sidebar */}
-        {protectedRoutes.includes(pathname) && (
-          <Sidebar collapsed={collapsed} />
-        )}
+        {protectedRoutes.includes(pathname) && <Sidebar />}
 
         {/* Main */}
         <Box
