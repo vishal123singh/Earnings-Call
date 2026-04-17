@@ -8,7 +8,7 @@ import Image from "next/image";
 import { Snackbar, Alert } from "@mui/material";
 import { useDispatch } from "react-redux";
 import { setIsUserLoggedIn } from "../../../../store/userSlice";
-import LogoImage from "../../../../public/images/logo_3.png"; // or relative path
+import LogoImage from "@/assets/images/logo_3.png";
 // 🔥 Firebase
 import {
   signInWithEmailAndPassword,
@@ -154,7 +154,7 @@ export default function LoginModal({
         {/* Close */}
         <button
           onClick={onClose}
-          className="absolute top-4 right-4 text-gray-400"
+          className="cursor-pointer absolute top-4 right-4 text-gray-400"
         >
           <X size={20} />
         </button>

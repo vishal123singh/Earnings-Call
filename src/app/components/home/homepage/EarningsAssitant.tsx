@@ -501,7 +501,7 @@ const ChatStep = ({
         exit={{ opacity: 0, scale: 0 }}
         transition={{ type: "spring", stiffness: 120, damping: 20 }}
         onClick={() => setIsOpen(true)}
-        className="fixed bottom-6 right-6 bg-gradient-to-r from-primary to-secondary text-white p-4 rounded-full shadow-xl hover:shadow-2xl transition-all z-50 group"
+        className="cursor-pointer fixed bottom-6 right-6 bg-gradient-to-r from-primary to-secondary text-white p-4 rounded-full shadow-xl hover:shadow-2xl transition-all z-50 group"
         whileHover={{ scale: 1.1 }}
         whileTap={{ scale: 0.95 }}
       >

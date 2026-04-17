@@ -13,7 +13,7 @@ import {
   signInWithPopup,
 } from "firebase/auth";
 import { auth } from "@/lib/firebase";
-import LogoImage from "../../../../public/images/logo_3.png"; // or relative path
+import LogoImage from "@/assets/images/logo_3.png";
 
 interface SignupModalProps {
   isOpen: boolean;
@@ -158,7 +158,7 @@ export default function SignupModal({
         {/* Close */}
         <button
           onClick={onClose}
-          className="absolute top-4 right-4 text-gray-400"
+          className="cursor-pointer absolute top-4 right-4 text-gray-400"
         >
           <X size={24} />
         </button>

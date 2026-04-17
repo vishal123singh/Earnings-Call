@@ -38,7 +38,7 @@ import {
 
 import { Area, AreaChart, XAxis, YAxis } from "recharts";
 import Image from "next/image";
-import LogoImage from "../../public/images/logo_3.png"; // or relative path
+import LogoImage from "@/assets/images/logo_3.png";
 
 const chartData = [
   { q: "Q1", value: 40, revenue: 42 },
@@ -978,7 +978,7 @@ const AIAssistantDemo = () => {
           {/* CTA */}
           <button
             onClick={() => setIsOpen(true)}
-            className="mt-8 btn-premium px-6 py-3 rounded-xl flex items-center gap-3"
+            className="cursor-pointer mt-8 btn-premium px-6 py-3 rounded-xl flex items-center gap-3"
           >
             Try Voice Assistant
             <Mic className="w-5 h-5" />
@@ -1244,7 +1244,7 @@ const PricingSection = () => {
                 ))}
               </ul>
               <button
-                className={`w-full py-3 rounded-lg font-semibold transition-all ${
+                className={`cursor-pointer w-full py-3 rounded-lg font-semibold transition-all ${
                   plan.highlighted
                     ? "bg-background text-foreground hover:shadow-lg"
                     : "bg-primary text-primary-foreground hover:shadow-lg"
@@ -1274,7 +1274,7 @@ const CTASection = ({ router }) => {
         <div className="flex flex-col sm:flex-row gap-4 justify-center">
           <button
             onClick={() => router.push("/insights")}
-            className="bg-background text-foreground px-8 py-3 rounded-lg font-semibold hover:shadow-xl transition-all flex items-center justify-center gap-2"
+            className="bg-background text-foreground px-8 py-3 rounded-lg font-semibold cursor-pointer hover:shadow-xl transition-all flex items-center justify-center gap-2"
           >
             Let's Get Started <ArrowRight className="w-5 h-5" />
           </button>

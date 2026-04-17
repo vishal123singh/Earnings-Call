@@ -25,7 +25,7 @@ import { useContext, useEffect, useState, useRef, useMemo } from "react";
 import { useSelector } from "react-redux";
 import { motion, AnimatePresence } from "framer-motion";
 import Image from "next/image";
-import LogoImage from "../../../public/images/logo_3.png"; // or relative path
+import LogoImage from "@/assets/images/logo_3.png";
 
 // Modern Navbar Component
 const Navbar = ({ handleLogout }) => {
