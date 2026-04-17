@@ -1,4 +1,4 @@
-import { ParentContext } from "@/layout";
+import { ParentContext } from "@/clientLayout";
 import AppBar from "@mui/material/AppBar/AppBar";
 import Avatar from "@mui/material/Avatar/Avatar";
 import Button from "@mui/material/Button/Button";
@@ -25,6 +25,7 @@ import { useContext, useEffect, useState, useRef, useMemo } from "react";
 import { useSelector } from "react-redux";
 import { motion, AnimatePresence } from "framer-motion";
 import Image from "next/image";
+import LogoImage from "../../../public/images/logo_3.png"; // or relative path
 
 // Modern Navbar Component
 const Navbar = ({ handleLogout }) => {
@@ -196,7 +197,7 @@ const Navbar = ({ handleLogout }) => {
               <div className="relative">
                 <div className="absolute inset-0 rounded-full blur-lg opacity-30 group-hover:opacity-50 transition-opacity" />
                 <Image
-                  src="/images/logo_3.png"
+                  src={LogoImage}
                   alt="InvestorEye Logo"
                   width={60}
                   height={60}

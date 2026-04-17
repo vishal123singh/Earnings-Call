@@ -8,7 +8,7 @@ import Image from "next/image";
 import { Snackbar, Alert } from "@mui/material";
 import { useDispatch } from "react-redux";
 import { setIsUserLoggedIn } from "../../../../store/userSlice";
-
+import LogoImage from "../../../../public/images/logo_3.png"; // or relative path
 // 🔥 Firebase
 import {
   signInWithEmailAndPassword,
@@ -162,7 +162,7 @@ export default function LoginModal({
         {/* Header */}
         <div className="flex flex-col items-center text-center gap-3 mb-6">
           <Image
-            src="/images/logo_3.png"
+            src={LogoImage}
             alt="InvestorEye Logo"
             width={120}
             height={120}

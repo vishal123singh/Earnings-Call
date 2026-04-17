@@ -1,39 +1,215 @@
-export const metadata = {
-  title: "InvestorEye",
-  description: "Investment insights and analytics platform",
-  openGraph: {
-    title: "InvestorEye",
-    description: "Investment insights and analytics platform",
-    url: "https://investoreye.vercel.app/",
-    siteName: "InvestorEye",
-    images: [
-      {
-        url: "https://investoreye.vercel.app/preview.png",
-        width: 1200,
-        height: 630,
-      },
-    ],
-    type: "website",
-  },
-  twitter: {
-    card: "summary_large_image",
-    title: "InvestorEye",
-    description: "Investment insights and analytics platform",
-    images: ["https://investoreye.vercel.app/preview.png"],
-  },
-};
+// src/app/clientLayout.tsx
+"use client";
 
-import ClientLayout from "./clientLayout";
+import { Poppins } from "next/font/google";
+import { useEffect, useState, createContext } from "react";
+import {
+  CssBaseline,
+  Box,
+  Snackbar,
+  Alert,
+  ThemeProvider,
+} from "@mui/material";
+import "./globals.css";
+import Sidebar from "./components/sidebar";
+import { Provider, useDispatch, useSelector } from "react-redux";
+import { store } from "../../store/store";
+import { useRouter, usePathname, useSearchParams } from "next/navigation";
+import LoginModal from "./components/auth/login";
+import SignupModal from "./components/auth/register";
+import { setIsUserLoggedIn } from "../../store/userSlice";
+import AIVoiceAssistant from "./components/AIVoiceAssistant";
+import Navbar from "./components/navbar";
+import { Suspense } from "react";
+import { onAuthStateChanged, signOut } from "firebase/auth";
+import { auth } from "@/lib/firebase";
 
-export default function RootLayout({
+import { createTheme } from "@mui/material/styles";
+
+const theme = createTheme({
+  typography: {
+    fontFamily: [
+      "Poppins",
+      "Roboto",
+      "Inter",
+      "system-ui",
+      "-apple-system",
+      "BlinkMacSystemFont",
+      "Segoe UI",
+      "Roboto",
+      "sans-serif",
+    ].join(","),
+    h1: {
+      fontFamily: "Poppins, sans-serif",
+      fontWeight: 700,
+    },
+    h2: {
+      fontFamily: "Poppins, sans-serif",
+      fontWeight: 600,
+    },
+    body1: {
+      fontFamily: "Poppins, sans-serif",
+    },
+  },
+});
+
+const poppins = Poppins({ subsets: ["latin"], weight: ["400"] });
+
+// Export the context so it can be used in other components
+export const ParentContext = createContext<any>(null);
+
+function LayoutContent({ children }: { children: React.ReactNode }) {
+  const [collapsed, setCollapsed] = useState(false);
+  const pathname = usePathname();
+  const router = useRouter();
+  const searchParams = useSearchParams();
+
+  const dispatch = useDispatch();
+  const isUserLoggedIn = useSelector((state: any) => state.user.isUserLoggedIn);
+
+  const [authChecked, setAuthChecked] = useState(false);
+
+  const [isLoginOpen, setIsLoginOpen] = useState(false);
+  const [isSignupOpen, setIsSignupOpen] = useState(false);
+
+  const [snackbarOpen, setSnackbarOpen] = useState(false);
+  const [snackbarMessage, setSnackbarMessage] = useState("");
+  const [snackbarSeverity, setSnackbarSeverity] = useState<"success" | "error">(
+    "success",
+  );
+
+  const [isVoiceAssistantOpen, setIsVoiceAssistantOpen] = useState(false);
+
+  const protectedRoutes = [
+    "/insights",
+    "/sentiment-analysis",
+    "/competitive-insights",
+    "/transcript",
+  ];
+
+  useEffect(() => {
+    const unsubscribe = onAuthStateChanged(auth, (user) => {
+      dispatch(setIsUserLoggedIn(!!user));
+      setAuthChecked(true);
+    });
+
+    return () => unsubscribe();
+  }, [dispatch]);
+
+  useEffect(() => {
+    console.log(searchParams);
+    if (searchParams.get("login") === "true") {
+      setIsLoginOpen(true);
+    }
+  }, [searchParams]);
+
+  const handleToggleSidebar = () => setCollapsed(!collapsed);
+
+  const handleLogout = async () => {
+    await signOut(auth);
+
+    document.cookie = "token=; path=/; max-age=0";
+
+    dispatch(setIsUserLoggedIn(false));
+    setSnackbarMessage("Logged out successfully");
+    setSnackbarSeverity("success");
+    setSnackbarOpen(true);
+    router.push("/");
+  };
+
+  return (
+    <ParentContext.Provider
+      value={{
+        isLoginOpen,
+        isSignupOpen,
+        setIsLoginOpen,
+        setIsSignupOpen,
+        handleToggleSidebar,
+        pathname,
+        collapsed,
+        isVoiceAssistantOpen,
+        setIsVoiceAssistantOpen,
+      }}
+    >
+      <Box
+        sx={{
+          display: "flex",
+          height: "100vh",
+          width: "100vw",
+          overflow: pathname === "/insights" ? "hidden" : "auto",
+          flexDirection: ["column", "row"],
+        }}
+      >
+        {protectedRoutes.includes(pathname) && <Sidebar />}
+
+        <Box
+          sx={{
+            flexGrow: 1,
+            display: "flex",
+            flexDirection: "column",
+            height: "100vh",
+            width: "100vw",
+            overflow: "hidden",
+          }}
+        >
+          <Navbar handleLogout={handleLogout} />
+
+          <Box
+            id="main-scroll-container"
+            component="main"
+            sx={{
+              flexGrow: 1,
+              overflowY: "auto",
+              padding: ["8px", "16px"],
+            }}
+          >
+            {!authChecked ? null : children}
+
+            <AIVoiceAssistant />
+
+            <Snackbar
+              open={snackbarOpen}
+              autoHideDuration={4000}
+              onClose={() => setSnackbarOpen(false)}
+              anchorOrigin={{ vertical: "top", horizontal: "center" }}
+            >
+              <Alert severity={snackbarSeverity}>{snackbarMessage}</Alert>
+            </Snackbar>
+
+            <LoginModal
+              isOpen={isLoginOpen}
+              onClose={() => setIsLoginOpen(false)}
+              setIsSignupOpen={setIsSignupOpen}
+            />
+
+            <SignupModal
+              isOpen={isSignupOpen}
+              onClose={() => setIsSignupOpen(false)}
+              setIsLoginOpen={setIsLoginOpen}
+            />
+          </Box>
+        </Box>
+      </Box>
+    </ParentContext.Provider>
+  );
+}
+
+export default function ClientLayout({
   children,
 }: {
   children: React.ReactNode;
 }) {
   return (
     <html lang="en">
-      <body>
-        <ClientLayout>{children}</ClientLayout>
+      <body className={`${poppins.className} antialiased`}>
+        <Provider store={store}>
+          <CssBaseline />
+          <ThemeProvider theme={theme}>
+            <Suspense fallback={null}>
+              <LayoutContent>{children}</LayoutContent>
+            </Suspense>
+          </ThemeProvider>
+        </Provider>
       </body>
     </html>
   );

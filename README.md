@@ -52,8 +52,6 @@ InvestorEye is a comprehensive Next.js application that leverages artificial int
 
 - **Google Cloud** - Cloud services
 - **Zoho** - CRM integration
-- **Apollo API** - Company intelligence
-- **reCAPTCHA** - Security
 
 ## 📁 Project Structure
 
@@ -235,7 +233,6 @@ Compare financial metrics between competitors to identify:
 
 ## 🔐 Security
 
-- reCAPTCHA integration for form protection
 - API key validation
 - Environment variable-based configuration
 - AWS S3 secure file storage

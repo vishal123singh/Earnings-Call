@@ -12,7 +12,7 @@ import ReactMarkdown from "react-markdown";
 import remarkGfm from "remark-gfm";
 import rehypeRaw from "rehype-raw";
 import VoiceRecorder from "./voice-input";
-import { ParentContext } from "@/layout";
+import { ParentContext } from "@/clientLayout";
 
 interface Chat {
   content: any;

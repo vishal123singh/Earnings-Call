@@ -4,7 +4,7 @@ import { motion, AnimatePresence } from "framer-motion";
 import { Mic, X, SpeakerIcon } from "lucide-react";
 import ReactMarkdown from "react-markdown";
 import { useSelector } from "react-redux";
-import { ParentContext } from "@/layout";
+import { ParentContext } from "@/clientLayout";
 
 const AIVoiceAssistant: React.FC = () => {
   const { isVoiceAssistantOpen, setIsVoiceAssistantOpen } =

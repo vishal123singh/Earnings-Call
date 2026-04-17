@@ -11,7 +11,7 @@ import {
   setFoundationModel,
 } from "../../../../store/sidebarSlice";
 import { useContext, useEffect } from "react";
-import { ParentContext } from "@/layout";
+import { ParentContext } from "@/clientLayout";
 
 // Type definitions
 interface Company {

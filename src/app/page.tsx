@@ -1,5 +1,5 @@
 "use client";
-import { ParentContext } from "./layout";
+import { ParentContext } from "./clientLayout";
 import ChatStep from "./components/home/homepage/EarningsAssitant";
 import CompaniesCarousel from "./components/home/homepage/CompaniesCarousel";
 import { useState, useEffect, useRef, useContext } from "react";
@@ -38,6 +38,7 @@ import {
 
 import { Area, AreaChart, XAxis, YAxis } from "recharts";
 import Image from "next/image";
+import LogoImage from "../../public/images/logo_3.png"; // or relative path
 
 const chartData = [
   { q: "Q1", value: 40, revenue: 42 },
@@ -197,10 +198,6 @@ function InvestorEyeDemo() {
               </div>
             </div>
             <div className="flex items-center gap-2">
-              <div className="hidden sm:flex items-center gap-1 px-2 py-1 bg-white/10 rounded-full backdrop-blur-sm">
-                <span className="w-1.5 h-1.5 bg-green-400 rounded-full" />
-                <span className="text-xs">Live</span>
-              </div>
               <button className="p-1.5 hover:bg-white/10 rounded-lg transition-colors">
                 <svg
                   className="w-4 h-4"
@@ -1296,7 +1293,7 @@ const Footer = () => {
           <div>
             <div className="flex items-center gap-2 mb-4">
               <Image
-                src="/images/logo_3.png"
+                src={LogoImage}
                 alt="InvestorEye Logo"
                 width={60}
                 height={60}

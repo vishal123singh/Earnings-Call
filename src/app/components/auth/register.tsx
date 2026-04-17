@@ -13,6 +13,7 @@ import {
   signInWithPopup,
 } from "firebase/auth";
 import { auth } from "@/lib/firebase";
+import LogoImage from "../../../../public/images/logo_3.png"; // or relative path
 
 interface SignupModalProps {
   isOpen: boolean;
@@ -165,7 +166,7 @@ export default function SignupModal({
         {/* Header */}
         <div className="flex flex-col items-center text-center gap-0 mb-6">
           <Image
-            src="/images/logo_2.png"
+            src={LogoImage}
             alt="InvestorEye Logo"
             width={120}
             height={120}

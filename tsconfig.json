@@ -1,11 +1,7 @@
 {
   "compilerOptions": {
     "target": "ES2017",
-    "lib": [
-      "dom",
-      "dom.iterable",
-      "esnext"
-    ],
+    "lib": ["dom", "dom.iterable", "esnext"],
     "allowJs": true,
     "skipLibCheck": true,
     "strict": true,
@@ -23,9 +19,17 @@
       }
     ],
     "paths": {
-      "@/*": [
-        "./src/app/*"
-      ]
+      "@/*": ["./src/app/*"],
+      "@components/*": ["./src/app/components/*"],
+      "@utils/*": ["./src/app/utils/*"],
+      "@hooks/*": ["./src/app/hooks/*"],
+      "@styles/*": ["./src/app/styles/*"],
+      "@assets/*": ["./src/app/assets/*"],
+      "@lib/*": ["./src/app/lib/*"],
+      "@context/*": ["./src/app/context/*"],
+      "@services/*": ["./src/app/services/*"],
+      "@types/*": ["./src/app/types/*"],
+      "@public/*": ["./public/*"]
     }
   },
   "include": [
@@ -40,7 +44,5 @@
     "src/app/competitive-insights/DynamicChartCreator.jsx",
     ".next/dev/types/**/*.ts"
   ],
-  "exclude": [
-    "node_modules"
-  ]
+  "exclude": ["node_modules"]
 }

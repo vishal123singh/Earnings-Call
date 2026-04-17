@@ -1,6 +1,6 @@
 import { motion } from "framer-motion";
 import { useContext } from "react";
-import { ParentContext } from "@/layout";
+import { ParentContext } from "@/clientLayout";
 import { Box } from "@mui/material";
 import FilterOptions from "../components/ui/filter-options";
 
