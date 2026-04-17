@@ -105,6 +105,10 @@ function LayoutContent({ children }: { children: React.ReactNode }) {
 
   const handleToggleSidebar = () => setCollapsed(!collapsed);
 
+  const onclose = () => {
+    setIsLoginOpen(false);
+  };
+
   const handleLogout = async () => {
     await signOut(auth);
 
@@ -178,7 +182,7 @@ function LayoutContent({ children }: { children: React.ReactNode }) {
 
             <LoginModal
               isOpen={isLoginOpen}
-              onClose={() => setIsLoginOpen(false)}
+              onClose={onclose}
               setIsSignupOpen={setIsSignupOpen}
             />
 
