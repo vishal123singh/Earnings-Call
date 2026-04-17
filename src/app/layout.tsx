@@ -2,6 +2,7 @@
 import ClientLayout from "./clientLayout";
 
 export const metadata = {
+  metadataBase: new URL("https://investoreye.vercel.app"),
   title: "InvestorEye",
   icons: {
     icon: [
