@@ -100,12 +100,21 @@ function LayoutContent({ children }: { children: React.ReactNode }) {
     if (searchParams.get("login") === "true") {
       setIsLoginOpen(true);
     }
-  }, [searchParams, isLoginOpen]);
+  }, [searchParams]);
 
   const handleToggleSidebar = () => setCollapsed(!collapsed);
 
   const onclose = () => {
     setIsLoginOpen(false);
+
+    const params = new URLSearchParams(searchParams.toString());
+    params.delete("login");
+
+    const newUrl = params.toString()
+      ? `${pathname}?${params.toString()}`
+      : pathname;
+
+    router.replace(newUrl); // important: no page reload
   };
 
   const handleLogout = async () => {
