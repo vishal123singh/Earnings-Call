@@ -97,11 +97,10 @@ function LayoutContent({ children }: { children: React.ReactNode }) {
   }, [dispatch]);
 
   useEffect(() => {
-    console.log(searchParams);
     if (searchParams.get("login") === "true") {
       setIsLoginOpen(true);
     }
-  }, [searchParams]);
+  }, [searchParams, isLoginOpen]);
 
   const handleToggleSidebar = () => setCollapsed(!collapsed);
 
