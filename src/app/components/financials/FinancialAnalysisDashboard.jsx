@@ -311,47 +311,15 @@ const FinancialAnalysisDashboard = ({
     }
   };
 
-  const renderChart = () => {
-    if (!graphData?.data?.datasets) {
-      return (
-        <div className="h-full flex items-center justify-center">
-          <div className="text-center text-gray-500">
-            <p>{error || "No chart data available"}</p>
-          </div>
-        </div>
-      );
-    }
-
-    return (
-      <ChartErrorBoundary>
-        {graphData.chartType === "line" && (
-          <Line data={graphData.data} options={graphData.options} />
-        )}
-        {graphData.chartType === "bar" && (
-          <Bar data={graphData.data} options={graphData.options} />
-        )}
-        {graphData.chartType === "pie" && (
-          <Pie data={graphData.data} options={graphData.options} />
-        )}
-        {graphData.chartType === "doughnut" && (
-          <Doughnut data={graphData.data} options={graphData.options} />
-        )}
-      </ChartErrorBoundary>
-    );
-  };
-
   const currentGraphConfig = selectedGraph
     ? graphRequirements[selectedGraph]
     : null;
 
   return (
-    <div className="container mx-auto p-6 max-w-7xl">
-      <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 items-start">
+    <div className="container mx-auto p-4 sm:p-6 max-w-7xl">
+      <div className="grid grid-cols-1 lg:grid-cols-2 gap-4 sm:gap-8 items-start">
         {/* Configuration Panel - Enhanced */}
-        <div className="bg-gradient-to-br from-white to-gray-50 dark:from-gray-900 dark:to-gray-950 rounded-2xl shadow-xl border border-gray-200 dark:border-gray-800 sticky top-6 overflow-hidden">
-          {/* Decorative header */}
-          {/* <div className="h-2 bg-gradient-to-r from-blue-500 via-purple-500 to-pink-500" /> */}
-
+        <div className="bg-gradient-to-br from-white to-gray-50 dark:from-gray-900 dark:to-gray-950 rounded-2xl shadow-xl border border-gray-200 dark:border-gray-800 sticky top-4 sm:top-6 overflow-hidden">
           <div className="p-6 space-y-6">
             <div className="flex items-center gap-3 mb-2">
               <div className="p-2 bg-gradient-to-br from-blue-500 to-purple-500 rounded-xl">
@@ -496,8 +464,6 @@ const FinancialAnalysisDashboard = ({
         <div className="space-y-6 relative z-10">
           {/* Chart Container */}
           <div className="bg-gradient-to-br from-white to-gray-50 dark:from-gray-900 dark:to-gray-950 rounded-2xl shadow-xl border border-gray-200 dark:border-gray-800 overflow-hidden">
-            {/* <div className="h-2 bg-gradient-to-r from-green-500 to-blue-500" /> */}
-
             <div className="p-6">
               <div className="flex items-center justify-between mb-4">
                 <div className="flex items-center gap-2">

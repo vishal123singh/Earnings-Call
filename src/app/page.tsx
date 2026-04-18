@@ -4,7 +4,6 @@ import ChatStep from "./components/home/homepage/EarningsAssitant";
 import CompaniesCarousel from "./components/home/homepage/CompaniesCarousel";
 import { useState, useEffect, useRef, useContext } from "react";
 import {
-  ChevronRight,
   Mic,
   BarChart3,
   TrendingUp,
@@ -14,7 +13,6 @@ import {
   Zap,
   Users,
   LineChart,
-  Play,
   Star,
   ArrowRight,
   CheckCircle,
@@ -22,23 +20,15 @@ import {
   Sparkles,
 } from "lucide-react";
 import { motion, useAnimation, useInView } from "framer-motion";
-import { Button } from "./components/ui/button";
 import { useSelector } from "react-redux";
-import { DemoModal } from "./components/Demo";
 import { useRouter } from "next/navigation";
-
 import { AnimatePresence } from "framer-motion";
-
-import {
-  LineChart as RechartLineChart,
-  Line,
-  ResponsiveContainer,
-  Tooltip,
-} from "recharts";
-
+import { ResponsiveContainer, Tooltip } from "recharts";
 import { Area, AreaChart, XAxis, YAxis } from "recharts";
 import Image from "next/image";
 import LogoImage from "@/assets/images/logo_3.png";
+import MetricsShowcase from "./components/home/homepage/MetricsShowcase";
+import FeaturesSection from "./components/home/homepage/Features";
 
 const chartData = [
   { q: "Q1", value: 40, revenue: 42 },
@@ -494,8 +484,6 @@ export default function LandingPage() {
       <CompaniesCarousel />
       <MetricsShowcase />
       <AIAssistantDemo />
-      {/* <TestimonialsSection /> */}
-      {/* <PricingSection /> */}
       <CTASection router={router} />
       <Footer />
     </div>
@@ -503,8 +491,6 @@ export default function LandingPage() {
 }
 
 const HeroSection = ({ router }) => {
-  const [openDemo, setOpenDemo] = useState(false);
-
   return (
     <section className="relative pt-28 pb-20 px-6 overflow-hidden bg-background">
       {/* background glow system */}
@@ -522,14 +508,14 @@ const HeroSection = ({ router }) => {
             {/* badge */}
             <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-primary/10 text-primary text-sm font-medium mb-6 border border-primary/20">
               <Sparkles className="w-4 h-4" />
-              InvestorEye • AI Financial Intelligence
+              InvestorEye • Financial Intelligence
             </div>
 
             {/* headline */}
             <h1 className="text-5xl md:text-6xl font-bold leading-tight mb-4">
               See Beyond Numbers
               <span className="block text-gradient-primary">
-                with AI-Powered Earnings Insights
+                with AI-Powered Financial Insights
               </span>
             </h1>
 
@@ -549,15 +535,6 @@ const HeroSection = ({ router }) => {
                 Explore Insights
                 <ArrowRight className="w-4 h-4" />
               </button>
-
-              {/* <button
-                onClick={() => setOpenDemo(true)}
-                className="px-6 py-3 rounded-xl border border-border hover:bg-muted transition"
-              >
-                Watch Demo
-              </button> */}
-
-              <DemoModal open={openDemo} setOpen={setOpenDemo} />
             </div>
 
             {/* TRUST STRIP */}
@@ -597,162 +574,6 @@ const HeroSection = ({ router }) => {
         </div>
       </div>
     </section>
-  );
-};
-
-const ChatBubble = ({ type, message }) => (
-  <div className={`flex ${type === "user" ? "justify-end" : "justify-start"}`}>
-    <div
-      className={`max-w-[90%] sm:max-w-[80%] p-2 sm:p-3 rounded-lg text-sm sm:text-sm ${
-        type === "user"
-          ? "bg-primary text-primary-foreground rounded-br-none"
-          : "bg-muted text-muted-foreground rounded-bl-none"
-      }`}
-    >
-      {message}
-    </div>
-  </div>
-);
-
-const FeaturesSection = () => {
-  const features = [
-    {
-      icon: <Brain className="w-6 h-6" />,
-      title: "AI-Powered Assistant",
-      description:
-        "Chat-based interface for asking questions about earnings calls.",
-      gradient: "from-primary to-secondary",
-    },
-    {
-      icon: <Mic className="w-6 h-6" />,
-      title: "Voice Assistant",
-      description:
-        "Hands-free interaction using natural voice commands and responses.",
-      gradient: "from-secondary to-tertiary",
-    },
-    {
-      icon: <BarChart3 className="w-6 h-6" />,
-      title: "Real-time Metrics",
-      description:
-        "Live financial indicators across global companies and markets.",
-      gradient: "from-chart-1 to-primary",
-    },
-    {
-      icon: <TrendingUp className="w-6 h-6" />,
-      title: "Sentiment Analysis",
-      description:
-        "Detect emotional tone and investor sentiment from transcripts.",
-      gradient: "from-destructive to-accent",
-    },
-    {
-      icon: <LineChart className="w-6 h-6" />,
-      title: "Performance Charts",
-      description: "Interactive charts for financial trends and comparisons.",
-      gradient: "from-chart-2 to-chart-3",
-    },
-    {
-      icon: <Users className="w-6 h-6" />,
-      title: "Competitive Insights",
-      description:
-        "Benchmark companies side-by-side for smarter investment decisions.",
-      gradient: "from-chart-3 to-secondary",
-    },
-    {
-      icon: <Calendar className="w-6 h-6" />,
-      title: "Earnings Calendar",
-      description:
-        "Never miss earnings calls with smart scheduling and alerts.",
-      gradient: "from-chart-4 to-accent",
-    },
-    {
-      icon: <FileText className="w-6 h-6" />,
-      title: "Transcript Management",
-      description:
-        "Search and analyze historical earnings call transcripts instantly.",
-      gradient: "from-chart-5 to-primary",
-    },
-  ];
-
-  return (
-    <section id="features" className="py-24 px-6 bg-background">
-      <div className="max-w-7xl mx-auto">
-        {/* Header */}
-        <div className="text-center mb-16">
-          <h2 className="text-4xl md:text-5xl font-bold mb-5 text-gradient-primary p-2">
-            Powerful Features for Financial Intelligence
-          </h2>
-
-          <p className="text-lg text-muted-foreground max-w-3xl mx-auto">
-            Everything you need to decode earnings calls and make informed
-            investment decisions
-          </p>
-        </div>
-
-        {/* Grid */}
-        <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-6">
-          {features.map((feature, index) => (
-            <FeatureCard key={index} {...feature} index={index} />
-          ))}
-        </div>
-      </div>
-    </section>
-  );
-};
-
-const FeatureCard = ({ icon, title, description, gradient, index }) => {
-  const controls = useAnimation();
-  const ref = useRef(null);
-  const inView = useInView(ref);
-
-  useEffect(() => {
-    if (inView) controls.start("visible");
-  }, [controls, inView]);
-
-  return (
-    <motion.div
-      ref={ref}
-      initial="hidden"
-      animate={controls}
-      variants={{
-        hidden: { opacity: 0, y: 25 },
-        visible: {
-          opacity: 1,
-          y: 0,
-          transition: { delay: index * 0.08 },
-        },
-      }}
-      className="group relative card-premium p-6 overflow-hidden hover:-translate-y-2 transition-all duration-300"
-    >
-      {/* top glow line */}
-      <div
-        className={`absolute top-0 left-0 right-0 h-[3px] bg-gradient-to-r ${gradient} opacity-70`}
-      />
-
-      {/* background number */}
-      <span className="absolute -top-4 -right-2 text-6xl font-bold text-muted/10 select-none">
-        {String(index + 1).padStart(2, "0")}
-      </span>
-
-      {/* icon orb */}
-      <div
-        className={`w-12 h-12 rounded-xl flex items-center justify-center mb-5 bg-gradient-to-r ${gradient} text-white shadow-lg group-hover:scale-110 transition-transform`}
-      >
-        {icon}
-      </div>
-
-      {/* title */}
-      <h3 className="text-lg font-semibold mb-2 group-hover:text-primary transition-colors">
-        {title}
-      </h3>
-
-      {/* description */}
-      <p className="text-sm text-muted-foreground leading-relaxed">
-        {description}
-      </p>
-
-      {/* hover glow */}
-      <div className="absolute inset-0 opacity-0 group-hover:opacity-100 transition bg-gradient-to-br from-primary/5 via-transparent to-secondary/5" />
-    </motion.div>
   );
 };
 
@@ -843,85 +664,6 @@ const HowItWorksSection = () => {
               )}
             </motion.div>
           ))}
-        </div>
-      </div>
-    </section>
-  );
-};
-
-const MetricsShowcase = () => {
-  const metrics = [
-    { label: "Revenue Growth", value: "+23.5%", trend: "up" },
-    { label: "Net Income", value: "$12.4B", trend: "up" },
-    { label: "EPS", value: "$3.45", trend: "up" },
-    { label: "ROE", value: "18.2%", trend: "up" },
-    { label: "Debt/Equity", value: "1.45", trend: "down" },
-    { label: "P/E Ratio", value: "12.3x", trend: "neutral" },
-  ];
-
-  return (
-    <section className="py-24 px-6 bg-gradient-to-r from-primary via-primary/90 to-primary/80 text-primary-foreground relative overflow-hidden">
-      {/* subtle glow overlay */}
-      <div className="absolute inset-0 opacity-20 bg-[radial-gradient(circle_at_20%_20%,white,transparent_60%)]" />
-
-      <div className="max-w-7xl mx-auto relative">
-        {/* Header */}
-        <div className="text-center mb-14">
-          <h2 className="text-4xl md:text-5xl font-bold mb-4 tracking-tight">
-            Real-time Financial Metrics
-          </h2>
-          <p className="text-primary-foreground/80 text-lg">
-            Live data from major financial institutions
-          </p>
-        </div>
-
-        {/* Grid */}
-        <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
-          {metrics.map((metric, index) => {
-            const isUp = metric.trend === "up";
-            const isDown = metric.trend === "down";
-
-            return (
-              <div
-                key={index}
-                className="group relative rounded-2xl p-6 bg-white/10 backdrop-blur-md border border-white/20 shadow-lg transition-all duration-300 hover:-translate-y-1 hover:bg-white/15"
-              >
-                {/* top glow line */}
-                <div className="absolute top-0 left-0 right-0 h-[2px] bg-gradient-to-r from-transparent via-white/40 to-transparent opacity-0 group-hover:opacity-100 transition" />
-
-                {/* Label */}
-                <p className="text-primary-foreground/70 text-sm mb-2">
-                  {metric.label}
-                </p>
-
-                {/* Value */}
-                <p className="text-3xl font-bold mb-3 tracking-tight">
-                  {metric.value}
-                </p>
-
-                {/* Trend badge */}
-                <div
-                  className={`inline-flex items-center gap-2 px-3 py-1 rounded-full text-xs font-medium border
-                    ${
-                      isUp
-                        ? "bg-emerald-500/20 text-emerald-200 border-emerald-400/30"
-                        : isDown
-                          ? "bg-red-500/20 text-red-200 border-red-400/30"
-                          : "bg-yellow-500/20 text-yellow-200 border-yellow-400/30"
-                    }
-                  `}
-                >
-                  {isUp && "▲"}
-                  {isDown && "▼"}
-                  {!isUp && !isDown && "●"}
-
-                  {isUp && "+12% vs last quarter"}
-                  {isDown && "-8% vs last quarter"}
-                  {!isUp && !isDown && "Stable vs last quarter"}
-                </div>
-              </div>
-            );
-          })}
         </div>
       </div>
     </section>
@@ -1082,183 +824,6 @@ const Feature = ({ icon, text }) => (
     <span className="text-foreground">{text}</span>
   </div>
 );
-
-const Suggestion = ({ text }) => (
-  <div className="bg-muted rounded-lg p-3 text-foreground hover:bg-muted/80 cursor-pointer transition-colors">
-    "{text}"
-  </div>
-);
-
-// Testimonials Section
-const TestimonialsSection = () => {
-  const testimonials = [
-    {
-      name: "Sarah Johnson",
-      role: "Hedge Fund Manager",
-      content:
-        "This platform has revolutionized how we analyze earnings calls. The AI insights are incredibly accurate and save us hours of manual work.",
-      rating: 5,
-    },
-    {
-      name: "Michael Chen",
-      role: "Financial Analyst",
-      content:
-        "The voice assistant is a game-changer. I can now get answers while reviewing other data. Highly recommended!",
-      rating: 5,
-    },
-    {
-      name: "David Williams",
-      role: "Investment Advisor",
-      content:
-        "Competitive insights feature helps us identify market trends before they become obvious. Invaluable tool.",
-      rating: 5,
-    },
-  ];
-
-  return (
-    <section className="py-20 px-4 bg-gradient-to-br from-primary/5 via-secondary/5 to-primary/5">
-      <div className="max-w-7xl mx-auto">
-        <div className="text-center mb-12">
-          <h2 className="text-4xl font-bold mb-4 text-foreground">
-            What Our Users Say
-          </h2>
-          <p className="text-xl text-muted-foreground">
-            Trusted by financial professionals worldwide
-          </p>
-        </div>
-        <div className="grid md:grid-cols-3 gap-8">
-          {testimonials.map((testimonial, index) => (
-            <motion.div
-              key={index}
-              initial={{ opacity: 0, y: 20 }}
-              whileInView={{ opacity: 1, y: 0 }}
-              transition={{ delay: index * 0.1 }}
-              className="bg-card rounded-2xl p-6 shadow-lg border border-border"
-            >
-              <div className="flex mb-4">
-                {[...Array(testimonial.rating)].map((_, i) => (
-                  <Star
-                    key={i}
-                    className="w-5 h-5 fill-destructive text-destructive"
-                  />
-                ))}
-              </div>
-              <p className="text-foreground mb-4 italic">
-                "{testimonial.content}"
-              </p>
-              <div>
-                <p className="font-semibold text-foreground">
-                  {testimonial.name}
-                </p>
-                <p className="text-sm text-muted-foreground">
-                  {testimonial.role}
-                </p>
-              </div>
-            </motion.div>
-          ))}
-        </div>
-      </div>
-    </section>
-  );
-};
-
-// Pricing Section
-const PricingSection = () => {
-  const plans = [
-    {
-      name: "Starter",
-      price: "$49",
-      period: "month",
-      features: [
-        "Up to 10 companies",
-        "Basic AI insights",
-        "Email support",
-        "Monthly reports",
-      ],
-      highlighted: false,
-    },
-    {
-      name: "Professional",
-      price: "$99",
-      period: "month",
-      features: [
-        "Unlimited companies",
-        "Advanced AI insights",
-        "Voice assistant",
-        "Priority support",
-        "Real-time metrics",
-        "Competitive analysis",
-      ],
-      highlighted: true,
-    },
-    {
-      name: "Enterprise",
-      price: "Custom",
-      period: "",
-      features: [
-        "Everything in Professional",
-        "Custom integrations",
-        "Dedicated account manager",
-        "SLA guarantee",
-        "On-premise deployment",
-      ],
-      highlighted: false,
-    },
-  ];
-
-  return (
-    <section id="pricing" className="py-20 px-4 bg-background">
-      <div className="max-w-7xl mx-auto">
-        <div className="text-center mb-12">
-          <h2 className="text-4xl font-bold mb-4 text-foreground">
-            Simple, Transparent Pricing
-          </h2>
-          <p className="text-xl text-muted-foreground">
-            Choose the plan that works for you
-          </p>
-        </div>
-        <div className="grid md:grid-cols-3 gap-8">
-          {plans.map((plan, index) => (
-            <motion.div
-              key={index}
-              initial={{ opacity: 0, y: 20 }}
-              whileInView={{ opacity: 1, y: 0 }}
-              transition={{ delay: index * 0.1 }}
-              className={`rounded-2xl p-8 ${
-                plan.highlighted
-                  ? "bg-gradient-to-br from-primary to-primary/80 text-primary-foreground transform scale-105 shadow-2xl"
-                  : "bg-muted border border-border"
-              }`}
-            >
-              <h3 className="text-2xl font-bold mb-2">{plan.name}</h3>
-              <div className="mb-4">
-                <span className="text-4xl font-bold">{plan.price}</span>
-                {plan.period && <span className="text-sm">/{plan.period}</span>}
-              </div>
-              <ul className="space-y-3 mb-8">
-                {plan.features.map((feature, i) => (
-                  <li key={i} className="flex items-center gap-2">
-                    <CheckCircle className="w-5 h-5" />
-                    <span>{feature}</span>
-                  </li>
-                ))}
-              </ul>
-              <button
-                className={`cursor-pointer w-full py-3 rounded-lg font-semibold transition-all ${
-                  plan.highlighted
-                    ? "bg-background text-foreground hover:shadow-lg"
-                    : "bg-primary text-primary-foreground hover:shadow-lg"
-                }`}
-              >
-                Get Started
-              </button>
-            </motion.div>
-          ))}
-        </div>
-      </div>
-    </section>
-  );
-};
 
 // CTA Section
 const CTASection = ({ router }) => {

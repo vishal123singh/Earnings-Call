@@ -1,13 +1,11 @@
 "use client";
-
 import { useState, useEffect } from "react";
 import { useRouter } from "next/navigation";
 import { motion } from "framer-motion";
-import { BrainCog, X } from "lucide-react";
+import { X } from "lucide-react";
 import Image from "next/image";
 import { Snackbar, Alert } from "@mui/material";
 import { useDispatch } from "react-redux";
-import { setIsUserLoggedIn } from "../../../../store/userSlice";
 import LogoImage from "@/assets/images/logo_3.png";
 // 🔥 Firebase
 import {

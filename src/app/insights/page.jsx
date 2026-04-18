@@ -264,11 +264,7 @@ export default function AggregateDashboard() {
 
                 {/* Message bubble */}
                 <div
-                  className={`relative p-4 rounded-2xl shadow-lg transition-all duration-300 ${
-                    chat.role === "user"
-                      ? "bg-gradient-to-br from-primary to-primary/90 text-white rounded-br-md"
-                      : "bg-white dark:bg-gray-800 text-gray-800 dark:text-gray-100 rounded-bl-md border border-gray-200 dark:border-gray-700"
-                  }`}
+                  className={`relative p-4 rounded-2xl shadow-lg transition-all duration-300 ${"bg-white dark:bg-gray-800 text-gray-800 dark:text-gray-100 rounded-bl-md border border-gray-200 dark:border-gray-700"}`}
                   style={{
                     boxShadow:
                       chat.role === "user"

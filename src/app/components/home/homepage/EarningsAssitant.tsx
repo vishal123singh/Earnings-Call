@@ -7,9 +7,9 @@ import {
   SendHorizonalIcon,
   Volume1,
   VolumeOffIcon,
+  X,
 } from "lucide-react";
 import { useEffect, useState, useRef } from "react";
-import { X } from "lucide-react";
 
 const ChatStep = ({
   isOpen,
@@ -293,7 +293,7 @@ const ChatStep = ({
 
   return (
     <>
-      {/* Chat Drawer - Enhanced */}
+      {/* Chat Drawer - Premium Design from InvestorEye */}
       <AnimatePresence mode="wait">
         {isOpen && (
           <motion.div
@@ -302,34 +302,55 @@ const ChatStep = ({
             animate={{ x: 0, opacity: 1 }}
             exit={{ x: "100%", opacity: 0 }}
             transition={{ type: "spring", stiffness: 120, damping: 20 }}
-            className="fixed top-0 right-0 w-[400px] h-screen bg-gradient-to-b from-gray-50 to-white dark:from-gray-900 dark:to-gray-950 shadow-2xl flex flex-col border-l border-gray-200 dark:border-gray-800 z-[5000]"
+            className="fixed top-0 right-0 w-[450px] h-screen bg-gradient-to-b from-gray-50 to-white dark:from-gray-900 dark:to-gray-950 shadow-2xl flex flex-col border-l border-gray-200 dark:border-gray-800 z-[5000]"
           >
-            {/* Header - Enhanced */}
-            <div className="relative flex justify-between items-center p-5 bg-gradient-to-r from-primary via-primary/90 to-secondary text-white">
+            {/* Animated gradient background */}
+            <div className="absolute inset-0 bg-gradient-to-br from-primary/5 via-transparent to-secondary/5 pointer-events-none" />
+
+            {/* Header - Enhanced with InvestorEye style */}
+            <div className="relative px-6 py-5 bg-gradient-to-r from-primary via-primary/90 to-secondary text-white">
               {/* Decorative glow */}
               <div className="absolute inset-0 bg-gradient-to-r from-white/10 to-transparent pointer-events-none" />
 
-              <motion.button
-                onClick={handleSwitchToVoice}
-                whileHover={{ scale: 1.02 }}
-                whileTap={{ scale: 0.98 }}
-                className="relative bg-white/20 backdrop-blur-sm text-white text-sm font-medium px-4 py-2 rounded-xl shadow-lg border border-white/30 transition-all duration-300 hover:bg-white/30"
-              >
-                🎙️ Switch to Voice
-              </motion.button>
+              <div className="flex items-center justify-between">
+                <div className="flex items-center gap-3">
+                  <div className="relative">
+                    <div className="w-2.5 h-2.5 rounded-full bg-green-400 animate-pulse" />
+                    <div className="absolute inset-0 w-2.5 h-2.5 rounded-full bg-green-400 animate-ping opacity-75" />
+                  </div>
+                  <div>
+                    <span className="font-semibold text-base tracking-tight">
+                      InvestorEye AI
+                    </span>
+                    <p className="text-xs opacity-90">
+                      AI-powered financial insights
+                    </p>
+                  </div>
+                </div>
+                <div className="flex items-center gap-2">
+                  <motion.button
+                    onClick={handleSwitchToVoice}
+                    whileHover={{ scale: 1.02 }}
+                    whileTap={{ scale: 0.98 }}
+                    className="relative bg-white/20 backdrop-blur-sm text-white text-sm font-medium px-4 py-2 rounded-xl shadow-lg border border-white/30 transition-all duration-300 hover:bg-white/30"
+                  >
+                    🎙️ Voice
+                  </motion.button>
 
-              <motion.button
-                onClick={closeChat}
-                whileHover={{ scale: 1.1, rotate: 90 }}
-                whileTap={{ scale: 0.9 }}
-                className="p-1.5 hover:bg-white/20 rounded-lg transition-all"
-              >
-                <X size={20} />
-              </motion.button>
+                  <motion.button
+                    onClick={closeChat}
+                    whileHover={{ scale: 1.1, rotate: 90 }}
+                    whileTap={{ scale: 0.9 }}
+                    className="p-1.5 hover:bg-white/20 rounded-lg transition-all"
+                  >
+                    <X size={20} />
+                  </motion.button>
+                </div>
+              </div>
             </div>
 
-            {/* Chat Messages - Enhanced */}
-            <div className="flex-1 overflow-y-auto p-5 space-y-3 bg-gradient-to-b from-gray-50 to-white dark:from-gray-900 dark:to-gray-950">
+            {/* Chat Messages - Enhanced with premium styling */}
+            <div className="flex-1 overflow-y-auto p-6 space-y-4 bg-gradient-to-b from-gray-50 to-white dark:from-gray-900 dark:to-gray-950">
               <AnimatePresence mode="popLayout">
                 {messages.map((msg, index) => (
                   <motion.div
@@ -340,14 +361,12 @@ const ChatStep = ({
                     transition={{ type: "spring", damping: 20 }}
                     className={`flex ${msg.type === "user" ? "justify-end" : "justify-start"}`}
                   >
-                    <div
-                      className={`max-w-[85%] ${msg.type === "user" ? "order-2" : "order-1"}`}
-                    >
+                    <div className="max-w-[85%]">
                       <div
-                        className={`p-3.5 rounded-2xl shadow-md ${
+                        className={`p-3.5 rounded-2xl shadow-lg ${
                           msg.type === "user"
-                            ? "bg-gradient-to-r from-primary to-primary/90 text-white rounded-br-md"
-                            : "bg-white dark:bg-gray-800 text-gray-800 dark:text-gray-100 rounded-bl-md border border-gray-200 dark:border-gray-700"
+                            ? "bg-gradient-to-r from-primary to-primary/90 text-white rounded-br-md shadow-primary/20"
+                            : "bg-white dark:bg-gray-800 text-gray-800 dark:text-gray-100 rounded-bl-md border border-gray-200 dark:border-gray-700 shadow-md"
                         }`}
                       >
                         <span className="text-sm leading-relaxed">
@@ -369,21 +388,21 @@ const ChatStep = ({
                       <div
                         className={`text-[10px] text-gray-400 mt-1 ${msg.type === "user" ? "text-right" : "text-left"}`}
                       >
-                        {msg.type === "user" ? "You" : "Earnings Assistant"}
+                        {msg.type === "user" ? "You" : "InvestorEye AI"}
                       </div>
                     </div>
                   </motion.div>
                 ))}
               </AnimatePresence>
 
-              {/* Typing Indicator */}
+              {/* Typing Indicator - Premium */}
               {isGenerating && !isFinalResponseDone && (
                 <motion.div
                   initial={{ opacity: 0, y: 10 }}
                   animate={{ opacity: 1, y: 0 }}
                   className="flex justify-start"
                 >
-                  <div className="bg-white dark:bg-gray-800 rounded-2xl rounded-bl-md px-4 py-3 shadow-md border border-gray-200 dark:border-gray-700">
+                  <div className="bg-white dark:bg-gray-800 rounded-2xl rounded-bl-md px-5 py-3 shadow-lg border border-gray-200 dark:border-gray-700">
                     <div className="flex gap-1.5">
                       <span
                         className="w-2 h-2 bg-primary/60 rounded-full animate-bounce"
@@ -402,6 +421,7 @@ const ChatStep = ({
                 </motion.div>
               )}
 
+              {/* Explore More Button - Premium */}
               {isFinalResponseDone && !isUserLoggedIn && (
                 <motion.div
                   key="explore-container"
@@ -429,72 +449,74 @@ const ChatStep = ({
               <div ref={messagesEndRef} />
             </div>
 
-            {/* Input Area - Enhanced */}
-            <div className="p-5 border-t border-gray-200 dark:border-gray-800 bg-white/80 dark:bg-gray-900/80 backdrop-blur-sm">
-              <AnimatePresence mode="popLayout">
-                <div className="flex flex-row gap-2 items-end">
-                  <div className="flex-1 relative">
-                    <input
-                      type="text"
-                      value={inputText}
-                      onChange={(e) => setInputText(e.target.value)}
-                      onKeyDown={(e) =>
-                        e.key === "Enter" &&
-                        !isGenerating &&
-                        handleSend(inputText)
-                      }
-                      placeholder={
-                        isGenerating ? "AI is thinking..." : "Ask a question..."
-                      }
-                      disabled={isGenerating}
-                      className="w-full py-2.5 px-4 pr-12 border border-gray-200 dark:border-gray-700 rounded-xl focus:outline-none focus:ring-2 focus:ring-primary/50 focus:border-transparent bg-white dark:bg-gray-800 text-gray-800 dark:text-gray-100 placeholder:text-gray-400 disabled:opacity-50 disabled:cursor-not-allowed transition-all"
-                    />
+            {/* Input Area - Premium Design */}
+            <div className="relative p-5 border-t border-gray-200 dark:border-gray-800 bg-white/90 dark:bg-gray-900/90 backdrop-blur-sm">
+              <div className="flex gap-2 items-center">
+                <div className="flex-1 relative">
+                  <input
+                    type="text"
+                    value={inputText}
+                    onChange={(e) => setInputText(e.target.value)}
+                    onKeyDown={(e) =>
+                      e.key === "Enter" &&
+                      !isGenerating &&
+                      handleSend(inputText)
+                    }
+                    placeholder={
+                      isGenerating ? "AI is thinking..." : "Ask a question..."
+                    }
+                    disabled={isGenerating}
+                    className="w-full py-2.5 px-4 rounded-xl bg-gray-100 dark:bg-gray-800 border border-gray-200 dark:border-gray-700 text-sm focus:outline-none focus:ring-2 focus:ring-primary/50 focus:border-transparent text-gray-800 dark:text-gray-100 placeholder:text-gray-400 disabled:opacity-50 disabled:cursor-not-allowed transition-all"
+                  />
+                  <div className="absolute right-3 top-1/2 -translate-y-1/2 flex gap-1">
+                    <span className="text-[10px] text-gray-400">⌘K</span>
                   </div>
-
-                  <motion.button
-                    onClick={() => !isGenerating && handleSend(inputText)}
-                    disabled={isGenerating}
-                    className={`p-2.5 rounded-xl transition-all ${
-                      isGenerating
-                        ? "bg-gray-100 dark:bg-gray-800 text-gray-400 cursor-not-allowed"
-                        : "bg-gradient-to-r from-primary to-secondary text-white shadow-md hover:shadow-lg"
-                    }`}
-                    whileHover={!isGenerating ? { scale: 1.05 } : {}}
-                    whileTap={!isGenerating ? { scale: 0.95 } : {}}
-                  >
-                    <Mic size={18} />
-                  </motion.button>
-
-                  <motion.button
-                    onClick={() => !isGenerating && handleSend(inputText)}
-                    disabled={isGenerating}
-                    className={`p-2.5 rounded-xl transition-all ${
-                      isGenerating
-                        ? "bg-gray-100 dark:bg-gray-800 text-gray-400 cursor-not-allowed"
-                        : "bg-gradient-to-r from-primary to-secondary text-white shadow-md hover:shadow-lg"
-                    }`}
-                    whileHover={!isGenerating ? { scale: 1.05 } : {}}
-                    whileTap={!isGenerating ? { scale: 0.95 } : {}}
-                  >
-                    <SendHorizonalIcon size={18} />
-                  </motion.button>
                 </div>
 
-                <div className="flex gap-2 mt-3 text-[10px] text-gray-400 justify-center">
-                  <span>✨ AI-powered earnings insights</span>
-                  <span>🔊 Voice enabled</span>
-                </div>
-              </AnimatePresence>
+                <motion.button
+                  onClick={() => !isGenerating && handleSend(inputText)}
+                  disabled={isGenerating}
+                  className={`p-2.5 rounded-xl transition-all ${
+                    isGenerating
+                      ? "bg-gray-100 dark:bg-gray-800 text-gray-400 cursor-not-allowed"
+                      : "bg-gradient-to-r from-primary to-secondary text-white shadow-lg shadow-primary/25 hover:shadow-xl"
+                  }`}
+                  whileHover={!isGenerating ? { scale: 1.02 } : {}}
+                  whileTap={!isGenerating ? { scale: 0.98 } : {}}
+                >
+                  <Mic size={18} />
+                </motion.button>
+
+                <motion.button
+                  onClick={() => !isGenerating && handleSend(inputText)}
+                  disabled={isGenerating}
+                  className={`p-2.5 rounded-xl transition-all ${
+                    isGenerating
+                      ? "bg-gray-100 dark:bg-gray-800 text-gray-400 cursor-not-allowed"
+                      : "bg-gradient-to-r from-primary to-secondary text-white shadow-lg shadow-primary/25 hover:shadow-xl"
+                  }`}
+                  whileHover={!isGenerating ? { scale: 1.02 } : {}}
+                  whileTap={!isGenerating ? { scale: 0.98 } : {}}
+                >
+                  <SendHorizonalIcon size={18} />
+                </motion.button>
+              </div>
+
+              <div className="flex gap-3 mt-3 text-[10px] text-gray-400 justify-center">
+                <span>✨ AI-powered earnings insights</span>
+                <span>🔊 Voice enabled</span>
+                <span>💡 Real-time analysis</span>
+              </div>
             </div>
 
-            {/* Decorative elements */}
-            <div className="absolute -top-20 -right-20 w-64 h-64 bg-primary/5 rounded-full blur-3xl pointer-events-none" />
-            <div className="absolute -bottom-20 -left-20 w-64 h-64 bg-secondary/5 rounded-full blur-3xl pointer-events-none" />
+            {/* Decorative glow effects from InvestorEye */}
+            <div className="absolute -top-20 -right-20 w-64 h-64 bg-primary/10 rounded-full blur-3xl pointer-events-none" />
+            <div className="absolute -bottom-20 -left-20 w-64 h-64 bg-secondary/10 rounded-full blur-3xl pointer-events-none" />
           </motion.div>
         )}
       </AnimatePresence>
 
-      {/* Chat Icon - Enhanced */}
+      {/* Chat Icon - Premium Design */}
       <motion.button
         initial={{ opacity: 0, scale: 0 }}
         animate={{ opacity: 1, scale: 1 }}
@@ -505,11 +527,14 @@ const ChatStep = ({
         whileHover={{ scale: 1.1 }}
         whileTap={{ scale: 0.95 }}
       >
-        <div className="absolute inset-0 rounded-full bg-primary/30 opacity-75" />
-        <MessageCircle
-          size={26}
-          className="group-hover:scale-110 transition-transform relative z-10"
-        />
+        <div className="absolute inset-0 rounded-full bg-primary/30 opacity-75 group-hover:opacity-100 transition-opacity" />
+        <div className="relative">
+          <div className="absolute -top-1 -right-1 w-3 h-3 bg-green-400 rounded-full animate-pulse" />
+          <MessageCircle
+            size={26}
+            className="group-hover:scale-110 transition-transform relative z-10"
+          />
+        </div>
       </motion.button>
     </>
   );

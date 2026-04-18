@@ -36,19 +36,6 @@ const personas: string[] = [
   "Head of Procurement & Vendor Management",
 ];
 
-// Models remain hard-coded (or you can add them to filterConfig if needed)
-const models: OptionType[] = [
-  {
-    value: "anthropic.claude-3-5-sonnet-20240620-v1:0",
-    label: "Claude 3.5 Sonnet v1",
-  },
-  { value: "anthropic.claude-3-5-sonnet-v2", label: "Claude 3.5 Sonnet v2" },
-  {
-    value: "anthropic.claude-3-haiku-20240307-v1:0",
-    label: "Claude 3.5 Haiku",
-  },
-];
-
 // Custom Styles for Select using CSS variables
 const customStyles: StylesConfig<OptionType, true> = {
   control: (base, state) => ({
@@ -331,56 +318,6 @@ const FilterOptions = () => {
           styles={customStyles}
         />
       </div>
-
-      {/* Model Select */}
-      {/* <div>
-        <label
-          className="text-sm font-medium block mb-2"
-          style={{ color: "var(--sidebar-foreground)" }}
-        >
-          Model
-        </label>
-        <Select
-          isDisabled={filterConfig.selectProps.model.isDisabled}
-          options={models}
-          isMulti={filterConfig.selectProps.model.isMulti}
-          value={
-            selectedModal
-              ? { value: selectedModal, label: selectedModal }
-              : null
-          }
-          onChange={(option: any) =>
-            dispatch(setFoundationModel(option?.value))
-          }
-          placeholder={filterConfig.selectProps.model.placeholder}
-          styles={customStyles}
-        />
-      </div> */}
-
-      {/* Apply Filters Button */}
-      {/* <button
-        className="w-full py-2.5 rounded-lg font-semibold text-sm transition-all hover:translate-y-[-2px]"
-        style={{
-          background:
-            "linear-gradient(135deg, var(--primary) 0%, var(--secondary) 100%)",
-          color: "var(--primary-foreground)",
-          boxShadow: "0 4px 12px rgba(37, 99, 235, 0.25)",
-        }}
-      >
-        Apply Filters
-      </button> */}
-
-      {/* Reset Button */}
-      {/* <button
-        className="w-full py-2.5 rounded-lg font-semibold text-sm transition-all hover:translate-y-[-2px]"
-        style={{
-          background: "transparent",
-          color: "var(--muted-foreground)",
-          border: `1px solid var(--border)`,
-        }}
-      >
-        Reset All
-      </button> */}
     </div>
   );
 };

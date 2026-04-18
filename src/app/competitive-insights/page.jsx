@@ -58,28 +58,33 @@ const Dashboard = () => {
   return (
     <div className="w-full min-h-screen bg-blue-50 text-gray-800 p-6">
       {/* Tabs */}
-      <div className="flex space-x-4 border-b border-gray-300 mb-6">
-        {TABS.map((tab) => (
-          <button
-            key={tab.id}
-            onClick={() => setActiveTab(tab.id)}
-            className={`py-2 px-4 text-sm font-medium ${
-              activeTab === tab.id
-                ? "border-b-2 border-blue-600 text-blue-600"
-                : "text-gray-500 hover:text-blue-600"
-            }`}
-          >
-            {tab.label}
-          </button>
-        ))}
-      </div>
+      <div className="w-full min-h-screen bg-blue-50 text-gray-800 px-4 sm:px-6 lg:px-10 py-6">
+        {/* Tabs */}
+        <div className="border-b border-gray-300 mb-6 overflow-x-auto">
+          <div className="flex gap-2 sm:gap-4 min-w-max">
+            {TABS.map((tab) => (
+              <button
+                key={tab.id}
+                onClick={() => setActiveTab(tab.id)}
+                className={`whitespace-nowrap py-2 px-3 sm:px-4 text-sm font-medium transition ${
+                  activeTab === tab.id
+                    ? "border-b-2 border-blue-600 text-blue-600"
+                    : "text-gray-500 hover:text-blue-600"
+                }`}
+              >
+                {tab.label}
+              </button>
+            ))}
+          </div>
+        </div>
 
-      {/* Active Tab Content */}
-      <div className="mx-[auto]">
-        {TABS.map(
-          (tab) =>
-            activeTab === tab.id && <div key={tab.id}>{tab.component}</div>,
-        )}
+        {/* Active Tab Content */}
+        <div className="max-w-7xl mx-auto">
+          {TABS.map(
+            (tab) =>
+              activeTab === tab.id && <div key={tab.id}>{tab.component}</div>,
+          )}
+        </div>
       </div>
     </div>
   );
