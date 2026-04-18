@@ -201,7 +201,7 @@ const Navbar = ({ handleLogout }) => {
                   alt="InvestorEye Logo"
                   width={60}
                   height={60}
-                  className="object-contain w-[60px] sm:w-[60px] md:w-[80px] lg:w-[80px] h-auto"
+                  className="hidden md:block object-contain w-[60px] sm:w-[60px] md:w-[80px] lg:w-[80px] h-auto"
                   priority
                 />
               </div>
@@ -575,7 +575,7 @@ const Navbar = ({ handleLogout }) => {
                 style={{ borderColor: "var(--border)" }}
               >
                 {!isUserLoggedIn ? (
-                  <div className="space-y-2">
+                  <div className="space-y-2 gap-2 flex flex-col">
                     <Button
                       fullWidth
                       onClick={() => {

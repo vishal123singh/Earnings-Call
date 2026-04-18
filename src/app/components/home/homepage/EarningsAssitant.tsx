@@ -21,12 +21,10 @@ const ChatStep = ({
   const [inputText, setInputText] = useState("");
   const [messages, setMessages] = useState([]);
   const [isGenerating, setIsGenerating] = useState(false);
-  const [isResponseDone, setIsResponseDone] = useState(false);
   const messagesEndRef = useRef(null);
-  const intervalRef = useRef(null);
   const [currentlyPlaying, setCurrentlyPlaying] = useState(null);
-  const [isFinalResponseDone, setIsFinalResponseDone] = useState(false);
   const chatRef = useRef(null);
+  const [hasSentGreeting, setHasSentGreeting] = useState(false);
 
   let audioInstance = useRef(null);
 
@@ -98,126 +96,34 @@ const ChatStep = ({
   }, []);
 
   useEffect(() => {
-    if (isOpen) {
+    if (isOpen && !hasSentGreeting) {
       resetChat();
-      typeResponse(
-        `Hi there! I'm Earnings Assistant, your AI assistant for earnings calls. How can I help you today?`,
-        true,
-      );
+      // Add greeting message when chat opens
+      setMessages([
+        {
+          type: "bot",
+          text: "Hi there! I'm EyeQ, your AI assistant for financial insights. How can I help you today?",
+          isTyped: true,
+        },
+      ]);
+      setHasSentGreeting(true);
     }
-    return () => clearInterval(intervalRef.current);
-  }, [isOpen]);
+  }, [isOpen, hasSentGreeting]);
 
   useEffect(() => {
     scrollToBottom();
-  }, [isFinalResponseDone]);
+  }, [messages]);
 
   const resetChat = () => {
     setMessages([]);
     setIsGenerating(false);
-    setIsResponseDone(false);
-    clearInterval(intervalRef.current);
-    setIsFinalResponseDone(false);
     stopSpeech();
-  };
-
-  const autoTypePrompt = (text) => {
-    let i = 0;
-    let generatedPrompt = "";
-
-    intervalRef.current = setInterval(() => {
-      if (i < text.length) {
-        generatedPrompt += text.charAt(i);
-        setMessages((prev) => {
-          const lastMessage = prev[prev.length - 1];
-          if (lastMessage?.type === "user") {
-            return [
-              ...prev.slice(0, -1),
-              {
-                type: "user",
-                text: generatedPrompt,
-                isTyped: i === text.length,
-              },
-            ];
-          }
-          return [
-            ...prev,
-            { type: "user", text: generatedPrompt, isTyped: i === text.length },
-          ];
-        });
-
-        i++;
-        scrollToBottom();
-      } else {
-        clearInterval(intervalRef.current);
-        handleSend2(text);
-      }
-    }, 20);
-  };
-
-  const handleSend2 = (prompt) => {
-    if (!prompt || isGenerating) return;
-    setIsGenerating(true);
-
-    setTimeout(() => {
-      typeResponse(
-        `Here are the most common themes and questions that emerged:
-  1. Wealth Management Business  
-  - Questions about client onboarding processes and regulatory focus  
-  - Inquiries on non-U.S. wealth management business size  
-  - Interest in growth prospects and ability to onboard new clients...`,
-      );
-    }, 300);
-  };
-
-  const typeResponse = async (text, startPrompt = false) => {
-    let i = 0;
-    let generatedResponse = "";
-
-    intervalRef.current = setInterval(() => {
-      if (i < text.length) {
-        generatedResponse += text.charAt(i);
-        setMessages((prev) => {
-          const lastMessage = prev[prev.length - 1];
-          if (lastMessage?.type === "bot") {
-            return [
-              ...prev.slice(0, -1),
-              {
-                type: "bot",
-                text: generatedResponse,
-                isTyped: i === text.length,
-              },
-            ];
-          }
-          return [
-            ...prev,
-            {
-              type: "bot",
-              text: generatedResponse,
-              isTyped: i === text.length,
-            },
-          ];
-        });
-
-        i++;
-        scrollToBottom();
-      } else {
-        clearInterval(intervalRef.current);
-        setIsGenerating(false);
-        setIsResponseDone(true);
-        if (startPrompt) {
-          autoTypePrompt(
-            `What are the most common questions asked during the Q&A portion of earnings calls?`,
-          );
-        } else {
-          setIsFinalResponseDone(true);
-        }
-      }
-    }, 20);
+    setHasSentGreeting(false);
   };
 
   const handleSend = async (prompt) => {
     if (!prompt || isGenerating) return;
+
     setIsGenerating(true);
     setMessages((prev) => [
       ...prev,
@@ -274,8 +180,6 @@ const ChatStep = ({
         }
       }
       setIsGenerating(false);
-      setIsResponseDone(true);
-      setIsFinalResponseDone(true);
     } catch (err) {
       console.error("Error fetching AI response:", err);
       setIsGenerating(false);
@@ -302,7 +206,7 @@ const ChatStep = ({
             animate={{ x: 0, opacity: 1 }}
             exit={{ x: "100%", opacity: 0 }}
             transition={{ type: "spring", stiffness: 120, damping: 20 }}
-            className="fixed top-0 right-0 w-[450px] h-screen bg-gradient-to-b from-gray-50 to-white dark:from-gray-900 dark:to-gray-950 shadow-2xl flex flex-col border-l border-gray-200 dark:border-gray-800 z-[5000]"
+            className="fixed top-0 right-0 w-full md:w-[450px] h-screen bg-gradient-to-b from-gray-50 to-white dark:from-gray-900 dark:to-gray-950 shadow-2xl flex flex-col border-l border-gray-200 dark:border-gray-800 z-[5000]"
           >
             {/* Animated gradient background */}
             <div className="absolute inset-0 bg-gradient-to-br from-primary/5 via-transparent to-secondary/5 pointer-events-none" />
@@ -328,14 +232,14 @@ const ChatStep = ({
                   </div>
                 </div>
                 <div className="flex items-center gap-2">
-                  <motion.button
+                  {/* <motion.button
                     onClick={handleSwitchToVoice}
                     whileHover={{ scale: 1.02 }}
                     whileTap={{ scale: 0.98 }}
-                    className="relative bg-white/20 backdrop-blur-sm text-white text-sm font-medium px-4 py-2 rounded-xl shadow-lg border border-white/30 transition-all duration-300 hover:bg-white/30"
+                    className="text-white/80 hover:text-white text-sm font-medium px-3 py-1.5 rounded-lg transition-all"
                   >
                     🎙️ Voice
-                  </motion.button>
+                  </motion.button> */}
 
                   <motion.button
                     onClick={closeChat}
@@ -396,7 +300,7 @@ const ChatStep = ({
               </AnimatePresence>
 
               {/* Typing Indicator - Premium */}
-              {isGenerating && !isFinalResponseDone && (
+              {isGenerating && (
                 <motion.div
                   initial={{ opacity: 0, y: 10 }}
                   animate={{ opacity: 1, y: 0 }}
@@ -422,7 +326,7 @@ const ChatStep = ({
               )}
 
               {/* Explore More Button - Premium */}
-              {isFinalResponseDone && !isUserLoggedIn && (
+              {messages.length > 0 && !isUserLoggedIn && (
                 <motion.div
                   key="explore-container"
                   initial={{ y: 30, opacity: 0 }}

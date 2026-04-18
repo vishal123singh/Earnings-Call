@@ -172,13 +172,32 @@ function CompaniesCarousel() {
           </div>
         </div>
 
-        {/* FOOTER */}
-        <div className="text-center mt-14">
-          <div className="inline-flex items-center gap-3 px-5 py-2 rounded-full bg-white/60 dark:bg-white/5 backdrop-blur border border-white/20 shadow-sm text-sm">
-            <Database className="w-4 h-4 text-primary" />
-            <span className="font-medium">500+ companies tracked</span>
-            <span className="text-muted-foreground">•</span>
-            <span className="text-muted-foreground">Live earnings data</span>
+        <div className="text-center mt-10 md:mt-14 px-4">
+          <div
+            className="
+      inline-flex flex-wrap items-center justify-center
+      gap-x-3 gap-y-2
+      px-4 py-2 md:px-5 md:py-2.5
+      rounded-full
+      bg-white/60 dark:bg-white/5
+      backdrop-blur
+      border border-white/20
+      shadow-sm
+      text-xs sm:text-sm
+      max-w-full
+    "
+          >
+            <Database className="w-4 h-4 text-primary shrink-0" />
+
+            <span className="font-medium whitespace-nowrap">
+              500+ companies tracked
+            </span>
+
+            <span className="text-muted-foreground hidden sm:inline">•</span>
+
+            <span className="text-muted-foreground whitespace-nowrap">
+              Live earnings data
+            </span>
           </div>
         </div>
       </div>
