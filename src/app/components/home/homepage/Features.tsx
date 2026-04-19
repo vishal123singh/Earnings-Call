@@ -75,11 +75,9 @@ const containerVariants = {
 export default function FeaturesSection() {
   return (
     <section className="relative py-28 px-6 overflow-hidden">
-      {/* Minimal background - just one subtle gradient */}
       <div className="absolute inset-0 hero-gradient opacity-30" />
 
       <div className="max-w-7xl mx-auto relative z-10">
-        {/* Minimal Header */}
         <motion.div
           initial={{ opacity: 0, y: 20 }}
           whileInView={{ opacity: 1, y: 0 }}
@@ -102,7 +100,6 @@ export default function FeaturesSection() {
           </p>
         </motion.div>
 
-        {/* Minimal Layout */}
         <motion.div
           variants={containerVariants}
           initial="hidden"
@@ -110,19 +107,16 @@ export default function FeaturesSection() {
           viewport={{ once: true, margin: "-100px" }}
           className="grid grid-cols-1 md:grid-cols-3 gap-5 auto-rows-min"
         >
-          {/* Hero Card */}
           <div className="md:col-span-2 md:row-span-2">
             <HeroCard feature={features[0]} />
           </div>
 
-          {/* Mini Cards */}
           <div className="space-y-5">
             {features.slice(1, 3).map((f, i) => (
               <MiniCard key={i} feature={f} index={i} />
             ))}
           </div>
 
-          {/* Wide Cards */}
           {features.slice(3).map((f, i) => (
             <WideCard key={i} feature={f} index={i} />
           ))}
@@ -158,7 +152,6 @@ const HeroCard = ({ feature }) => {
           {feature.description}
         </p>
 
-        {/* Preview */}
         <div className="mt-6 p-4 rounded-lg bg-muted/30 border border-border">
           <div className="space-y-2">
             <div className="flex items-start gap-2">
@@ -204,14 +197,7 @@ const MiniCard = ({ feature, index }) => {
         </div>
 
         <div className="flex-1">
-          <div className="flex items-center gap-2">
-            <h4 className="font-medium text-sm">{feature.title}</h4>
-            {feature.badge && (
-              <span className="text-[10px] font-medium px-1.5 py-0.5 rounded-full bg-primary/10 text-primary">
-                {feature.badge}
-              </span>
-            )}
-          </div>
+          <h4 className="font-medium text-sm">{feature.title}</h4>
           <p className="text-xs text-muted-foreground mt-0.5">
             {feature.description}
           </p>

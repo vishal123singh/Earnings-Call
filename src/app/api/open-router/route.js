@@ -1,6 +1,6 @@
 import OpenAI from "openai";
-import fs from "fs";
-import path from "path";
+import { connectDB } from "@/lib/mongodb";
+import Transcript from "@/models/Transcript";
 
 // ✅ OpenAI (OpenRouter)
 const openai = new OpenAI({
@@ -23,42 +23,6 @@ const quarterMapping = {
   second: 2,
   third: 3,
   fourth: 4,
-};
-
-// ✅ Generate LOCAL file path
-const generateLocalPath = (obj) => {
-  if (!obj.ticker || !obj.year || !obj.quarter) {
-    throw new Error("Missing required fields: ticker, year, or quarter.");
-  }
-
-  const quarterNumber = quarterMapping[obj.quarter];
-  if (!quarterNumber) {
-    throw new Error(`Invalid quarter value: ${obj.quarter}`);
-  }
-
-  return path.join(
-    process.cwd(),
-    "transcripts/json",
-    obj.ticker,
-    String(obj.year),
-    `Q${quarterNumber}.json`,
-  );
-};
-
-// ✅ Read JSON from LOCAL
-const fetchJsonFromLocal = async (filePath) => {
-  try {
-    if (!fs.existsSync(filePath)) {
-      console.warn(`⚠️ File not found: ${filePath}`);
-      return null;
-    }
-
-    const data = fs.readFileSync(filePath, "utf-8");
-    return JSON.parse(data);
-  } catch (error) {
-    console.error("Error reading local JSON:", error);
-    return null;
-  }
 };
 
 // Extract JSON from LLM response
@@ -166,9 +130,22 @@ const generateResponse = async (
     }
 
     if (optimizedPrompt.fetch_transcripts) {
-      const filePaths = queryParamsArray.map(generateLocalPath);
+      await connectDB();
 
-      const jsonFiles = await Promise.all(filePaths.map(fetchJsonFromLocal));
+      const jsonFiles = await Promise.all(
+        queryParamsArray.map(async (q) => {
+          const quarterNumber = quarterMapping[q.quarter];
+          const quarterFormatted = `Q${quarterNumber}`;
+
+          const doc = await Transcript.findOne({
+            ticker: q.ticker,
+            year: Number(q.year),
+            quarter: quarterFormatted,
+          });
+
+          return doc?.data || null;
+        }),
+      );
       const validFiles = jsonFiles.filter(Boolean);
 
       const transformedData = validFiles

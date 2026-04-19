@@ -1,7 +1,8 @@
 import { NextResponse } from "next/server";
-import fs from "fs";
-import path from "path";
 import OpenAI from "openai";
+import { connectDB } from "@/lib/mongodb";
+import Sentiment from "@/models/Sentiment";
+import Transcript from "@/models/Transcript";
 
 const quarters = { "1st": 1, "2nd": 2, "3rd": 3, "4th": 4 };
 
@@ -18,33 +19,33 @@ export async function POST(req) {
     const ticker = selectedCompany.ticker || selectedCompany.value;
     const quarter = quarters[selectedQuarter];
     const quarterFormatted = `Q${quarter}`;
+    const yearFormatted = Number(selectedYear?.[0]);
 
-    const transcriptPath = path.join(
-      process.cwd(),
-      "transcripts/json",
-      ticker,
-      String(selectedYear),
-      `Q${quarter}.json`,
-    );
+    await connectDB();
 
-    const sentimentPath = path.join(
-      process.cwd(),
-      "sentiments/json",
+    // find
+    const existing = await Sentiment.findOne({
       ticker,
-      String(selectedYear),
-      `Q${quarter}.json`,
-    );
+      year: yearFormatted,
+      quarter: quarterFormatted,
+    });
 
     // 1️⃣ Check local sentiment
-    if (fs.existsSync(sentimentPath)) {
-      const sentimentData = JSON.parse(fs.readFileSync(sentimentPath, "utf-8"));
-      return NextResponse.json(sentimentData);
+    if (existing) {
+      return NextResponse.json(existing.sentiment_analysis);
     }
+
+    // ✅ 1. Check cache
+    const existingTranscript = await Transcript.findOne({
+      ticker,
+      year: yearFormatted,
+      quarter: quarterFormatted,
+    });
 
     // 2️⃣ Get transcript
     let transcriptData = null;
-    if (fs.existsSync(transcriptPath)) {
-      transcriptData = JSON.parse(fs.readFileSync(transcriptPath, "utf-8"));
+    if (existingTranscript) {
+      transcriptData = existingTranscript.data;
     } else {
       const pythonApiUrl =
         process.env.PYTHON_API_URL || "http://localhost:8000";
@@ -79,13 +80,37 @@ export async function POST(req) {
         },
       };
 
-      await saveLocally(transcriptPath, transcriptData);
+      await Transcript.findOneAndUpdate(
+        {
+          ticker,
+          year: yearFormatted,
+          quarter: quarterFormatted,
+        },
+        {
+          ticker,
+          year: yearFormatted,
+          quarter: quarterFormatted,
+          data: transcriptData,
+        },
+        {
+          upsert: true, // create if not exists
+          new: true,
+        },
+      );
     }
 
     // 3️⃣ Generate structured sentiment using OpenAI
     const sentiment = await generateStructuredSentiment(transcriptData);
 
-    await saveLocally(sentimentPath, sentiment);
+    // upsert (BEST)
+    await Sentiment.findOneAndUpdate(
+      { ticker, year: selectedYear, quarter: quarterFormatted },
+      sentiment,
+      {
+        upsert: true,
+        new: true,
+      },
+    );
 
     return NextResponse.json(sentiment);
   } catch (error) {
@@ -98,13 +123,6 @@ export async function POST(req) {
       { status: 500 },
     );
   }
-}
-
-// Save JSON locally
-async function saveLocally(filePath, data) {
-  const dirPath = path.dirname(filePath);
-  if (!fs.existsSync(dirPath)) fs.mkdirSync(dirPath, { recursive: true });
-  fs.writeFileSync(filePath, JSON.stringify(data, null, 2), "utf-8");
 }
 
 // OpenAI structured sentiment
