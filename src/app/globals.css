@@ -447,8 +447,8 @@
 
 /* Premium Scrollbar */
 ::-webkit-scrollbar {
-  width: 8px;
-  height: 8px;
+  width: 4px;
+  height: 4px;
 }
 
 ::-webkit-scrollbar-track {
@@ -457,12 +457,12 @@
 }
 
 ::-webkit-scrollbar-thumb {
-  background: linear-gradient(135deg, #2563eb, #8b5cf6);
+  background: lightgrey;
   border-radius: 10px;
 }
 
 ::-webkit-scrollbar-thumb:hover {
-  background: linear-gradient(135deg, #3b82f6, #a78bfa);
+  background: lightgrey;
 }
 
 .dark ::-webkit-scrollbar-track {
