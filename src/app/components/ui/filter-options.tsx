@@ -102,10 +102,6 @@ const FilterOptions = () => {
   const selectedQuarter = useSelector(
     (state: any) => state.sidebar.selectedQuarter,
   );
-  const selectedPersona = useSelector((state: any) => state.sidebar.persona);
-  const selectedModal = useSelector(
-    (state: any) => state.sidebar.foundationModel,
-  );
 
   // Create option arrays for companies, years and quarters
   const companyOptions: OptionType[] = filterConfig.companies.map(
@@ -175,7 +171,7 @@ const FilterOptions = () => {
     <div
       className={`transition-all duration-300 ${
         isMobile || !collapsed ? "p-8 opacity-100 space-y-6" : "p-0 opacity-0"
-      } h-full overflow-y-auto`}
+      } h-screen overflow-y-auto`}
       style={{
         background: "var(--sidebar)",
       }}

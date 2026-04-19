@@ -736,83 +736,8 @@ const AIAssistantDemo = () => {
         </div>
 
         {/* RIGHT AI PANEL */}
-        <div className="relative">
-          <div className="card-premium p-8 relative overflow-hidden">
-            {/* AI glow background */}
-            <div className="absolute inset-0 opacity-10 bg-[radial-gradient(circle_at_30%_20%,#2563eb,transparent_60%)]" />
 
-            {/* HEADER */}
-            <div className="flex items-center justify-between mb-8 relative">
-              <div className="flex items-center gap-2">
-                <span className="w-2 h-2 rounded-full bg-emerald-500 animate-pulse" />
-                <span className="text-sm text-muted-foreground">
-                  AI Listening
-                </span>
-              </div>
-
-              <span className="text-xs px-3 py-1 rounded-full bg-primary/10 text-primary border border-primary/20">
-                LIVE
-              </span>
-            </div>
-
-            {/* BIG MIC ORB */}
-            <div className="flex items-center justify-center mb-6">
-              <div
-                onClick={toggleListening}
-                className={`relative w-36 h-36 rounded-full flex items-center justify-center cursor-pointer transition-all duration-300
-                ${
-                  isListening
-                    ? "animate-pulse-glow scale-110"
-                    : "hover:scale-105"
-                }
-                bg-gradient-to-r from-primary via-secondary to-tertiary shadow-lg`}
-              >
-                <Mic className="w-14 h-14 text-white" />
-
-                {/* outer ring */}
-                <div className="absolute inset-0 rounded-full border border-white/20 scale-110" />
-              </div>
-            </div>
-
-            {/* STATUS */}
-            <div className="text-center mb-6">
-              <p className="font-medium">
-                {isListening
-                  ? "Listening to your question..."
-                  : "Tap to start speaking"}
-              </p>
-              <p className="text-xs text-muted-foreground mt-1">
-                Powered by AI financial intelligence
-              </p>
-            </div>
-
-            {/* TRANSCRIPT */}
-            {transcript && (
-              <div className="mb-6 p-4 rounded-xl bg-muted border border-border">
-                <p className="text-xs text-muted-foreground mb-1">You said</p>
-                <p className="text-sm font-medium">{transcript}</p>
-              </div>
-            )}
-
-            {/* SUGGESTIONS */}
-            <div className="space-y-2">
-              <p className="text-xs text-muted-foreground mb-2">Try asking:</p>
-
-              {[
-                "What were JPM earnings this quarter?",
-                "Compare MSFT vs SOFI performance",
-                "Summarize CEO outlook",
-              ].map((q, i) => (
-                <button
-                  key={i}
-                  className="w-full text-left px-4 py-2 rounded-lg border border-border bg-background hover:bg-muted transition text-sm"
-                >
-                  {q}
-                </button>
-              ))}
-            </div>
-          </div>
-        </div>
+        <SentimentDemoCard />
       </div>
     </section>
   );
@@ -939,9 +864,155 @@ const Footer = () => {
           </div>
         </div>
         <div className="border-t border-border pt-8 text-center text-sm">
-          <p>&copy; 2024 EarningsCall Insights. All rights reserved.</p>
+          <p>&copy; 2024 InvestorEye. All rights reserved.</p>
         </div>
       </div>
     </footer>
+  );
+};
+
+const demoSentiment = {
+  label: "Neutral",
+  confidence: 0.78,
+  summary:
+    "Apple reported December quarter revenue of $117.2B, down 5% YoY due to FX headwinds and supply constraints, while services and iPad showed strong growth.",
+  key_insights: [
+    "Revenue declined 5% YoY impacted by FX",
+    "Services hit record $20.8B revenue",
+    "iPad grew 30% YoY",
+    "Gross margin improved to 43%",
+  ],
+  risks: [
+    "Foreign exchange volatility",
+    "Weak macro demand",
+    "Supply chain constraints",
+  ],
+  opportunities: [
+    "Emerging market growth (India, Brazil)",
+    "Services expansion",
+    "New product launches",
+  ],
+  management_tone: "Confident but cautious amid macro uncertainty",
+  notable_quotes: [
+    "We remain confident in long-term growth.",
+    "Our installed base reached 2 billion devices.",
+  ],
+};
+
+function SentimentDemoCard() {
+  const sentiment = demoSentiment;
+
+  const sentimentColor =
+    sentiment.label === "Positive"
+      ? "text-emerald-500 bg-emerald-500/10"
+      : sentiment.label === "Negative"
+        ? "text-red-500 bg-red-500/10"
+        : "text-yellow-500 bg-yellow-500/10";
+
+  return (
+    <div className="card-premium p-6 md:p-8 space-y-6">
+      {/* HEADER */}
+      <div className="flex flex-col md:flex-row md:items-center md:justify-between gap-4">
+        <div>
+          <h2 className="text-xl font-semibold">AI Sentiment Analysis</h2>
+          <p className="text-sm text-muted-foreground">
+            Earnings call intelligence summary
+          </p>
+        </div>
+
+        <div
+          className={`px-4 py-1 rounded-full text-sm font-medium ${sentimentColor}`}
+        >
+          {sentiment.label}
+        </div>
+      </div>
+
+      {/* CONFIDENCE BAR */}
+      <div>
+        <div className="flex justify-between text-sm mb-1">
+          <span>Confidence</span>
+          <span>{Math.round(sentiment.confidence * 100)}%</span>
+        </div>
+        <div className="w-full h-2 bg-muted rounded-full overflow-hidden">
+          <div
+            className="h-full bg-primary transition-all"
+            style={{ width: `${sentiment.confidence * 100}%` }}
+          />
+        </div>
+      </div>
+
+      {/* SUMMARY */}
+      <div className="p-4 rounded-xl bg-muted border border-border">
+        <p className="text-sm leading-relaxed">{sentiment.summary}</p>
+      </div>
+
+      {/* GRID SECTIONS */}
+      <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+        {/* KEY INSIGHTS */}
+        <Section title="Key Insights" items={sentiment.key_insights} />
+
+        {/* RISKS */}
+        <Section title="Risks" items={sentiment.risks} variant="red" />
+
+        {/* OPPORTUNITIES */}
+        <Section
+          title="Opportunities"
+          items={sentiment.opportunities}
+          variant="green"
+        />
+
+        {/* MANAGEMENT TONE */}
+        <div className="p-4 rounded-xl border bg-background">
+          <h3 className="text-sm font-semibold mb-2">Management Tone</h3>
+          <p className="text-sm text-muted-foreground">
+            {sentiment.management_tone}
+          </p>
+        </div>
+      </div>
+
+      {/* QUOTES */}
+      <div>
+        <h3 className="text-sm font-semibold mb-3">Notable Quotes</h3>
+        <div className="space-y-2">
+          {sentiment.notable_quotes.map((q, i) => (
+            <div
+              key={i}
+              className="p-3 rounded-lg border bg-muted text-sm italic"
+            >
+              “{q}”
+            </div>
+          ))}
+        </div>
+      </div>
+    </div>
+  );
+}
+
+// Reusable Section Component
+const Section = ({
+  title,
+  items,
+  variant,
+}: {
+  title: string;
+  items: string[];
+  variant?: "red" | "green";
+}) => {
+  const color =
+    variant === "red"
+      ? "text-red-500"
+      : variant === "green"
+        ? "text-emerald-500"
+        : "text-primary";
+
+  return (
+    <div className="p-4 rounded-xl border bg-background">
+      <h3 className={`text-sm font-semibold mb-2 ${color}`}>{title}</h3>
+      <ul className="space-y-1 text-sm text-muted-foreground">
+        {items.map((item, i) => (
+          <li key={i}>• {item}</li>
+        ))}
+      </ul>
+    </div>
   );
 };

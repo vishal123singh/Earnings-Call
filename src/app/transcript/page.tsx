@@ -79,7 +79,7 @@ export default function Transcript() {
           <div className="animate-spin rounded-full h-12 w-12 border-t-4 border-blue-600"></div>
         </div>
       ) : transcriptData ? (
-        <Card className="bg-white shadow-md border border-gray-200 rounded-xl max-w-[75vw] m-auto">
+        <Card className="bg-white shadow-md border border-gray-200 rounded-xl w-full lg:max-w-[75vw] m-auto">
           <CardContent className="py-6">
             <div className="prose ml-6 text-gray-700">
               {/* Company & Event Details */}
