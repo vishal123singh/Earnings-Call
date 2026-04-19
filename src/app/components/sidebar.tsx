@@ -71,7 +71,7 @@ const Sidebar = () => {
           initial={{ opacity: 0, x: -20 }}
           animate={{ opacity: 1, x: 0 }}
           onClick={handleDrawerToggle}
-          className="fixed top-4 left-4 z-[5000] p-2 rounded-lg lg:hidden"
+          className="fixed top-4 left-4 z-[1401] p-2 rounded-lg lg:hidden"
           style={{
             background: "var(--sidebar)",
             color: "var(--sidebar-foreground)",
@@ -97,8 +97,8 @@ const Sidebar = () => {
               background: "var(--sidebar)",
               borderRight: "1px solid var(--sidebar-border)",
               boxShadow: "24px 0px 48px -12px rgba(0,0,0,0.2)",
-              top: 55,
             },
+            zIndex: 1402,
           }}
         >
           <SidebarContent />
@@ -107,20 +107,22 @@ const Sidebar = () => {
     );
   }
 
-  // Desktop Sidebar - Original animation
+  // Desktop Sidebar - Smooth animation
   return (
     <motion.div
-      initial={{ width: collapsed ? "0px" : "25vw" }}
-      animate={{ width: collapsed ? "0px" : "25vw" }}
-      transition={{ duration: 0.3 }}
+      initial={{ width: "280px", opacity: 1 }}
+      animate={{
+        width: collapsed ? "0px" : "280px",
+        opacity: collapsed ? 0 : 1,
+      }}
+      transition={{ duration: 0.3, ease: "easeInOut" }}
       className="h-screen shadow-md overflow-hidden flex-shrink-0 hidden md:block"
       style={{
-        minWidth: collapsed ? "0px" : "250px",
         background: "var(--sidebar)",
         borderRight: "1px solid var(--sidebar-border)",
       }}
     >
-      {!collapsed && <SidebarContent />}
+      <SidebarContent />
     </motion.div>
   );
 };

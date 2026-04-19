@@ -24,12 +24,23 @@ export default function LiquidityCard({ ticker }: Props) {
         const res = await fetch(
           `${process.env.NEXT_PUBLIC_FMP_BASE_URL}/balance-sheet-statement?symbol=${ticker}&limit=1&apikey=${FMP_API_KEY}`,
         );
+
         const d = await res.json();
         const latest = d[0];
+
+        const currentRatio =
+          latest.totalCurrentLiabilities !== 0
+            ? latest.totalCurrentAssets / latest.totalCurrentLiabilities
+            : 0;
+
+        const debtEquity =
+          latest.totalStockholdersEquity !== 0
+            ? latest.totalLiabilities / latest.totalStockholdersEquity
+            : 0;
+
         setData({
-          currentRatio:
-            latest.totalCurrentAssets / latest.totalCurrentLiabilities,
-          debtEquity: latest.totalLiabilities / latest.totalStockholdersEquity,
+          currentRatio,
+          debtEquity,
           cash: latest.cashAndCashEquivalents,
           totalDebt: latest.totalDebt,
         });
@@ -39,39 +50,63 @@ export default function LiquidityCard({ ticker }: Props) {
         setLoading(false);
       }
     };
+
     fetchBalance();
   }, [ticker]);
 
-  if (loading) return <p>Loading liquidity data...</p>;
-  if (!data) return null;
+  const formatCurrency = (val: number) => {
+    if (!val) return "-";
+    return `$${(val / 1e6).toFixed(1)}M`;
+  };
+
+  const formatNumber = (val: number) => {
+    if (!val) return "-";
+    return val.toFixed(2);
+  };
 
   return (
-    <div className="bg-background p-4 rounded-xl shadow-md">
-      <h2 className="text-lg font-semibold text-primary">
+    <div className="bg-background border border-border rounded-2xl p-4 sm:p-5 shadow-sm hover:shadow-md transition-all">
+      {/* Header */}
+      <h2 className="text-base sm:text-lg font-semibold text-primary mb-4">
         {ticker} Liquidity & Leverage
       </h2>
-      <div className="grid grid-cols-2 gap-2 mt-2">
-        <Metric label="Current Ratio" value={data.currentRatio.toFixed(2)} />
-        <Metric label="Debt/Equity" value={data.debtEquity.toFixed(2)} />
-        <Metric label="Cash" value={`$${(data.cash / 1e6).toFixed(2)}M`} />
-        <Metric
-          label="Total Debt"
-          value={`$${(data.totalDebt / 1e6).toFixed(2)}M`}
-        />
-      </div>
+
+      {/* Loading Skeleton */}
+      {loading ? (
+        <div className="grid grid-cols-2 sm:grid-cols-2 lg:grid-cols-4 gap-3">
+          {[...Array(4)].map((_, i) => (
+            <div key={i} className="h-20 rounded-lg bg-muted animate-pulse" />
+          ))}
+        </div>
+      ) : !data ? (
+        <p className="text-sm text-muted-foreground">No data available</p>
+      ) : (
+        <div className="grid grid-cols-2 sm:grid-cols-2 lg:grid-cols-4 gap-3">
+          <MetricCard
+            label="Current Ratio"
+            value={formatNumber(data.currentRatio)}
+          />
+          <MetricCard
+            label="Debt / Equity"
+            value={formatNumber(data.debtEquity)}
+          />
+          <MetricCard label="Cash" value={formatCurrency(data.cash)} />
+          <MetricCard
+            label="Total Debt"
+            value={formatCurrency(data.totalDebt)}
+          />
+        </div>
+      )}
     </div>
   );
 }
 
-const Metric = ({
-  label,
-  value,
-}: {
-  label: string;
-  value: string | number;
-}) => (
-  <div className="flex justify-between bg-gray-50 p-2 rounded">
-    <span>{label}</span>
-    <span className="font-semibold">{value}</span>
+/* Reusable Metric Card */
+const MetricCard = ({ label, value }: { label: string; value: string }) => (
+  <div className="bg-muted/40 rounded-lg p-3 flex flex-col justify-between hover:bg-muted/60 transition">
+    <span className="text-xs text-muted-foreground">{label}</span>
+    <span className="text-sm sm:text-base font-semibold text-foreground">
+      {value}
+    </span>
   </div>
 );

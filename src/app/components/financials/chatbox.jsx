@@ -1,5 +1,11 @@
 // components/ui/ChatBox.jsx
-import React, { forwardRef, useImperativeHandle, useState } from "react";
+import React, {
+  forwardRef,
+  useImperativeHandle,
+  useState,
+  useRef,
+  useEffect,
+} from "react";
 import { motion, AnimatePresence } from "framer-motion";
 
 const ChatBox = forwardRef(
@@ -8,6 +14,17 @@ const ChatBox = forwardRef(
 
     // Maintain local input state
     const [localInput, setLocalInput] = useState(inputMessage || "");
+    const messagesEndRef = useRef(null);
+    const inputRef = useRef(null);
+
+    // Auto-scroll to bottom on new messages
+    useEffect(() => {
+      scrollToBottom();
+    }, [messages, isWaitingForResponse]);
+
+    const scrollToBottom = () => {
+      messagesEndRef.current?.scrollIntoView({ behavior: "smooth" });
+    };
 
     // Expose functions to parent component
     useImperativeHandle(ref, () => ({
@@ -25,14 +42,20 @@ const ChatBox = forwardRef(
     };
 
     const handleBlur = () => {
-      // Call setChatState only when input is finalized
       setChatState((prev) => ({ ...prev, inputMessage: localInput }));
+    };
+
+    const handleKeyPress = (e) => {
+      if (e.key === "Enter" && !e.shiftKey) {
+        e.preventDefault();
+        handleSendMessage(e);
+      }
     };
 
     const handleSendMessage = async (e, customMessage = null) => {
       e.preventDefault();
-      const messageText = customMessage || inputMessage;
-      if (!messageText.trim()) return;
+      const messageText = customMessage || localInput;
+      if (!messageText.trim() || isWaitingForResponse) return;
 
       // Add user message
       const userMessage = {
@@ -45,11 +68,13 @@ const ChatBox = forwardRef(
         }),
       };
       updateChatState({ messages: [...messages, userMessage] });
-      if (!customMessage) updateChatState({ inputMessage: "" });
+      if (!customMessage) {
+        setLocalInput("");
+        updateChatState({ inputMessage: "" });
+      }
       updateChatState({ isWaitingForResponse: true });
 
       try {
-        // Send to API endpoint
         const response = await fetch("/api/generate-chart", {
           method: "POST",
           headers: {
@@ -66,13 +91,11 @@ const ChatBox = forwardRef(
         const result = await response.json();
 
         if (result.type === "chart_update") {
-          // Handle chart update
           onChartUpdate(result.data);
           addBotMessage(
             "I've updated the chart based on your request. How does it look?",
           );
         } else {
-          // Handle regular response
           addBotMessage(result.text || "I've processed your request.");
         }
       } catch (error) {
@@ -99,61 +122,74 @@ const ChatBox = forwardRef(
     };
 
     return (
-      <div className="flex flex-col h-full">
+      <div className="flex flex-col h-full bg-white dark:bg-gray-900">
         {/* Messages container */}
-        <div className="flex-1 p-4 overflow-y-auto">
+        <div className="flex-1 overflow-y-auto p-3 sm:p-4">
           <AnimatePresence initial={false}>
             {messages.length === 0 ? (
-              <div className="h-full flex items-center justify-center text-gray-400 text-sm">
+              <div className="h-full flex items-center justify-center text-gray-400 text-xs sm:text-sm text-center px-4">
                 Ask questions or request changes to the chart...
               </div>
             ) : (
-              messages.map((message) => (
-                <motion.div
-                  key={message.id}
-                  initial={{ opacity: 0, y: 10 }}
-                  animate={{ opacity: 1, y: 0 }}
-                  exit={{ opacity: 0 }}
-                  transition={{ duration: 0.2 }}
-                  className={`mb-3 flex ${
-                    message.sender === "user" ? "justify-end" : "justify-start"
-                  }`}
-                >
-                  <div
-                    className={`max-w-[80%] rounded-lg px-3 py-2 ${
+              <>
+                {messages.map((message) => (
+                  <motion.div
+                    key={message.id}
+                    initial={{ opacity: 0, y: 10 }}
+                    animate={{ opacity: 1, y: 0 }}
+                    exit={{ opacity: 0 }}
+                    transition={{ duration: 0.2 }}
+                    className={`mb-3 flex ${
                       message.sender === "user"
-                        ? "bg-blue-600 text-white"
-                        : "bg-gray-100 text-gray-800"
+                        ? "justify-end"
+                        : "justify-start"
                     }`}
                   >
-                    <p className="text-sm">{message.text}</p>
-                    <p className="text-xs mt-1 opacity-70 text-right">
-                      {message.timestamp}
-                    </p>
-                  </div>
-                </motion.div>
-              ))
-            )}
-            {isWaitingForResponse && (
-              <motion.div
-                initial={{ opacity: 0, y: 10 }}
-                animate={{ opacity: 1, y: 0 }}
-                className="mb-3 flex justify-start"
-              >
-                <div className="max-w-[80%] rounded-lg px-3 py-2 bg-gray-100 text-gray-800">
-                  <div className="flex space-x-2">
-                    <div className="w-2 h-2 rounded-full bg-gray-400 animate-bounce"></div>
                     <div
-                      className="w-2 h-2 rounded-full bg-gray-400 animate-bounce"
-                      style={{ animationDelay: "0.2s" }}
-                    ></div>
-                    <div
-                      className="w-2 h-2 rounded-full bg-gray-400 animate-bounce"
-                      style={{ animationDelay: "0.4s" }}
-                    ></div>
-                  </div>
-                </div>
-              </motion.div>
+                      className={`max-w-[85%] sm:max-w-[75%] rounded-lg px-3 py-2 ${
+                        message.sender === "user"
+                          ? "bg-blue-600 text-white"
+                          : "bg-gray-100 dark:bg-gray-800 text-gray-800 dark:text-gray-200"
+                      }`}
+                    >
+                      <p className="text-sm sm:text-base break-words">
+                        {message.text}
+                      </p>
+                      <p
+                        className={`text-[10px] sm:text-xs mt-1 opacity-70 ${
+                          message.sender === "user" ? "text-right" : "text-left"
+                        }`}
+                      >
+                        {message.timestamp}
+                      </p>
+                    </div>
+                  </motion.div>
+                ))}
+
+                {isWaitingForResponse && (
+                  <motion.div
+                    initial={{ opacity: 0, y: 10 }}
+                    animate={{ opacity: 1, y: 0 }}
+                    className="mb-3 flex justify-start"
+                  >
+                    <div className="max-w-[85%] sm:max-w-[75%] rounded-lg px-3 py-2 bg-gray-100 dark:bg-gray-800">
+                      <div className="flex space-x-1.5">
+                        <div className="w-1.5 h-1.5 sm:w-2 sm:h-2 rounded-full bg-gray-400 animate-bounce"></div>
+                        <div
+                          className="w-1.5 h-1.5 sm:w-2 sm:h-2 rounded-full bg-gray-400 animate-bounce"
+                          style={{ animationDelay: "0.2s" }}
+                        ></div>
+                        <div
+                          className="w-1.5 h-1.5 sm:w-2 sm:h-2 rounded-full bg-gray-400 animate-bounce"
+                          style={{ animationDelay: "0.4s" }}
+                        ></div>
+                      </div>
+                    </div>
+                  </motion.div>
+                )}
+
+                <div ref={messagesEndRef} />
+              </>
             )}
           </AnimatePresence>
         </div>
@@ -161,22 +197,24 @@ const ChatBox = forwardRef(
         {/* Input area */}
         <form
           onSubmit={handleSendMessage}
-          className="p-4 border-t border-gray-200"
+          className="p-3 sm:p-4 border-t border-gray-200 dark:border-gray-800"
         >
-          <div className="flex gap-2">
+          <div className="flex flex-wrap gap-2">
             <input
+              ref={inputRef}
               type="text"
               value={localInput}
               onChange={handleInputChange}
               onBlur={handleBlur}
+              onKeyPress={handleKeyPress}
               placeholder="Type your message..."
-              className="flex-1 border border-gray-300 rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+              className="flex-1 border border-gray-300 dark:border-gray-700 rounded-lg px-3 py-2 text-sm sm:text-base focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent bg-white dark:bg-gray-800 text-gray-900 dark:text-gray-100"
               disabled={isWaitingForResponse}
             />
             <button
               type="submit"
-              className="bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded-lg text-sm font-medium transition-colors disabled:opacity-50"
-              disabled={isWaitingForResponse || !inputMessage.trim()}
+              className="w-full bg-blue-600 hover:bg-blue-700 text-white px-4 sm:px-6 py-2 rounded-lg text-sm sm:text-base font-medium transition-colors disabled:opacity-50 whitespace-nowrap"
+              disabled={isWaitingForResponse || !localInput.trim()}
             >
               Send
             </button>

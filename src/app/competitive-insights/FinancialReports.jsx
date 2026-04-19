@@ -20,6 +20,7 @@ import {
   IconButton,
   Tooltip,
   Button,
+  Skeleton,
 } from "@mui/material";
 import {
   TrendingUp,
@@ -49,6 +50,146 @@ const periodTypes = [
   { name: "📅 Annual", value: "annual" },
   { name: "📆 Quarterly", value: "quarterly" },
 ];
+
+// Loading Skeleton Component
+const LoadingSkeleton = () => (
+  <div className="min-h-screen bg-background">
+    {/* Header Skeleton */}
+    <div className="bg-primary text-white shadow-lg">
+      <div className="max-w-7xl mx-auto px-4 py-6">
+        <div className="flex justify-between items-center flex-wrap gap-4">
+          <div>
+            <Skeleton
+              variant="text"
+              width={300}
+              height={48}
+              className="bg-white/20"
+            />
+            <Skeleton
+              variant="text"
+              width={200}
+              height={24}
+              className="bg-white/20 mt-1"
+            />
+          </div>
+          <div className="flex gap-2">
+            <Skeleton
+              variant="circular"
+              width={40}
+              height={40}
+              className="bg-white/20"
+            />
+            <Skeleton
+              variant="circular"
+              width={40}
+              height={40}
+              className="bg-white/20"
+            />
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div className="max-w-7xl mx-auto px-4 py-6">
+      {/* Controls Skeleton */}
+      <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-6">
+        {[1, 2, 3].map((i) => (
+          <Paper key={i} className="p-4 border-border">
+            <Skeleton variant="text" width="100%" height={56} />
+          </Paper>
+        ))}
+      </div>
+
+      {/* Key Metrics Cards Skeleton */}
+      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 mb-6">
+        {[1, 2, 3, 4].map((i) => (
+          <Paper key={i} className="p-4 border-border">
+            <Skeleton variant="text" width="80%" height={24} className="mb-2" />
+            <Skeleton variant="text" width="60%" height={32} className="mb-2" />
+            <Skeleton variant="text" width="40%" height={20} />
+          </Paper>
+        ))}
+      </div>
+
+      {/* Table Skeleton */}
+      <Paper className="overflow-hidden border-border bg-card">
+        <div className="bg-primary p-4">
+          <div className="flex justify-between items-center flex-wrap gap-4">
+            <div>
+              <Skeleton
+                variant="text"
+                width={200}
+                height={28}
+                className="bg-white/20"
+              />
+              <Skeleton
+                variant="text"
+                width={100}
+                height={20}
+                className="bg-white/20 mt-1"
+              />
+            </div>
+            <div className="flex gap-2">
+              <Skeleton
+                variant="rounded"
+                width={200}
+                height={36}
+                className="bg-white/20"
+              />
+              <Skeleton
+                variant="circular"
+                width={36}
+                height={36}
+                className="bg-white/20"
+              />
+            </div>
+          </div>
+        </div>
+
+        <TableContainer style={{ maxHeight: 600 }}>
+          <Table stickyHeader>
+            <TableHead>
+              <TableRow className="bg-muted">
+                <TableCell className="font-bold text-foreground">
+                  <Skeleton variant="text" width={100} height={24} />
+                </TableCell>
+                <TableCell align="right" className="font-bold text-foreground">
+                  <Skeleton
+                    variant="text"
+                    width={80}
+                    height={24}
+                    className="ml-auto"
+                  />
+                </TableCell>
+              </TableRow>
+            </TableHead>
+            <TableBody>
+              {[1, 2, 3, 4, 5].map((i) => (
+                <TableRow key={i}>
+                  <TableCell>
+                    <Skeleton variant="text" width="90%" height={20} />
+                  </TableCell>
+                  <TableCell align="right">
+                    <Skeleton
+                      variant="text"
+                      width="70%"
+                      height={20}
+                      className="ml-auto"
+                    />
+                  </TableCell>
+                </TableRow>
+              ))}
+            </TableBody>
+          </Table>
+        </TableContainer>
+
+        <div className="p-4 bg-muted border-t border-border">
+          <Skeleton variant="text" width={250} height={20} />
+        </div>
+      </Paper>
+    </div>
+  </div>
+);
 
 export default function FinancialReports() {
   const dispatch = useDispatch();
@@ -113,15 +254,9 @@ export default function FinancialReports() {
     }
   };
 
+  // Show loading skeleton while fetching data
   if (loading) {
-    return (
-      <Box className="flex justify-center items-center min-h-screen">
-        <CircularProgress size={60} />
-        <Typography variant="h6" className="ml-4">
-          Loading financial data...
-        </Typography>
-      </Box>
-    );
+    return <LoadingSkeleton />;
   }
 
   if (error) {

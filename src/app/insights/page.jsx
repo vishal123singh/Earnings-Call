@@ -1,13 +1,12 @@
 "use client";
 import {
-  Mic,
   Send,
   ChevronDown,
   SendHorizonalIcon,
   X,
   ChevronRight,
 } from "lucide-react";
-import React, { useState, useEffect, useRef } from "react";
+import { useState, useEffect, useRef } from "react";
 import Head from "next/head";
 import { useDispatch, useSelector } from "react-redux";
 import DOMPurify from "dompurify";
@@ -29,6 +28,7 @@ import { createPortal } from "react-dom";
 import { Button } from "@/components/ui/button";
 import TranscriptSearch from "@/components/SearchTranscripts";
 import { AnimatePresence, motion } from "framer-motion";
+import SelectWithSubmenu from "@/components/insights/SelectWithSubMenu";
 
 const options = Object.entries(suggestedQuestions).map(([category, data]) => ({
   label: category,
@@ -206,6 +206,7 @@ export default function AggregateDashboard() {
             }}
             handleCategoryChange={handleCategoryChange}
             handleButtonClick={handleButtonClick}
+            options={options}
           />
         </div>
 
@@ -319,68 +320,132 @@ export default function AggregateDashboard() {
 
                   {/* Message content */}
                   <div
-                    className={`prose prose-sm max-w-none break-words ${
-                      chat.role === "user"
-                        ? "prose-invert"
-                        : "dark:prose-invert"
-                    }`}
+                    className={`prose prose-sm max-w-none w-full
+  overflow-hidden
+  [overflow-wrap:anywhere]
+  break-words
+  ${chat.role === "user" ? "prose-invert" : "dark:prose-invert"}
+  
+  /* Mobile tuning */
+  prose-p:my-2
+  prose-ul:my-2
+  prose-ol:my-2
+  prose-li:my-1
+  prose-pre:my-3
+  prose-table:my-3
+  `}
                   >
                     <ReactMarkdown
                       remarkPlugins={[remarkGfm]}
                       rehypePlugins={[rehypeRaw]}
                       components={{
                         p: ({ children }) => (
-                          <p className="leading-relaxed mb-2 last:mb-0">
+                          <p className="leading-relaxed text-[15px] sm:text-sm">
                             {children}
                           </p>
                         ),
+
+                        /* ---------- CODE ---------- */
                         code: ({ children, className }) => {
                           const isInline = !className;
+
                           if (isInline) {
                             return (
-                              <code className="px-1.5 py-0.5 rounded bg-black/10 dark:bg-white/10 text-sm font-mono">
+                              <code className="px-1.5 py-0.5 rounded-md bg-black/10 dark:bg-white/10 text-[13px] font-mono break-all">
                                 {children}
                               </code>
                             );
                           }
+
                           return (
-                            <code className="block p-3 rounded-lg bg-black/5 dark:bg-white/5 text-sm font-mono overflow-x-auto">
+                            <code
+                              className="block w-full text-[13px] sm:text-sm font-mono leading-relaxed
+            bg-[#0f172a] text-white
+            dark:bg-black dark:text-white
+            p-4 rounded-xl
+            overflow-x-auto
+            whitespace-pre
+          "
+                            >
                               {children}
                             </code>
                           );
                         },
+
                         pre: ({ children }) => (
-                          <pre className="rounded-lg overflow-x-auto">
+                          <pre className="w-full overflow-x-auto rounded-xl">
                             {children}
                           </pre>
                         ),
+
+                        /* ---------- LISTS ---------- */
                         ul: ({ children }) => (
-                          <ul className="list-disc list-inside space-y-1 my-2">
+                          <ul className="list-disc pl-5 space-y-1">
                             {children}
                           </ul>
                         ),
+
                         ol: ({ children }) => (
-                          <ol className="list-decimal list-inside space-y-1 my-2">
+                          <ol className="list-decimal pl-5 space-y-1">
                             {children}
                           </ol>
                         ),
+
                         li: ({ children }) => (
-                          <li className="text-sm">{children}</li>
+                          <li className="text-[15px] sm:text-sm leading-relaxed">
+                            {children}
+                          </li>
                         ),
+
+                        /* ---------- LINKS ---------- */
                         a: ({ children, href }) => (
                           <a
                             href={href}
                             target="_blank"
                             rel="noopener noreferrer"
-                            className="underline hover:no-underline transition-colors"
+                            className="underline underline-offset-2 hover:no-underline break-all"
                           >
                             {children}
                           </a>
                         ),
+
+                        /* ---------- BLOCKQUOTE ---------- */
                         blockquote: ({ children }) => (
-                          <blockquote className="border-l-4 border-primary pl-4 italic my-2">
+                          <blockquote className="border-l-4 border-primary pl-4 italic text-sm opacity-90">
                             {children}
                           </blockquote>
+                        ),
+
+                        /* ---------- TABLES (IMPORTANT FOR MOBILE) ---------- */
+                        table: ({ children }) => (
+                          <div className="w-full overflow-x-auto">
+                            <table className="w-full border-collapse text-sm">
+                              {children}
+                            </table>
+                          </div>
+                        ),
+
+                        thead: ({ children }) => (
+                          <thead className="bg-black/5 dark:bg-white/10">
+                            {children}
+                          </thead>
+                        ),
+
+                        th: ({ children }) => (
+                          <th className="px-3 py-2 text-left font-medium border border-black/10 dark:border-white/10">
+                            {children}
+                          </th>
+                        ),
+
+                        td: ({ children }) => (
+                          <td className="px-3 py-2 border border-black/10 dark:border-white/10 align-top">
+                            {children}
+                          </td>
+                        ),
+
+                        /* ---------- HR ---------- */
+                        hr: () => (
+                          <hr className="my-4 border-black/10 dark:border-white/10" />
                         ),
                       }}
                     >
@@ -659,211 +724,6 @@ function FetchUploadPopUp({ isOpen, setIsOpen, chats, setChats }) {
   );
 }
 
-const SelectWithSubmenu = ({
-  className,
-  handleCategoryChange,
-  handleButtonClick,
-}) => {
-  const [selected, setSelected] = useState(null);
-  const [openSubmenu, setOpenSubmenu] = useState(null);
-  const [isOpen, setIsOpen] = useState(false);
-  const dropdownRef = useRef(null);
-  const submenuRef = useRef(null);
-  const parentOptionRef = useRef({});
-  let closeTimeout = useRef(null);
-
-  const handleSelect = (value) => {
-    setSelected(value);
-    setOpenSubmenu(null);
-    setIsOpen(false);
-  };
-
-  useEffect(() => {
-    if (typeof window != undefined) {
-      const handleClickOutside = (event) => {
-        if (
-          dropdownRef.current &&
-          !dropdownRef.current.contains(event.target) &&
-          (!submenuRef.current || !submenuRef.current.contains(event.target))
-        ) {
-          setIsOpen(false);
-          setOpenSubmenu(null);
-        }
-      };
-
-      document.addEventListener("mousedown", handleClickOutside);
-      return () =>
-        document.removeEventListener("mousedown", handleClickOutside);
-    }
-  }, []);
-
-  const openSubmenuWithDelay = (value) => {
-    clearTimeout(closeTimeout.current);
-    setOpenSubmenu(value);
-  };
-
-  const closeSubmenuWithDelay = () => {
-    closeTimeout.current = setTimeout(() => {
-      setOpenSubmenu(null);
-    }, 100);
-  };
-
-  return (
-    <div className="relative inline-block text-left" ref={dropdownRef}>
-      <Menu as="div" className="relative" open={isOpen} onChange={setIsOpen}>
-        <MenuButton
-          onClick={() => setIsOpen(!isOpen)}
-          className={`${className} px-5 py-2.5 rounded-xl transition-all duration-200 outline-none focus:ring-2 focus:ring-offset-0 group`}
-          style={{
-            background: isOpen
-              ? "rgba(37, 99, 235, 0.15)"
-              : "rgba(37, 99, 235, 0.08)",
-            color: "var(--primary)",
-            border: `1px solid ${isOpen ? "var(--primary)" : "rgba(37, 99, 235, 0.3)"}`,
-            boxShadow: isOpen ? "0 0 0 3px rgba(37, 99, 235, 0.1)" : "none",
-          }}
-        >
-          <div className="flex items-center justify-between gap-3">
-            <span
-              className="max-w-[12rem] truncate text-sm font-medium"
-              style={{ color: "var(--foreground)" }}
-            >
-              {selected || "Select a question"}
-            </span>
-            <ChevronDown
-              size={18}
-              style={{ color: "var(--primary)" }}
-              className={`transition-all duration-200 ${isOpen ? "rotate-180" : ""}`}
-            />
-          </div>
-        </MenuButton>
-
-        {isOpen && (
-          <div
-            className="absolute z-50 mt-2 min-w-[16rem] rounded-xl shadow-xl overflow-hidden animate-in fade-in zoom-in-95 duration-200"
-            style={{
-              background: "var(--background)",
-              border: `1px solid var(--border)`,
-            }}
-          >
-            <div className="max-h-[55vh] overflow-y-auto py-1">
-              {options?.map((option) => (
-                <div key={option.value} className="relative">
-                  {option.submenu ? (
-                    <>
-                      {/* Main Option with Submenu Indicator */}
-                      <button
-                        ref={(el) =>
-                          (parentOptionRef.current[option.value] = el)
-                        }
-                        onMouseEnter={() => openSubmenuWithDelay(option.value)}
-                        onMouseLeave={closeSubmenuWithDelay}
-                        className="w-full text-left px-4 py-2.5 font-medium transition-all duration-150 text-sm flex items-center justify-between group"
-                        style={{
-                          color: "var(--foreground)",
-                        }}
-                        title={option.label}
-                      >
-                        <span>{option.label}</span>
-                        <ChevronRight
-                          size={14}
-                          style={{ color: "var(--muted-foreground)" }}
-                          className="group-hover:translate-x-0.5 transition-transform duration-200"
-                        />
-                      </button>
-
-                      {/* Submenu */}
-                      {openSubmenu === option.value &&
-                        createPortal(
-                          <div
-                            ref={submenuRef}
-                            className="absolute z-50 rounded-xl shadow-xl overflow-y-auto max-w-[80vw] min-w-[14rem] animate-in fade-in zoom-in-95 duration-150"
-                            style={{
-                              position: "fixed",
-                              top:
-                                parentOptionRef.current[
-                                  option.value
-                                ]?.getBoundingClientRect().top || 0,
-                              left:
-                                parentOptionRef.current[
-                                  option.value
-                                ]?.getBoundingClientRect().right || 0,
-                              background: "var(--background)",
-                              border: `1px solid var(--border)`,
-                            }}
-                            onMouseEnter={() =>
-                              openSubmenuWithDelay(option.value)
-                            }
-                            onMouseLeave={closeSubmenuWithDelay}
-                          >
-                            <div className="py-1">
-                              {option?.submenu?.map((subOption) => (
-                                <button
-                                  key={subOption.value}
-                                  onClick={() => {
-                                    handleSelect(option.value);
-                                    handleCategoryChange(option.value);
-                                    handleButtonClick(subOption.value);
-                                    setIsOpen(false);
-                                  }}
-                                  className="block w-full px-4 py-2.5 text-left transition-all duration-150 hover:scale-[1.02] text-sm"
-                                  style={{
-                                    color: "var(--foreground)",
-                                    background: "transparent",
-                                  }}
-                                  title={subOption.label}
-                                >
-                                  {subOption.label}
-                                </button>
-                              ))}
-                            </div>
-                          </div>,
-                          document.body,
-                        )}
-                    </>
-                  ) : (
-                    <MenuItem>
-                      {({ active }) => (
-                        <button
-                          onClick={() => {
-                            handleSelect(option.value);
-                            setIsOpen(false);
-                          }}
-                          className={`block w-full px-4 py-2.5 text-left transition-all duration-150 text-sm ${
-                            active ? "scale-[1.02]" : ""
-                          }`}
-                          style={{
-                            background: active
-                              ? "rgba(37, 99, 235, 0.08)"
-                              : "transparent",
-                            color: active
-                              ? "var(--primary)"
-                              : "var(--foreground)",
-                          }}
-                          title={option.label}
-                        >
-                          <div className="flex items-center gap-2">
-                            {option.icon && (
-                              <span style={{ color: "var(--primary)" }}>
-                                {option.icon}
-                              </span>
-                            )}
-                            <span>{option.label}</span>
-                          </div>
-                        </button>
-                      )}
-                    </MenuItem>
-                  )}
-                </div>
-              ))}
-            </div>
-          </div>
-        )}
-      </Menu>
-    </div>
-  );
-};
-
 function BusinessInsightsForm({
   inputValue,
   onChange,
@@ -873,7 +733,7 @@ function BusinessInsightsForm({
   return (
     <form
       onSubmit={onSubmit}
-      className="mt-6 flex items-center rounded-full shadow-lg transition-all duration-300 focus-within:shadow-xl relative group"
+      className="mt-4 sm:mt-6 flex items-center rounded-full shadow-lg transition-all duration-300 focus-within:shadow-xl relative group w-full"
       style={{
         background: "var(--background)",
         border: `1px solid var(--border)`,
@@ -901,16 +761,16 @@ function BusinessInsightsForm({
         value={inputValue}
         onChange={onChange}
         placeholder="Ask about business insights..."
-        className="flex-1 px-5 py-3.5 bg-transparent outline-none rounded-l-full text-sm relative z-10"
+        className="flex-1 px-3 sm:px-5 py-2.5 sm:py-3.5 bg-transparent outline-none rounded-l-full text-xs sm:text-sm relative z-10 min-w-0"
         style={{
           color: "var(--foreground)",
         }}
       />
 
-      {/* Character Counter (Optional) */}
+      {/* Character Counter (Optional) - Hide on very small screens */}
       {inputValue.length > 0 && (
         <div
-          className="text-xs px-2 relative z-10"
+          className="hidden sm:block text-xs px-2 relative z-10 whitespace-nowrap"
           style={{ color: "var(--muted-foreground)" }}
         >
           {inputValue.length}/500
@@ -918,20 +778,20 @@ function BusinessInsightsForm({
       )}
 
       {/* Mic Button */}
-      <div className="relative z-10">
+      <div className="relative z-10 flex-shrink-0">
         <VoiceRecorder onVoiceInput={onVoiceInput} />
       </div>
 
-      {/* Divider */}
+      {/* Divider - Hide on very small screens */}
       <div
-        className="w-px h-6 mx-1 relative z-10"
+        className="hidden sm:block w-px h-6 mx-1 relative z-10"
         style={{ background: "var(--border)" }}
       />
 
       {/* Send Button */}
       <button
         type="submit"
-        className="p-2.5 mr-1.5 transition-all duration-300 rounded-full hover:scale-105 active:scale-95 disabled:opacity-50 disabled:cursor-not-allowed disabled:hover:scale-100 relative z-10"
+        className="p-2 sm:p-2.5 mr-1 sm:mr-1.5 transition-all duration-300 rounded-full hover:scale-105 active:scale-95 disabled:opacity-50 disabled:cursor-not-allowed disabled:hover:scale-100 relative z-10 flex-shrink-0"
         style={{
           background: inputValue.trim()
             ? "linear-gradient(135deg, var(--primary) 0%, var(--secondary) 100%)"
@@ -945,7 +805,7 @@ function BusinessInsightsForm({
         }}
         disabled={!inputValue.trim()}
       >
-        <Send className="w-5 h-5" />
+        <Send className="w-4 h-4 sm:w-5 sm:h-5" />
       </button>
     </form>
   );

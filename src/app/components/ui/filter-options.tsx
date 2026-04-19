@@ -1,17 +1,14 @@
 "use client";
 import Select, { StylesConfig, MultiValue } from "react-select";
 import { useDispatch, useSelector } from "react-redux";
-import { usePathname } from "next/navigation";
 import {
   setCompanies,
-  setEarningsData,
-  setPersona,
   setQuarter,
   setYear,
-  setFoundationModel,
 } from "../../../../store/sidebarSlice";
-import { useContext, useEffect } from "react";
+import { useContext } from "react";
 import { ParentContext } from "@/clientLayout";
+import { useMediaQuery } from "@mui/material";
 
 // Type definitions
 interface Company {
@@ -25,16 +22,6 @@ interface OptionType {
   label?: string;
   logo?: string;
 }
-
-const personas: string[] = [
-  "Controller (Chief Accounting Officer)",
-  "Treasurer",
-  "Head of Financial Planning & Analysis (FP&A)",
-  "Head of Risk & Compliance",
-  "Head of Taxation",
-  "Investor Relations Director",
-  "Head of Procurement & Vendor Management",
-];
 
 // Custom Styles for Select using CSS variables
 const customStyles: StylesConfig<OptionType, true> = {
@@ -104,6 +91,7 @@ const customStyles: StylesConfig<OptionType, true> = {
 const FilterOptions = () => {
   const dispatch = useDispatch();
   const { collapsed } = useContext(ParentContext);
+  const isMobile = useMediaQuery("(max-width: 768px)");
 
   // Get filter configuration and current selections from redux state
   const filterConfig = useSelector((state: any) => state.sidebar.filterConfig);
@@ -133,10 +121,6 @@ const FilterOptions = () => {
   const quarterOptions: OptionType[] = (filterConfig.quarters as string[]).map(
     (quarter) => ({ value: quarter, label: quarter }),
   );
-  const personaOptions: OptionType[] = personas.map((persona) => ({
-    value: persona,
-    label: persona,
-  }));
 
   const handleCompanySelect = (
     selected: OptionType | MultiValue<OptionType>,
@@ -187,22 +171,10 @@ const FilterOptions = () => {
     }
   };
 
-  const fetchDataFromYahooFinance = async (symbol: string) => {
-    if (!symbol) return;
-    try {
-      const res = await fetch(`/api/yahoo-finance?symbol=${symbol}`);
-      const result = await res.json();
-      console.log("result", result);
-      dispatch(setEarningsData(result));
-    } catch (error) {
-      console.error("Error fetching data:", error);
-    }
-  };
-
   return (
     <div
       className={`transition-all duration-300 ${
-        !collapsed ? "p-8 opacity-100 space-y-6" : "p-0 opacity-0"
+        isMobile || !collapsed ? "p-8 opacity-100 space-y-6" : "p-0 opacity-0"
       } h-full overflow-y-auto`}
       style={{
         background: "var(--sidebar)",
@@ -292,29 +264,6 @@ const FilterOptions = () => {
           }
           onChange={handleQuarterSelect}
           placeholder={filterConfig.selectProps.quarters.placeholder}
-          styles={customStyles}
-        />
-      </div>
-
-      {/* Persona Select */}
-      <div>
-        <label
-          className="text-sm font-medium block mb-2"
-          style={{ color: "var(--sidebar-foreground)" }}
-        >
-          Persona
-        </label>
-        <Select
-          isDisabled={filterConfig.selectProps.persona.isDisabled}
-          options={personaOptions}
-          isMulti={filterConfig.selectProps.persona.isMulti}
-          value={
-            selectedPersona
-              ? { value: selectedPersona, label: selectedPersona }
-              : null
-          }
-          onChange={(option: any) => dispatch(setPersona(option?.value))}
-          placeholder={filterConfig.selectProps.persona.placeholder}
           styles={customStyles}
         />
       </div>

@@ -1,6 +1,6 @@
 "use client";
 import { Card, CardContent } from "@/components/ui/card";
-import { useEffect, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import DOMPurify from "dompurify";
 import FinancialMetricsCard from "@/components/ui/financial-metrics";
 import ChatBox from "@/components/ui/chatbox";
@@ -15,16 +15,12 @@ const inter = Inter({ subsets: ["latin"], weight: ["400"] });
 
 export default function SentimentAnalysis() {
   const [chats, setChats] = useState<any[]>([]);
-  const [isSentimentsLoading, setIsSentimentsLoading] = useState(false);
-  const [content, setContent] = useState<string>("");
-  const apiUrlSentiments = `${process.env.NEXT_PUBLIC_API_URL}/sentiment-analysis`;
   const [isChatOpen, setIsChatOpen] = useState(false);
 
+  const [isSentimentsLoading, setIsSentimentsLoading] = useState(false);
+  const [content, setContent] = useState({});
+
   const [isChartsLoading, setIsChartsLoading] = useState(false);
-  const [financialMetricsData, setFinancialMetricsData] = useState<any>({
-    marketData: {},
-    revenueTrends: [],
-  });
 
   const selectedCompanies = useSelector(
     (state: any) => state?.sidebar.selectedCompanies,
@@ -34,112 +30,154 @@ export default function SentimentAnalysis() {
     (state: any) => state?.sidebar.selectedQuarter,
   );
 
+  const primaryTicker = selectedCompanies?.[0];
+
+  const canFetch = useMemo(
+    () => primaryTicker && selectedYear && selectedQuarter,
+    [primaryTicker, selectedYear, selectedQuarter],
+  );
+
+  // 🔹 Fetch Financial Data
   useEffect(() => {
-    if (selectedCompanies.length > 0 && selectedYear && selectedQuarter) {
-      getFinancialMetricsData();
-      getSentimentAnalysis();
-    }
-  }, [selectedCompanies, selectedYear, selectedQuarter]);
+    if (!canFetch) return;
 
-  const getFinancialMetricsData = async () => {
-    if (!selectedCompanies.length || !selectedYear || !selectedQuarter) return;
+    const fetchFinancials = async () => {
+      try {
+        setIsChartsLoading(true);
 
-    try {
-      setIsChartsLoading(true);
-      const response = await fetch("/api/market-metrics", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ companies: selectedCompanies }),
-      });
-      if (!response.ok) throw new Error("Failed to fetch data");
+        const res = await fetch("/api/market-metrics", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ companies: selectedCompanies }),
+        });
 
-      const data = await response.json();
-      setFinancialMetricsData(data);
-    } catch (error) {
-      console.error("Error:", error);
-    } finally {
-      setIsChartsLoading(false);
-    }
-  };
+        if (!res.ok) throw new Error();
+      } catch (err) {
+        console.error("Financial error:", err);
+      } finally {
+        setIsChartsLoading(false);
+      }
+    };
 
-  const getSentimentAnalysis = async () => {
-    if (!selectedCompanies.length) return;
+    fetchFinancials();
+  }, [canFetch, selectedCompanies]);
 
-    setIsSentimentsLoading(true);
-    try {
-      const res = await fetch(apiUrlSentiments, {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({
-          selectedCompany: { name: "", ticker: selectedCompanies[0] },
-          selectedYear,
-          selectedQuarter,
-        }),
-      });
+  // 🔹 Fetch Sentiment
+  useEffect(() => {
+    if (!canFetch) return;
 
-      if (!res.ok) throw new Error("Failed to fetch sentiment");
+    const fetchSentiment = async () => {
+      try {
+        setIsSentimentsLoading(true);
 
-      const data = await res.json();
-      setContent(
-        DOMPurify.sanitize(
-          data.sentiment_analysis?.reasoning || "No Data Available.",
-        ),
-      );
-    } catch (error) {
-      console.error(error);
-      setContent(
-        "<p style='color:red;'>Error: Sorry, something went wrong.</p>",
-      );
-    } finally {
-      setIsSentimentsLoading(false);
-    }
-  };
+        const res = await fetch(
+          `${process.env.NEXT_PUBLIC_API_URL}/sentiment-analysis`,
+          {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({
+              selectedCompany: { ticker: primaryTicker },
+              selectedYear,
+              selectedQuarter,
+            }),
+          },
+        );
+
+        // 🔴 Better error debugging
+        if (!res.ok) {
+          const text = await res.text();
+          console.error("API ERROR:", text);
+          throw new Error("Failed to fetch sentiment");
+        }
+
+        let data;
+
+        // 🔴 Safe JSON parsing
+        try {
+          data = await res.json();
+        } catch (err) {
+          const text = await res.text();
+          console.error("Invalid JSON:", text);
+          throw new Error("Invalid API response");
+        }
+
+        const sentiment = data?.sentiment_analysis;
+
+        // 🔴 Validate structure
+        if (!sentiment || typeof sentiment !== "object") {
+          throw new Error("Invalid sentiment structure");
+        }
+
+        // ✅ Set structured data instead of HTML
+        setContent(sentiment);
+      } catch (err) {
+        console.error("Sentiment error:", err);
+
+        // ✅ Keep consistent fallback structure
+        setContent({
+          label: "Neutral",
+          confidence: 0.5,
+          summary: "Something went wrong while fetching sentiment.",
+          key_insights: [],
+          risks: [],
+          opportunities: [],
+          management_tone: "Unknown",
+          notable_quotes: [],
+        });
+      } finally {
+        setIsSentimentsLoading(false);
+      }
+    };
+
+    fetchSentiment();
+  }, [canFetch, primaryTicker, selectedYear, selectedQuarter]);
 
   return (
-    <div className="flex flex-col bg-background px-6 py-6 space-y-6 min-h-screen">
-      {/* Financial & Market Metrics */}
-      {isChartsLoading ? (
-        <div className="flex justify-center items-center h-32 text-gray-400">
-          Loading financial metrics...
-        </div>
-      ) : selectedCompanies?.length ? (
-        <div className="grid grid-cols-1 lg:grid-cols-1 gap-6">
-          <FinancialMetricsCard ticker={selectedCompanies[0]} />
-          <ProfitabilityCard ticker={selectedCompanies[0]} />
-          <LiquidityCard ticker={selectedCompanies[0]} />
-          <EarningsCard
-            ticker={selectedCompanies[0]}
-            year={selectedYear}
-            quarter={selectedQuarter}
-          />
-        </div>
-      ) : null}
+    <div className="flex flex-col gap-6 px-4 sm:px-6 py-6 min-h-screen bg-background">
+      {/* ===== Metrics Section ===== */}
+      {/* {canFetch && (
+        <div className="grid grid-cols-1 xl:grid-cols-2 gap-6">
+          <div className="space-y-6">
+            <SkeletonWrapper loading={isChartsLoading}>
+              <FinancialMetricsCard ticker={primaryTicker} />
+            </SkeletonWrapper>
 
-      {/* Sentiment Analysis Card */}
-      {isSentimentsLoading ? (
-        <div className="flex justify-center items-center py-4">
-          <div className="animate-spin rounded-full h-12 w-12 border-t-4 border-primary"></div>
-        </div>
-      ) : (
-        <Card className="bg-background shadow-md border border-[#e5e7eb] rounded-xl backdrop-blur-lg">
-          <CardContent className="py-4">
-            {content.trim().length ? (
-              <FormattedContent text={content} />
-            ) : (
-              <p>
-                No Data Available.
-                <br />
-                Select a company to get started.
-              </p>
-            )}
-          </CardContent>
-        </Card>
-      )}
+            <SkeletonWrapper loading={isChartsLoading}>
+              <ProfitabilityCard ticker={primaryTicker} />
+            </SkeletonWrapper>
+          </div>
 
-      {/* Chatbox */}
+          <div className="space-y-6">
+            <SkeletonWrapper loading={isChartsLoading}>
+              <LiquidityCard ticker={primaryTicker} />
+            </SkeletonWrapper>
+
+            <SkeletonWrapper loading={isChartsLoading}>
+              <EarningsCard
+                ticker={primaryTicker}
+                year={selectedYear}
+                quarter={selectedQuarter}
+              />
+            </SkeletonWrapper>
+          </div>
+        </div>
+      )} */}
+
+      {/* ===== Sentiment Section ===== */}
+      <Card className="rounded-2xl border shadow-sm">
+        <CardContent className="py-5">
+          {isSentimentsLoading ? (
+            <SkeletonText />
+          ) : (
+            <SentimentView data={content} />
+          )}
+        </CardContent>
+      </Card>
+
+      {/* ===== Chat ===== */}
       <ChatBox
         isOpen={isChatOpen}
-        toggleChat={() => setIsChatOpen(!isChatOpen)}
+        toggleChat={() => setIsChatOpen((p) => !p)}
         chats={chats}
         setChats={setChats}
       />
@@ -147,29 +185,90 @@ export default function SentimentAnalysis() {
   );
 }
 
-// Component to safely render formatted content
-const FormattedContent = ({ text }: { text: string }) => {
-  let formatted = text;
+const SkeletonWrapper = ({
+  loading,
+  children,
+}: {
+  loading: boolean;
+  children: React.ReactNode;
+}) => {
+  if (!loading) return <>{children}</>;
 
-  // Basic Markdown formatting
-  formatted = formatted.replace(/^# (.*?)$/gm, "<h1>$1</h1>");
-  formatted = formatted.replace(/^## (.*?)$/gm, "<h2>$1</h2>");
-  formatted = formatted.replace(/\*\*(.*?)\*\*/g, "<strong>$1</strong>");
-  formatted = formatted.replace(/---/g, "<hr />");
+  return <div className="h-40 rounded-xl bg-muted animate-pulse" />;
+};
 
-  // Fix lists: wrap consecutive <li> in <ul>
-  const liMatches = [...formatted.matchAll(/<li>[\s\S]*?<\/li>/g)];
-  if (liMatches.length) {
-    formatted = formatted.replace(
-      /(<li>[\s\S]*?<\/li>)+/g,
-      (match) => `<ul>${match}</ul>`,
-    );
-  }
+const SkeletonText = () => (
+  <div className="space-y-3 animate-pulse">
+    <div className="h-4 bg-muted rounded w-3/4" />
+    <div className="h-4 bg-muted rounded w-5/6" />
+    <div className="h-4 bg-muted rounded w-2/3" />
+  </div>
+);
+
+const SentimentView = ({ data }: { data: any }) => {
+  const getColor = () => {
+    if (data.label === "Positive") return "text-green-500";
+    if (data.label === "Negative") return "text-red-500";
+    return "text-yellow-500";
+  };
 
   return (
-    <div
-      className={`sentiment-analysis ${inter.className}`}
-      dangerouslySetInnerHTML={{ __html: formatted }}
-    />
+    <div className="space-y-6">
+      {/* Header */}
+      <div className="p-5 rounded-xl bg-gradient-to-r from-primary/10 to-transparent border">
+        <div className="flex items-center justify-between">
+          <h2 className={`text-lg font-semibold ${getColor()}`}>
+            {data.label} Sentiment
+          </h2>
+          <span className="text-sm text-muted-foreground">
+            Confidence: {(data.confidence * 100).toFixed(0)}%
+          </span>
+        </div>
+
+        <p className="mt-3 text-sm text-muted-foreground leading-relaxed">
+          {data.summary}
+        </p>
+      </div>
+
+      {/* Grid Sections */}
+      <div className="grid md:grid-cols-2 gap-4">
+        <Section title="📊 Key Insights" items={data.key_insights} />
+        <Section title="⚠️ Risks" items={data.risks} />
+        <Section title="🚀 Opportunities" items={data.opportunities} />
+        <Section title="🎯 Management Tone" text={data.management_tone} />
+      </div>
+
+      {/* Quotes */}
+      <Section title="💬 Notable Quotes" items={data.notable_quotes} />
+    </div>
   );
 };
+
+const Section = ({
+  title,
+  items,
+  text,
+}: {
+  title: string;
+  items?: string[];
+  text?: string;
+}) => (
+  <div className="bg-background border rounded-xl p-4 shadow-sm">
+    <h3 className="font-semibold mb-3">{title}</h3>
+
+    {items && (
+      <ul className="space-y-2 text-sm text-muted-foreground">
+        {items.map((item, i) => (
+          <li key={i} className="flex gap-2">
+            <span>•</span>
+            <span>{item}</span>
+          </li>
+        ))}
+      </ul>
+    )}
+
+    {text && (
+      <p className="text-sm text-muted-foreground leading-relaxed">{text}</p>
+    )}
+  </div>
+);

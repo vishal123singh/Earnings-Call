@@ -45,8 +45,6 @@ export async function POST(req) {
     let transcriptData = null;
     if (fs.existsSync(transcriptPath)) {
       transcriptData = JSON.parse(fs.readFileSync(transcriptPath, "utf-8"));
-      console.log("Loaded transcript from local cache:", transcriptPath);
-      console.log("Transcript metadata:", transcriptData.metadata);
     } else {
       const pythonApiUrl =
         process.env.PYTHON_API_URL || "http://localhost:8000";
@@ -127,21 +125,26 @@ async function generateStructuredSentiment(transcriptData) {
     formatSection("Q&A Session", transcriptData.qa_session),
   ].join("\n\n");
 
-  console.log(
-    "Generating sentiment for:",
-    transcriptData.metadata.ticker,
-    transcriptData.metadata.quarter,
-    transcriptData.metadata.year,
-  );
-  console.log("Transcript length (chars):", combinedText.length);
-
-  console.log("Transcript sample:", combinedText.slice(0, 500));
-
   const prompt = `
-You are a financial analyst. Given the following earnings transcript, provide a structured JSON output with:
-- label: Positive, Neutral, or Negative
-- confidence: float number between 0 and 1
-- reasoning: 1-2 sentences explaining the sentiment
+You are a senior financial analyst.
+
+Analyze the following earnings transcript and return a structured JSON:
+
+{
+  "label": "Positive | Neutral | Negative",
+  "confidence": number (0 to 1),
+  "summary": "2-3 sentence high-level summary",
+  "key_insights": ["bullet points"],
+  "risks": ["bullet points"],
+  "opportunities": ["bullet points"],
+  "management_tone": "Brief description of tone",
+  "notable_quotes": ["important quotes from transcript"]
+}
+
+Rules:
+- Keep insights concise and actionable
+- Extract real signals (growth, margins, guidance, risks)
+- Do NOT hallucinate
 
 Transcript:
 ${combinedText}
@@ -156,16 +159,46 @@ Respond ONLY with JSON.
 
   const responseText = completion.choices[0].message?.content || "";
 
+  const cleaned = responseText.trim();
+
   // Try parsing GPT output safely
-  let sentimentJson = {};
+  let sentimentJson;
+
   try {
-    sentimentJson = JSON.parse(responseText);
+    // 1. Try direct parse
+    sentimentJson = JSON.parse(cleaned);
   } catch {
-    sentimentJson = {
-      label: "Neutral",
-      confidence: 0.5,
-      reasoning: responseText.slice(0, 200), // fallback
-    };
+    try {
+      // 2. Try extracting ```json block
+      const codeBlockMatch = cleaned.match(/```json([\s\S]*?)```/);
+      if (codeBlockMatch) {
+        sentimentJson = JSON.parse(codeBlockMatch[1]);
+      } else {
+        throw new Error("No code block");
+      }
+    } catch {
+      try {
+        // 3. Extract first JSON object from text
+        const jsonMatch = cleaned.match(/\{[\s\S]*\}/);
+        if (jsonMatch) {
+          sentimentJson = JSON.parse(jsonMatch[0]);
+        } else {
+          throw new Error("No JSON found");
+        }
+      } catch {
+        // 4. Final fallback (FULL schema)
+        sentimentJson = {
+          label: "Neutral",
+          confidence: 0.5,
+          summary: "Unable to parse structured sentiment.",
+          key_insights: [],
+          risks: [],
+          opportunities: [],
+          management_tone: "Unknown",
+          notable_quotes: [],
+        };
+      }
+    }
   }
 
   return {

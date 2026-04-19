@@ -1,9 +1,11 @@
 import { ParentContext } from "@/clientLayout";
-import AppBar from "@mui/material/AppBar/AppBar";
-import Avatar from "@mui/material/Avatar/Avatar";
-import Button from "@mui/material/Button/Button";
-import IconButton from "@mui/material/IconButton/IconButton";
-import Toolbar from "@mui/material/Toolbar/Toolbar";
+
+import AppBar from "@mui/material/AppBar";
+import Avatar from "@mui/material/Avatar";
+import Button from "@mui/material/Button";
+import IconButton from "@mui/material/IconButton";
+import Toolbar from "@mui/material/Toolbar";
+
 import {
   PanelRightClose,
   PanelRightOpen,
@@ -26,14 +28,28 @@ import { useSelector } from "react-redux";
 import { motion, AnimatePresence } from "framer-motion";
 import Image from "next/image";
 import LogoImage from "@/assets/images/logo_3.png";
+import { RootState } from "../../../store/store";
 
 // Modern Navbar Component
-const Navbar = ({ handleLogout }) => {
+interface NavbarProps {
+  handleLogout: () => void;
+}
+
+interface NavItem {
+  label: string;
+  path: string;
+  icon: React.ComponentType<any>;
+  shortLabel?: string;
+}
+
+const Navbar: React.FC<NavbarProps> = ({ handleLogout }) => {
   const router = useRouter();
   const pathname = usePathname();
   const { setIsLoginOpen, setIsSignupOpen, collapsed, handleToggleSidebar } =
     useContext(ParentContext);
-  const isUserLoggedIn = useSelector((state) => state.user.isUserLoggedIn);
+  const isUserLoggedIn = useSelector(
+    (state: RootState) => state.user.isUserLoggedIn,
+  );
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   const [scrolled, setScrolled] = useState(false);
   const [visible, setVisible] = useState(true);
@@ -41,35 +57,36 @@ const Navbar = ({ handleLogout }) => {
   const [showUserMenu, setShowUserMenu] = useState(false);
 
   const lastScrollY = useRef(0);
-  const scrollTimeout = useRef(null);
 
-  // useEffect(() => {
-  //   const container = document.getElementById("main-scroll-container");
+  useEffect(() => {
+    const handleScroll = () => {
+      const currentY = window.scrollY;
 
-  //   if (!container) return;
+      setScrolled(currentY > 10);
 
-  //   const handleScroll = () => {
-  //     const currentY = container.scrollTop;
-  //     const delta = currentY - lastScrollY.current;
+      if (currentY < 80) {
+        setVisible(true);
+      } else if (currentY > lastScrollY.current) {
+        const delta = currentY - lastScrollY.current;
 
-  //     if (currentY < 80) {
-  //       setVisible(true);
-  //     } else if (delta > 5) {
-  //       setVisible(false);
-  //       setShowUserMenu(false);
-  //     } else if (delta < -5) {
-  //       setVisible(true);
-  //     }
+        if (currentY < 80) {
+          setVisible(true);
+        } else if (delta > 5) {
+          setVisible(false);
+          setShowUserMenu(false);
+        } else if (delta < -5) {
+          setVisible(true);
+        }
+      } else {
+        setVisible(true); // scrolling up
+      }
 
-  //     lastScrollY.current = currentY;
-  //   };
+      lastScrollY.current = currentY;
+    };
 
-  //   container.addEventListener("scroll", handleScroll);
-
-  //   return () => {
-  //     container.removeEventListener("scroll", handleScroll);
-  //   };
-  // }, []);
+    window.addEventListener("scroll", handleScroll, { passive: true });
+    return () => window.removeEventListener("scroll", handleScroll);
+  }, []);
 
   useEffect(() => {
     const user = JSON.parse(localStorage.getItem("user") || "{}");
@@ -82,7 +99,23 @@ const Navbar = ({ handleLogout }) => {
     setShowUserMenu(false);
   }, [pathname]);
 
-  const navItems = useMemo(
+  const userMenuRef = useRef<HTMLDivElement>(null);
+
+  useEffect(() => {
+    const handler = (e: MouseEvent) => {
+      if (
+        userMenuRef.current &&
+        !userMenuRef.current.contains(e.target as Node)
+      ) {
+        setShowUserMenu(false);
+      }
+    };
+
+    document.addEventListener("mousedown", handler);
+    return () => document.removeEventListener("mousedown", handler);
+  }, []);
+
+  const navItems: NavItem[] = useMemo(
     () => [
       { label: "Home", path: "/", icon: Home },
       {
@@ -102,15 +135,7 @@ const Navbar = ({ handleLogout }) => {
     [],
   );
 
-  const isActive = (path) => pathname === path;
-
-  // Get responsive label based on screen size
-  const getNavLabel = (item) => {
-    if (typeof window !== "undefined" && window.innerWidth < 1024) {
-      return item.shortLabel || item.label;
-    }
-    return item.label;
-  };
+  const isActive = (path: string) => pathname === path;
 
   return (
     <>
@@ -123,7 +148,7 @@ const Navbar = ({ handleLogout }) => {
             ? "0 8px 32px rgba(0, 0, 0, 0.08)"
             : "0 2px 8px rgba(0, 0, 0, 0.04)",
           padding: { xs: "0 8px", sm: "0 16px", md: "0 24px" },
-          zIndex: 1201,
+          zIndex: 1400,
           borderBottom: "1px solid var(--border)",
           transform: visible ? "translateY(0)" : "translateY(-110%)",
           opacity: visible ? 1 : 0,
@@ -201,7 +226,7 @@ const Navbar = ({ handleLogout }) => {
                   alt="InvestorEye Logo"
                   width={60}
                   height={60}
-                  className="hidden md:block object-contain w-[60px] sm:w-[60px] md:w-[80px] lg:w-[80px] h-auto"
+                  className="object-contain h-10 sm:h-12 md:h-14 w-auto"
                   priority
                 />
               </div>
@@ -210,7 +235,7 @@ const Navbar = ({ handleLogout }) => {
 
           {/* Desktop Navigation - Responsive spacing */}
           <div className="hidden md:flex items-center gap-0.5 lg:gap-1 flex-wrap justify-center">
-            {navItems.map((item, index) => (
+            {navItems.map((item: NavItem, index) => (
               <motion.div
                 key={item.path}
                 initial={{ opacity: 0, y: -20 }}
@@ -275,7 +300,7 @@ const Navbar = ({ handleLogout }) => {
                 className="flex items-center gap-1 sm:gap-2 md:gap-3"
               >
                 {/* User Info with Dropdown - Desktop */}
-                <div className="relative hidden sm:block">
+                <div ref={userMenuRef} className="relative hidden sm:block">
                   <motion.div
                     whileHover={{ scale: 1.02 }}
                     whileTap={{ scale: 0.98 }}
@@ -451,14 +476,6 @@ const Navbar = ({ handleLogout }) => {
         </Toolbar>
       </AppBar>
 
-      {/* Click outside handler for user menu */}
-      {showUserMenu && (
-        <div
-          className="fixed inset-0 z-40"
-          onClick={() => setShowUserMenu(false)}
-        />
-      )}
-
       {/* Mobile Menu Drawer */}
       <AnimatePresence>
         {mobileMenuOpen && (
@@ -469,7 +486,7 @@ const Navbar = ({ handleLogout }) => {
               animate={{ opacity: 1 }}
               exit={{ opacity: 0 }}
               onClick={() => setMobileMenuOpen(false)}
-              className="fixed inset-0 bg-black/50 backdrop-blur-sm z-50 md:hidden"
+              className="fixed inset-0 bg-black/50 backdrop-blur-sm z-[1700] md:hidden"
             />
 
             {/* Drawer */}
@@ -478,7 +495,7 @@ const Navbar = ({ handleLogout }) => {
               animate={{ x: 0 }}
               exit={{ x: "100%" }}
               transition={{ type: "spring", damping: 25, stiffness: 200 }}
-              className="fixed right-0 top-0 bottom-0 w-[85%] max-w-[320px] shadow-2xl z-50 md:hidden flex flex-col"
+              className="fixed right-0 top-0 bottom-0 w-[85%] max-w-[320px] shadow-2xl z-[1700] md:hidden flex flex-col"
               style={{ backgroundColor: "var(--background)" }}
             >
               {/* Drawer Header */}
@@ -542,7 +559,7 @@ const Navbar = ({ handleLogout }) => {
 
               {/* Drawer Navigation */}
               <div className="flex-1 overflow-y-auto py-4">
-                {navItems.map((item) => (
+                {navItems.map((item: NavItem) => (
                   <motion.div
                     key={item.path}
                     whileTap={{ scale: 0.98 }}
