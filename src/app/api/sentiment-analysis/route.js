@@ -48,7 +48,7 @@ export async function POST(req) {
     } else {
       const pythonApiUrl =
         process.env.PYTHON_API_URL || "http://localhost:8000";
-      const pythonApiEndpoint = `${pythonApiUrl}/scrape/${ticker.toLowerCase()}/${selectedYear}/Q${quarterFormatted}`;
+      const pythonApiEndpoint = `${pythonApiUrl}/scrape/${ticker.toLowerCase()}/${selectedYear}/${quarterFormatted}`;
       const pythonResponse = await fetch(pythonApiEndpoint);
       if (!pythonResponse.ok)
         throw new Error(`Python API error: ${pythonResponse.status}`);
