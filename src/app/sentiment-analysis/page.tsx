@@ -20,6 +20,13 @@ export default function SentimentAnalysis() {
   const [isSentimentsLoading, setIsSentimentsLoading] = useState(false);
   const [content, setContent] = useState({});
 
+  const [marketsData, setMarketsData] = useState({
+    marketData: null,
+    profitability: null,
+    liquidity: null,
+    earnings: null,
+  });
+
   const [isChartsLoading, setIsChartsLoading] = useState(false);
 
   const selectedCompanies = useSelector(
@@ -52,6 +59,11 @@ export default function SentimentAnalysis() {
         });
 
         if (!res.ok) throw new Error();
+
+        const data = await res.json();
+        setMarketsData(data);
+
+        console.log("Fetched Metrics:", data);
       } catch (err) {
         console.error("Financial error:", err);
       } finally {
@@ -135,33 +147,41 @@ export default function SentimentAnalysis() {
   return (
     <div className="flex flex-col gap-6 px-4 sm:px-6 py-6 min-h-screen bg-background">
       {/* ===== Metrics Section ===== */}
-      {/* {canFetch && (
+      {canFetch && (
         <div className="grid grid-cols-1 xl:grid-cols-2 gap-6">
           <div className="space-y-6">
             <SkeletonWrapper loading={isChartsLoading}>
-              <FinancialMetricsCard ticker={primaryTicker} />
+              <FinancialMetricsCard
+                ticker={primaryTicker}
+                metrics={marketsData?.marketData}
+              />
             </SkeletonWrapper>
 
             <SkeletonWrapper loading={isChartsLoading}>
-              <ProfitabilityCard ticker={primaryTicker} />
+              <ProfitabilityCard
+                ticker={primaryTicker}
+                data={marketsData?.profitability}
+              />
             </SkeletonWrapper>
           </div>
 
           <div className="space-y-6">
             <SkeletonWrapper loading={isChartsLoading}>
-              <LiquidityCard ticker={primaryTicker} />
+              <LiquidityCard
+                ticker={primaryTicker}
+                data={marketsData?.liquidity}
+              />
             </SkeletonWrapper>
 
             <SkeletonWrapper loading={isChartsLoading}>
               <EarningsCard
                 ticker={primaryTicker}
-                year={selectedYear}
-                quarter={selectedQuarter}
+                data={marketsData?.earnings}
               />
             </SkeletonWrapper>
           </div>
         </div>
-      )} */}
+      )}
 
       {/* ===== Sentiment Section ===== */}
       <Card className="rounded-2xl border shadow-sm">
@@ -252,23 +272,42 @@ const Section = ({
   title: string;
   items?: string[];
   text?: string;
-}) => (
-  <div className="bg-background border rounded-xl p-4 shadow-sm">
-    <h3 className="font-semibold mb-3">{title}</h3>
+}) => {
+  const hasItems = Array.isArray(items) && items.length > 0;
+  const hasText = text && text.trim().length > 0;
 
-    {items && (
-      <ul className="space-y-2 text-sm text-muted-foreground">
-        {items.map((item, i) => (
-          <li key={i} className="flex gap-2">
-            <span>•</span>
-            <span>{item}</span>
-          </li>
+  return (
+    <div className="bg-background border rounded-xl p-4 shadow-sm">
+      <h3 className="font-semibold mb-3">{title}</h3>
+
+      {/* List */}
+      {items !== undefined &&
+        (hasItems ? (
+          <ul className="space-y-2 text-sm text-muted-foreground">
+            {items.map((item, i) => (
+              <li key={i} className="flex gap-2">
+                <span>•</span>
+                <span>{item}</span>
+              </li>
+            ))}
+          </ul>
+        ) : (
+          <EmptyState message="No data available." />
         ))}
-      </ul>
-    )}
 
-    {text && (
-      <p className="text-sm text-muted-foreground leading-relaxed">{text}</p>
-    )}
-  </div>
+      {/* Text */}
+      {text !== undefined &&
+        (hasText ? (
+          <p className="text-sm text-muted-foreground leading-relaxed">
+            {text}
+          </p>
+        ) : (
+          <EmptyState message="No information available." />
+        ))}
+    </div>
+  );
+};
+
+const EmptyState = ({ message }: { message: string }) => (
+  <p className="text-sm text-muted-foreground italic">{message}</p>
 );

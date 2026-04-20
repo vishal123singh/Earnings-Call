@@ -32,7 +32,7 @@ export async function POST(req) {
 
     // 1️⃣ Check local sentiment
     if (existing) {
-      return NextResponse.json(existing.sentiment_analysis);
+      return NextResponse.json(existing);
     }
 
     // ✅ 1. Check cache

@@ -1,67 +1,77 @@
-const api_key = process.env.FMP_API_KEY;
+const PYTHON_API_URL = process.env.PYTHON_API_URL || "http://localhost:8000";
 
 export async function POST(req) {
   const { companies } = await req.json();
 
   if (!companies?.length) {
-    return NextResponse.json({ error: "Company is required" }, { status: 400 });
-  }
-
-  const symbol = companies[0];
-  const apiKey = api_key;
-
-  if (!apiKey) {
-    return new Response(JSON.stringify({ error: "API key is missing" }), {
+    return new Response(JSON.stringify({ error: "Company is required" }), {
       status: 400,
     });
   }
 
+  const symbol = companies[0];
+
   try {
-    // Fetch historical stock prices
-    const stockPriceRes = await fetch(
-      `https://financialmodelingprep.com/stable/historical-price-eod/full?symbol=${symbol}&apikey=${apiKey}`,
-    );
-    const stockPriceData = await stockPriceRes.json();
+    // 🔥 Call BOTH endpoints in parallel
+    const [marketRes, financialsRes] = await Promise.all([
+      fetch(`${PYTHON_API_URL}/market-data/${symbol}`),
+      fetch(`${PYTHON_API_URL}/financials/${symbol}`),
+    ]);
 
-    // Fetch company financial data
-    const financialsRes = await fetch(
-      `https://financialmodelingprep.com/stable/profile?symbol=${symbol}&apikey=${apiKey}`,
-    );
-    const financialsData = await financialsRes.json();
+    const [marketText, financialsText] = await Promise.all([
+      marketRes.text(),
+      financialsRes.text(),
+    ]);
 
-    // Fetch earnings data
-    const earningsRes = await fetch(
-      `https://financialmodelingprep.com/stable/earnings?symbol=${symbol}&apikey=${apiKey}`,
-    );
-    const earningsData = await earningsRes.json();
+    let marketApi, financialsApi;
 
-    const revenueTrends = await fetch(
-      `https://financialmodelingprep.com/stable/income-statement?symbol=${symbol}&apikey=${apiKey}`,
-    );
+    try {
+      marketApi = JSON.parse(marketText);
+      financialsApi = JSON.parse(financialsText);
+    } catch (err) {
+      console.error("Invalid JSON:", { marketText, financialsText });
+      throw new Error("FastAPI returned invalid JSON");
+    }
 
-    const revenueTrendsData = await revenueTrends.json();
+    if (!marketRes.ok || !marketApi?.success) {
+      throw new Error(marketApi?.detail || "Market API failed");
+    }
 
-    const revenueTrend = revenueTrendsData.map((entry) => ({
-      year: entry.calendarYear,
-      period: entry.period,
-      revenue: entry.revenue,
-    }));
-    const sortedRevenueTrends = revenueTrend.sort((a, b) => b.year - a.year);
+    if (!financialsRes.ok || !financialsApi?.success) {
+      throw new Error(financialsApi?.detail || "Financials API failed");
+    }
 
-    const formattedData = sortedRevenueTrends.map((item) => {
-      // Convert year to Date object
-      const date = new Date(`${item.year}-12-31`);
+    // ---------------- MARKET DATA ----------------
+    const market = marketApi.data;
 
-      // Convert revenue from string to number
-      let revenue = parseFloat(item.revenue.toString().replace(/[BM]/, ""));
-      if (item.revenue.toString().includes("B")) {
-        revenue *= 1_000_000_000; // Convert from billions to actual number
-      } else if (item.revenue.toString().includes("M")) {
-        revenue *= 1_000_000; // Convert from millions to actual number
-      }
+    const responseData = {
+      stockPrices: market.stockPrices || [],
+      marketData: {
+        mktCap: market.marketData?.marketCap,
+        beta: market.marketData?.beta,
+        price: market.marketData?.currentPrice,
+        lastDiv: market.marketData?.dividendYield
+          ? market.marketData.dividendYield * market.marketData.currentPrice
+          : 0,
+      },
+      earningsData: (market.earningsData || []).map((e) => ({
+        actualEarningResult: e.earnings,
+        date: e.year,
+      })),
+    };
+
+    const marketData = processStockData(responseData);
+
+    // ---------------- REVENUE TRENDS ----------------
+    const incomeStatement = financialsApi.data?.income_statement || {};
+
+    const annualData = incomeStatement || {};
+
+    const revenueTrends = Object.entries(annualData).map(([date, values]) => {
+      const revenue = values?.["Total Revenue"];
 
       return {
-        date,
+        date: new Date(date),
         open: revenue,
         high: revenue,
         low: revenue,
@@ -69,26 +79,106 @@ export async function POST(req) {
       };
     });
 
-    if (!stockPriceData || !financialsData || !earningsData) {
-      return new Response(JSON.stringify({ error: "Failed to fetch data" }), {
-        status: 500,
-      });
+    const sortedRevenueTrends = revenueTrends.sort((a, b) => b.date - a.date);
+
+    // ---------------- PROFITABILITY ----------------
+    const latestEntry = Object.entries(incomeStatement)[0];
+
+    let profitability = null;
+
+    if (latestEntry) {
+      const [date, values] = latestEntry;
+
+      const revenue = Number(values?.["Total Revenue"]);
+      const netIncome = Number(values?.["Net Income"]);
+      const grossProfit = Number(values?.["Gross Profit"]);
+
+      profitability = {
+        revenue: isFinite(revenue) ? revenue : null,
+        netIncome: isFinite(netIncome) ? netIncome : null,
+        grossMargin:
+          isFinite(grossProfit) && isFinite(revenue) && revenue !== 0
+            ? grossProfit / revenue
+            : null,
+        netMargin:
+          isFinite(netIncome) && isFinite(revenue) && revenue !== 0
+            ? netIncome / revenue
+            : null,
+      };
     }
 
-    const responseData = {
-      stockPrices: stockPriceData.historical?.slice(0, 16) || [],
-      marketData: financialsData[0] || {},
-      earningsData: earningsData.slice(0, 4) || [],
-    };
-    const marketData = processStockData(responseData);
+    // ---------------- LIQUIDITY ----------------
+    const balanceSheet = financialsApi.data?.balance_sheet || {};
+
+    const latestBalanceEntry = Object.entries(balanceSheet)[0];
+
+    let liquidity = null;
+
+    if (latestBalanceEntry) {
+      const [date, values] = latestBalanceEntry;
+
+      const currentAssets = Number(values?.["Total Current Assets"]);
+      const currentLiabilities = Number(values?.["Total Current Liabilities"]);
+      const totalLiabilities = Number(values?.["Total Liabilities"]);
+      const equity = Number(values?.["Total Stockholder Equity"]);
+      const cash = Number(values?.["Cash And Cash Equivalents"]);
+      const totalDebt = Number(values?.["Total Debt"]);
+
+      liquidity = {
+        currentRatio:
+          isFinite(currentAssets) &&
+          isFinite(currentLiabilities) &&
+          currentLiabilities !== 0
+            ? currentAssets / currentLiabilities
+            : null,
+
+        debtEquity:
+          isFinite(totalLiabilities) && isFinite(equity) && equity !== 0
+            ? totalLiabilities / equity
+            : null,
+
+        cash: isFinite(cash) ? cash : null,
+        totalDebt: isFinite(totalDebt) ? totalDebt : null,
+      };
+    }
+
+    // ---------------- EARNINGS ----------------
+    const earningsList = responseData.earningsData || [];
+
+    const latestEarnings = earningsList[0];
+
+    let earnings = null;
+
+    if (latestEarnings) {
+      earnings = {
+        revenue: null, // Yahoo earnings API usually doesn’t include revenue
+        netIncome: null,
+        eps: isFinite(latestEarnings.actualEarningResult)
+          ? latestEarnings.actualEarningResult
+          : null,
+        reportDate: latestEarnings.date || null,
+      };
+    }
 
     return new Response(
-      JSON.stringify({ marketData, revenueTrends: formattedData }),
+      JSON.stringify({
+        marketData,
+        revenueTrends: sortedRevenueTrends,
+        profitability,
+        liquidity,
+        earnings,
+        stockPrices: responseData.stockPrices,
+      }),
       { status: 200 },
     );
   } catch (error) {
+    console.error("Error fetching data:", error);
+
     return new Response(
-      JSON.stringify({ error: "Error fetching data", details: error.message }),
+      JSON.stringify({
+        error: "Error fetching data",
+        details: error.message,
+      }),
       { status: 500 },
     );
   }

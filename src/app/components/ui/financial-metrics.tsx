@@ -1,61 +1,26 @@
 "use client";
 
-import { useEffect, useState } from "react";
-
 interface FinancialMetrics {
   price: number;
   changePercent: number;
   marketCap: number;
-  volume: number;
-  week52High: number;
-  week52Low: number;
-  dividendYield: number;
+  volume?: number;
+  week52High?: number;
+  week52Low?: number;
+  dividendYield?: number;
 }
 
 interface Props {
   ticker: string;
+  metrics: FinancialMetrics | null;
+  loading?: boolean;
 }
 
-export default function FinancialMetricsCard({ ticker }: Props) {
-  const [metrics, setMetrics] = useState<FinancialMetrics | null>(null);
-  const [loading, setLoading] = useState(false);
-
-  const FMP_API_KEY = process.env.NEXT_PUBLIC_FMP_API_KEY;
-
-  useEffect(() => {
-    if (!ticker) return;
-
-    const fetchMetrics = async () => {
-      setLoading(true);
-      try {
-        const res = await fetch(
-          `${process.env.NEXT_PUBLIC_FMP_BASE_URL}/profile?symbol=${ticker}&apikey=${FMP_API_KEY}`,
-        );
-
-        const data = await res.json();
-        const p = data?.[0];
-
-        if (!p) return;
-
-        setMetrics({
-          price: p.price,
-          changePercent: p.changePercentage,
-          marketCap: p.marketCap,
-          volume: p.averageVolume,
-          week52High: parseFloat(p.range?.split("-")[1] || 0),
-          week52Low: parseFloat(p.range?.split("-")[0] || 0),
-          dividendYield: p.lastDividend,
-        });
-      } catch (err) {
-        console.error(err);
-      } finally {
-        setLoading(false);
-      }
-    };
-
-    fetchMetrics();
-  }, [ticker]);
-
+export default function FinancialMetricsCard({
+  ticker,
+  metrics,
+  loading,
+}: Props) {
   if (loading) return <Skeleton />;
 
   if (!metrics) {
@@ -106,12 +71,17 @@ const MetricItem = ({ label, value }: { label: string; value: number }) => {
 const formatLabel = (key: string) =>
   key.replace(/([A-Z])/g, " $1").replace(/^./, (str) => str.toUpperCase());
 
-const formatValue = (value: number) => {
-  if (value >= 1e12) return `${(value / 1e12).toFixed(2)}T`;
-  if (value >= 1e9) return `${(value / 1e9).toFixed(2)}B`;
-  if (value >= 1e6) return `${(value / 1e6).toFixed(2)}M`;
-  if (value >= 1e3) return `${(value / 1e3).toFixed(2)}K`;
-  return value.toFixed(2);
+const formatValue = (value: any) => {
+  const num = Number(value);
+
+  if (!isFinite(num)) return "N/A";
+
+  if (num >= 1e12) return `${(num / 1e12).toFixed(2)}T`;
+  if (num >= 1e9) return `${(num / 1e9).toFixed(2)}B`;
+  if (num >= 1e6) return `${(num / 1e6).toFixed(2)}M`;
+  if (num >= 1e3) return `${(num / 1e3).toFixed(2)}K`;
+
+  return num.toFixed(2);
 };
 
 const Skeleton = () => (
