@@ -1,17 +1,12 @@
 "use client";
 import { Card, CardContent } from "@/components/ui/card";
 import { useEffect, useMemo, useState } from "react";
-import DOMPurify from "dompurify";
 import FinancialMetricsCard from "@/components/ui/financial-metrics";
 import ChatBox from "@/components/ui/chatbox";
-import "./styles.css";
-import { Inter } from "next/font/google";
 import { useSelector } from "react-redux";
 import ProfitabilityCard from "@/components/ui/profitabilityCard";
 import LiquidityCard from "@/components/ui/liquidityCard";
 import EarningsCard from "@/components/ui/EarningsCard";
-
-const inter = Inter({ subsets: ["latin"], weight: ["400"] });
 
 export default function SentimentAnalysis() {
   const [chats, setChats] = useState<any[]>([]);
@@ -184,15 +179,24 @@ export default function SentimentAnalysis() {
       )}
 
       {/* ===== Sentiment Section ===== */}
-      <Card className="rounded-2xl border shadow-sm">
-        <CardContent className="py-5">
-          {isSentimentsLoading ? (
-            <SkeletonText />
-          ) : (
-            <SentimentView data={content} />
-          )}
-        </CardContent>
-      </Card>
+      {canFetch ? (
+        <Card className="rounded-2xl border shadow-sm">
+          <CardContent className="py-5">
+            {isSentimentsLoading ? (
+              <SkeletonText />
+            ) : (
+              <SentimentView data={content} />
+            )}
+          </CardContent>
+        </Card>
+      ) : (
+        <Card className="rounded-2xl border shadow-sm">
+          <CardContent className="py-10 text-center text-muted-foreground">
+            Please select a company, year, and quarter to view sentiment
+            analysis.
+          </CardContent>
+        </Card>
+      )}
 
       {/* ===== Chat ===== */}
       <ChatBox

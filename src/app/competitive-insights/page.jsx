@@ -56,11 +56,11 @@ const Dashboard = () => {
   const [activeTab, setActiveTab] = useState(TABS[0].id);
 
   return (
-    <div className="w-full min-h-screen bg-blue-50 text-gray-800 p-0">
+    <div className="w-full min-h-screen bg-muted/30 text-foreground p-0">
       {/* Tabs */}
-      <div className="w-full min-h-screen bg-blue-50 text-gray-800 px-4 py-6">
+      <div className="w-full min-h-screen bg-muted/30 text-foreground px-4 py-6">
         {/* Tabs */}
-        <div className="border-b border-gray-300 mb-6 overflow-x-auto hide-scrollbar">
+        <div className="border-b border-border mb-6 overflow-x-auto hide-scrollbar">
           <div className="flex gap-2 sm:gap-4 min-w-max">
             {TABS.map((tab) => (
               <button
@@ -68,8 +68,8 @@ const Dashboard = () => {
                 onClick={() => setActiveTab(tab.id)}
                 className={`whitespace-nowrap py-2 px-3 sm:px-4 text-sm font-medium transition ${
                   activeTab === tab.id
-                    ? "border-b-2 border-blue-600 text-blue-600"
-                    : "text-gray-500 hover:text-blue-600"
+                    ? "border-b-2 border-primary text-primary"
+                    : "text-muted-foreground hover:text-primary"
                 }`}
               >
                 {tab.label}

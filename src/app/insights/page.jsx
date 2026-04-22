@@ -1,11 +1,5 @@
 "use client";
-import {
-  Send,
-  ChevronDown,
-  SendHorizonalIcon,
-  X,
-  ChevronRight,
-} from "lucide-react";
+import { Send, SendHorizonalIcon, X } from "lucide-react";
 import { useState, useEffect, useRef } from "react";
 import Head from "next/head";
 import { useDispatch, useSelector } from "react-redux";
@@ -21,14 +15,12 @@ import {
   suggestedQuestions,
   years,
 } from "../../../public/data";
-import { Menu, MenuButton, MenuItem } from "@headlessui/react";
 import { setFilterConfig } from "../../../store/sidebarSlice";
 import VoiceRecorder from "@/components/ui/voice-input";
-import { createPortal } from "react-dom";
 import { Button } from "@/components/ui/button";
-import TranscriptSearch from "@/components/SearchTranscripts";
 import { AnimatePresence, motion } from "framer-motion";
 import SelectWithSubmenu from "@/components/insights/SelectWithSubMenu";
+import TranscriptSearch from "@/components/SearchTranscripts";
 
 const options = Object.entries(suggestedQuestions).map(([category, data]) => ({
   label: category,

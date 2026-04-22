@@ -492,48 +492,56 @@ export default function LandingPage() {
 
 const HeroSection = ({ router }) => {
   return (
-    <section className="relative pt-28 pb-20 px-6 overflow-hidden bg-background">
-      {/* background glow system */}
-      <div className="absolute -top-32 -right-32 w-[500px] h-[500px] bg-primary/20 rounded-full blur-3xl opacity-30" />
-      <div className="absolute -bottom-32 -left-32 w-[500px] h-[500px] bg-secondary/20 rounded-full blur-3xl opacity-30" />
+    <section className="relative pt-32 pb-24 px-6 overflow-hidden bg-background">
+      {/* BACKGROUND SYSTEM (theme-aware) */}
+      <div className="absolute inset-0 bg-[radial-gradient(circle_at_20%_20%,rgba(2,119,199,0.15),transparent_40%),radial-gradient(circle_at_80%_0%,rgba(41,182,246,0.15),transparent_40%)]" />
+
+      {/* subtle grid */}
+      <div className="absolute inset-0 bg-[linear-gradient(rgba(0,0,0,0.03)_1px,transparent_1px),linear-gradient(90deg,rgba(0,0,0,0.03)_1px,transparent_1px)] dark:bg-[linear-gradient(rgba(255,255,255,0.03)_1px,transparent_1px),linear-gradient(90deg,rgba(255,255,255,0.03)_1px,transparent_1px)] bg-[size:40px_40px]" />
 
       <div className="max-w-7xl mx-auto relative">
         <div className="grid lg:grid-cols-2 gap-16 items-center">
           {/* LEFT */}
           <motion.div
-            initial={{ opacity: 0, y: 20 }}
+            initial={{ opacity: 0, y: 30 }}
             animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.6 }}
+            transition={{ duration: 0.7 }}
           >
-            {/* badge */}
-            <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-primary/10 text-primary text-sm font-medium mb-6 border border-primary/20">
-              <Sparkles className="w-4 h-4" />
-              InvestorEye • Financial Intelligence
+            {/* BADGE */}
+            <div
+              className="inline-flex items-center gap-2 px-3 py-1.5 rounded-full 
+            bg-accent/10 border border-accent/20 backdrop-blur-md mb-6"
+            >
+              <Sparkles className="w-4 h-4 text-accent" />
+              <span className="text-accent text-sm font-medium">
+                InvestorEye • Financial Intelligence
+              </span>
             </div>
 
-            {/* headline */}
-            <h1 className="text-5xl md:text-6xl font-bold leading-tight mb-4">
-              See Beyond Numbers
-              <span className="block text-gradient-primary">
-                with AI-Powered Financial Insights
+            {/* HEADLINE */}
+            <h1 className="text-5xl md:text-6xl lg:text-7xl font-semibold leading-tight mb-6 tracking-tight">
+              <span className="text-foreground">See Beyond Numbers</span>
+              <br />
+              <span className="text-gradient-cool">
+                with AI-Powered Insights
               </span>
             </h1>
 
-            {/* subtext */}
+            {/* SUBTEXT */}
             <p className="text-lg text-muted-foreground mb-8 leading-relaxed max-w-xl">
-              InvestorEye helps you instantly decode earnings calls, uncover
-              hidden signals, track sentiment, and analyze financial performance
-              — all in one intelligent platform.
+              Decode earnings calls instantly, uncover hidden signals, and track
+              market sentiment — all in one intelligent platform designed for
+              modern investors.
             </p>
 
             {/* CTA */}
             <div className="flex flex-col sm:flex-row gap-4">
               <button
                 onClick={() => router.push("/insights")}
-                className="cursor-pointer btn-premium px-6 py-3 rounded-xl flex items-center gap-2"
+                className="group btn-premium px-6 py-3 rounded-xl flex items-center gap-2"
               >
                 Explore Insights
-                <ArrowRight className="w-4 h-4" />
+                <ArrowRight className="w-4 h-4 transition-transform group-hover:translate-x-1" />
               </button>
             </div>
 
@@ -544,7 +552,11 @@ const HeroSection = ({ router }) => {
                 {[1, 2, 3, 4].map((i) => (
                   <div
                     key={i}
-                    className="w-9 h-9 rounded-full bg-gradient-to-br from-primary to-secondary border-2 border-background flex items-center justify-center text-xs font-bold text-white"
+                    className="w-10 h-10 rounded-full 
+                    bg-gradient-primary 
+                    border-2 border-background 
+                    flex items-center justify-center 
+                    text-xs font-semibold text-white shadow-md"
                   >
                     {String.fromCharCode(64 + i)}
                   </div>
@@ -553,24 +565,35 @@ const HeroSection = ({ router }) => {
 
               {/* rating */}
               <div>
-                <div className="flex items-center gap-1">
+                <div className="flex items-center gap-1 mb-1">
                   {[...Array(5)].map((_, i) => (
                     <Star
                       key={i}
-                      className="w-4 h-4 fill-yellow-500 text-yellow-500"
+                      className="w-4 h-4 fill-secondary-green text-secondary-green"
                     />
                   ))}
                 </div>
                 <p className="text-sm text-muted-foreground">
-                  Trusted by investors & analysts
+                  Trusted by investors & analysts worldwide
                 </p>
               </div>
             </div>
           </motion.div>
 
-          {/* RIGHT - AI TERMINAL */}
+          {/* RIGHT */}
+          <motion.div
+            initial={{ opacity: 0, scale: 0.95 }}
+            animate={{ opacity: 1, scale: 1 }}
+            transition={{ duration: 0.7, delay: 0.2 }}
+            className="relative"
+          >
+            {/* glow using theme */}
+            <div className="absolute inset-0 bg-gradient-accent opacity-20 blur-2xl rounded-3xl" />
 
-          <InvestorEyeDemo />
+            <div className="relative">
+              <InvestorEyeDemo />
+            </div>
+          </motion.div>
         </div>
       </div>
     </section>
@@ -580,53 +603,53 @@ const HeroSection = ({ router }) => {
 const HowItWorksSection = () => {
   const steps = [
     {
-      icon: <FileText className="w-6 h-6" />,
+      icon: <FileText className="w-5 h-5" />,
       title: "Ingest Earnings Data",
       description:
-        "Access earnings call transcripts, financial metrics, and market data across multiple companies in one place.",
+        "Access transcripts, financial metrics, and market data across companies in one unified system.",
       step: "01",
     },
     {
-      icon: <Brain className="w-6 h-6" />,
+      icon: <Brain className="w-5 h-5" />,
       title: "AI Extracts Signals",
       description:
-        "InvestorEye analyzes transcripts to detect key drivers, sentiment shifts, risks, and hidden financial signals.",
+        "Detect key drivers, sentiment shifts, risks, and hidden financial signals automatically.",
       step: "02",
     },
     {
-      icon: <MessageSquare className="w-6 h-6" />,
+      icon: <MessageSquare className="w-5 h-5" />,
       title: "Ask Anything",
       description:
-        "Use chat or voice to ask questions like a conversation — compare quarters, detect trends, or explore risks instantly.",
+        "Query insights naturally — compare quarters, trends, or risks in seconds.",
       step: "03",
     },
     {
-      icon: <TrendingUp className="w-6 h-6" />,
+      icon: <TrendingUp className="w-5 h-5" />,
       title: "Visualize & Decide",
       description:
-        "Get charts, insights, and comparisons to make faster, data-driven investment decisions.",
+        "Turn insights into charts and make faster, data-driven decisions.",
       step: "04",
     },
   ];
 
   return (
-    <section
-      id="how-it-works"
-      className="py-24 px-6 bg-gradient-to-br from-[#2563eb]/5 via-background to-[#8b5cf6]/5"
-    >
-      <div className="max-w-7xl mx-auto">
-        {/* Header */}
-        <div className="text-center mb-16">
-          <h2 className="text-4xl md:text-5xl font-bold mb-4 bg-gradient-to-r from-[#2563eb] to-[#8b5cf6] bg-clip-text text-transparent">
+    <section id="how-it-works" className="relative py-28 px-6 overflow-hidden">
+      {/* Background */}
+      <div className="absolute inset-0 hero-gradient opacity-30" />
+
+      <div className="max-w-7xl mx-auto relative z-10">
+        {/* HEADER */}
+        <div className="text-center mb-20 max-w-2xl mx-auto">
+          <h2 className="text-4xl md:text-5xl font-semibold tracking-tight mb-4">
             How InvestorEye Works
           </h2>
-          <p className="text-lg text-muted-foreground">
-            From earnings calls → insights, charts, and decisions in seconds
+          <p className="text-muted-foreground text-lg">
+            From raw earnings calls → structured insights → faster decisions
           </p>
         </div>
 
-        {/* Steps */}
-        <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-6 relative">
+        {/* FLOW */}
+        <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-8 relative">
           {steps.map((step, index) => (
             <motion.div
               key={index}
@@ -635,32 +658,49 @@ const HowItWorksSection = () => {
               transition={{ delay: index * 0.12 }}
               className="relative group"
             >
-              <div className="card-premium p-6 h-full relative overflow-hidden">
-                {/* Step Number */}
-                <span className="absolute -top-6 -right-2 text-7xl font-bold text-muted/10 select-none">
-                  {step.step}
-                </span>
+              {/* CARD */}
+              <div
+                className="relative h-full p-6 rounded-2xl border border-border 
+  bg-white/60 dark:bg-white/5 backdrop-blur-xl 
+  flex flex-col
+  transition-all duration-300 
+  hover:shadow-xl hover:shadow-primary/10 hover:-translate-y-2"
+              >
+                {/* top glow */}
+                <div className="absolute inset-x-0 top-0 h-[2px] bg-gradient-primary opacity-0 group-hover:opacity-100 transition" />
 
-                {/* Icon */}
-                <div className="w-12 h-12 rounded-xl flex items-center justify-center bg-gradient-to-r from-[#2563eb] to-[#8b5cf6] text-white shadow-lg mb-5 group-hover:scale-110 transition-transform">
-                  {step.icon}
+                {/* HEADER */}
+                <div className="flex items-center justify-between mb-5">
+                  <div
+                    className="w-10 h-10 rounded-xl flex items-center justify-center 
+    bg-gradient-primary text-white shadow-md"
+                  >
+                    {step.icon}
+                  </div>
+
+                  <span className="text-xs font-medium text-muted-foreground tracking-wider">
+                    STEP {step.step}
+                  </span>
                 </div>
 
-                {/* Title */}
-                <h3 className="text-lg font-semibold mb-2">{step.title}</h3>
+                {/* CONTENT */}
+                <div className="flex flex-col flex-grow">
+                  <h3 className="text-lg font-semibold text-foreground mb-2">
+                    {step.title}
+                  </h3>
 
-                {/* Description */}
-                <p className="text-sm text-muted-foreground leading-relaxed">
-                  {step.description}
-                </p>
-
-                {/* Hover Glow */}
-                <div className="absolute inset-x-0 top-0 h-[2px] bg-gradient-to-r from-[#2563eb] to-[#8b5cf6] opacity-0 group-hover:opacity-100 transition" />
+                  <p className="text-sm text-muted-foreground leading-relaxed mt-auto">
+                    {step.description}
+                  </p>
+                </div>
               </div>
 
-              {/* Connector */}
+              {/* CONNECTOR LINE */}
               {index < steps.length - 1 && (
-                <div className="hidden lg:block absolute top-1/2 right-[-20px] w-10 h-[2px] bg-gradient-to-r from-[#2563eb]/40 to-transparent" />
+                <div className="hidden lg:flex absolute top-1/2 right-[-28px] items-center">
+                  <div className="w-12 h-[2px] bg-gradient-to-r from-primary/40 to-transparent" />
+                  <div className="w-2 h-2 rounded-full bg-primary/40" />
+                </div>
               )}
             </motion.div>
           ))}
@@ -774,64 +814,90 @@ const CTASection = ({ router }) => {
   );
 };
 
-// Footer
 const Footer = () => {
   return (
-    <footer className="bg-card text-muted-foreground py-12 px-4 border-t border-border">
-      <div className="max-w-7xl mx-auto">
-        <div className="grid md:grid-cols-4 gap-8 mb-8">
+    <footer className="relative overflow-hidden border-t border-border">
+      {/* Background Layer */}
+      <div className="absolute inset-0 bg-gradient-cool opacity-10" />
+      <div className="absolute inset-0 bg-background/80 backdrop-blur-xl" />
+
+      <div className="bg-background relative max-w-7xl mx-auto px-6 py-16">
+        {/* GRID */}
+        <div className="grid md:grid-cols-4 gap-10 mb-12">
+          {/* BRAND */}
           <div>
-            <div className="flex items-center gap-2 mb-4">
+            <div className="flex items-center gap-3 mb-5">
               <Image
                 src={LogoImage}
                 alt="InvestorEye Logo"
-                width={60}
-                height={60}
-                className="object-contain w-[60px] sm:w-[60px] md:w-[80px] lg:w-[80px] h-auto"
+                width={70}
+                height={70}
+                className="object-contain"
                 priority
               />
+              {/* <span className="text-lg font-semibold text-foreground tracking-tight">
+                InvestorEye
+              </span> */}
             </div>
-            <p className="text-sm">
-              AI-powered platform for decoding earnings call transcripts and
-              extracting financial insights.
+
+            <p className="text-sm text-muted-foreground leading-relaxed max-w-xs">
+              AI-powered platform for decoding earnings calls and uncovering
+              real financial signals with precision.
             </p>
           </div>
+
+          {/* PRODUCT */}
           <div>
-            <h4 className="text-foreground font-semibold mb-4">Product</h4>
-            <ul className="space-y-2">
+            <h4 className="text-foreground font-semibold mb-4 tracking-tight">
+              Product
+            </h4>
+            <ul className="space-y-2 text-sm">
               <li>
                 <a
                   href="#features"
-                  className="hover:text-foreground transition"
+                  className="text-muted-foreground hover:text-primary transition-colors duration-200"
                 >
                   Features
                 </a>
               </li>
             </ul>
           </div>
+
+          {/* COMPANY */}
           <div>
-            <h4 className="text-foreground font-semibold mb-4">Company</h4>
-            <ul className="space-y-2">
+            <h4 className="text-foreground font-semibold mb-4 tracking-tight">
+              Company
+            </h4>
+            <ul className="space-y-2 text-sm">
               <li>
-                <a href="/about" className="hover:text-foreground transition">
+                <a
+                  href="/about"
+                  className="text-muted-foreground hover:text-primary transition-colors duration-200"
+                >
                   About
                 </a>
               </li>
-
               <li>
-                <a href="/contact" className="hover:text-foreground transition">
+                <a
+                  href="/contact"
+                  className="text-muted-foreground hover:text-primary transition-colors duration-200"
+                >
                   Contact
                 </a>
               </li>
             </ul>
           </div>
+
+          {/* LEGAL */}
           <div>
-            <h4 className="text-foreground font-semibold mb-4">Legal</h4>
-            <ul className="space-y-2">
+            <h4 className="text-foreground font-semibold mb-4 tracking-tight">
+              Legal
+            </h4>
+            <ul className="space-y-2 text-sm">
               <li>
                 <a
                   href="/privacy-policy"
-                  className="hover:text-foreground transition"
+                  className="text-muted-foreground hover:text-primary transition-colors duration-200"
                 >
                   Privacy Policy
                 </a>
@@ -839,7 +905,7 @@ const Footer = () => {
               <li>
                 <a
                   href="/terms-of-service"
-                  className="hover:text-foreground transition"
+                  className="text-muted-foreground hover:text-primary transition-colors duration-200"
                 >
                   Terms of Service
                 </a>
@@ -847,7 +913,7 @@ const Footer = () => {
               <li>
                 <a
                   href="/security"
-                  className="hover:text-foreground transition"
+                  className="text-muted-foreground hover:text-primary transition-colors duration-200"
                 >
                   Security
                 </a>
@@ -855,7 +921,7 @@ const Footer = () => {
               <li>
                 <a
                   href="/compliance"
-                  className="hover:text-foreground transition"
+                  className="text-muted-foreground hover:text-primary transition-colors duration-200"
                 >
                   Compliance
                 </a>
@@ -863,8 +929,34 @@ const Footer = () => {
             </ul>
           </div>
         </div>
-        <div className="border-t border-border pt-8 text-center text-sm">
-          <p>&copy; 2024 InvestorEye. All rights reserved.</p>
+
+        {/* DIVIDER */}
+        <div className="relative mb-6">
+          <div className="h-px w-full bg-border" />
+          <div className="absolute inset-0 bg-gradient-to-r from-transparent via-primary/30 to-transparent opacity-40" />
+        </div>
+
+        {/* BOTTOM */}
+        <div className="flex flex-col md:flex-row items-center justify-between gap-4 text-sm text-muted-foreground">
+          <p>© 2024 InvestorEye. All rights reserved.</p>
+
+          <div className="flex items-center gap-6">
+            <a
+              href="/privacy-policy"
+              className="hover:text-primary transition-colors"
+            >
+              Privacy
+            </a>
+            <a
+              href="/terms-of-service"
+              className="hover:text-primary transition-colors"
+            >
+              Terms
+            </a>
+            <a href="/contact" className="hover:text-primary transition-colors">
+              Contact
+            </a>
+          </div>
         </div>
       </div>
     </footer>

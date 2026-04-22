@@ -6,8 +6,8 @@ export const metadata = {
   title: "InvestorEye",
   icons: {
     icon: [
-      { url: "/icon.png", sizes: "32x32", type: "image/png" },
-      { url: "/icon.png", sizes: "192x192", type: "image/png" },
+      { url: "/images/logo_3.png", sizes: "32x32", type: "image/png" },
+      { url: "/images/logo_3.png", sizes: "192x192", type: "image/png" },
     ],
   },
   description: "Investment insights and analytics platform",

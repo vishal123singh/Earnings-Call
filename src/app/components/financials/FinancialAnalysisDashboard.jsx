@@ -1,6 +1,5 @@
 // components/FinancialAnalysisDashboard.jsx
 import React, { useEffect, useRef, useState } from "react";
-import { Bar, Line, Pie, Doughnut } from "react-chartjs-2";
 import {
   Chart as ChartJS,
   CategoryScale,
@@ -24,7 +23,6 @@ import {
 import { useDispatch, useSelector } from "react-redux";
 import { motion, AnimatePresence } from "framer-motion";
 import {
-  Expand,
   ChevronDown,
   ChevronUp,
   X,
@@ -42,7 +40,7 @@ import {
 import ChatBox from "./chatbox";
 import PropTypes from "prop-types";
 import { setFilterConfig } from "../../../../store/sidebarSlice";
-import { quarters, companies, years } from "../../../../public/data";
+import { quarters, companies } from "../../../../public/data";
 import ChartContainer from "./ChartContainer";
 import MemoizedChatPanel from "./MemoizedChatPanel";
 
@@ -65,13 +63,13 @@ const graphRequirements = {
     statements: ["incomeStatement"],
     metrics: ["Total Revenue"],
     icon: TrendingUp,
-    color: "from-blue-500 to-cyan-500",
+    color: "from-primary to-primary-lighter",
   },
   "Net Income Comparison": {
     statements: ["incomeStatement"],
     metrics: ["Net Income Common Stockholders"],
     icon: BarChart3,
-    color: "from-green-500 to-emerald-500",
+    color: "from-success to-secondary-green",
   },
   "Asset Composition": {
     statements: ["balanceSheet"],
@@ -82,49 +80,49 @@ const graphRequirements = {
       "Net PPE",
     ],
     icon: PieChart,
-    color: "from-purple-500 to-pink-500",
+    color: "from-secondary-purple to-primary-lighter",
   },
   "Debt-to-Equity Ratio": {
     statements: ["balanceSheet"],
     metrics: ["Total Debt", "Total Equity Gross Minority Interest"],
     icon: BarChart3,
-    color: "from-orange-500 to-red-500",
+    color: "from-secondary to-success",
   },
   "Loan Portfolio Growth": {
     statements: ["balanceSheet"],
     metrics: ["Gross Loan"],
     icon: TrendingUp,
-    color: "from-teal-500 to-green-500",
+    color: "from-secondary-green to-success",
   },
   "Interest Income vs Expense": {
     statements: ["incomeStatement"],
     metrics: ["Interest Income", "Interest Expense"],
     icon: BarChart3,
-    color: "from-indigo-500 to-blue-500",
+    color: "from-primary to-secondary",
   },
   "Operating Cash Flow": {
     statements: ["cashFlow"],
     metrics: ["Operating Cash Flow"],
     icon: TrendingUp,
-    color: "from-cyan-500 to-blue-500",
+    color: "from-primary-lighter to-tertiary",
   },
   "EPS Comparison": {
     statements: ["incomeStatement"],
     metrics: ["Basic EPS", "Diluted EPS"],
     icon: BarChart3,
-    color: "from-violet-500 to-purple-500",
+    color: "from-secondary-purple to-secondary",
   },
   "Efficiency Ratio": {
     statements: ["incomeStatement"],
     metrics: ["Non Interest Expense", "Total Revenue"],
     icon: PieChart,
-    color: "from-rose-500 to-pink-500",
+    color: "from-secondary to-secondary-purple",
   },
   "Deposit Growth": {
     statements: ["balanceSheet"],
     metrics: ["Total Deposits"],
     icon: TrendingUp,
-    color: "from-amber-500 to-orange-500",
+    color: "from-tertiary to-primary-lighter",
   },
 };
 
@@ -146,15 +144,13 @@ const MobileBottomSheet = ({ isOpen, onClose, children, title }) => {
             animate={{ y: 0 }}
             exit={{ y: "100%" }}
             transition={{ type: "spring", damping: 25, stiffness: 300 }}
-            className="fixed bottom-0 left-0 right-0 bg-white dark:bg-gray-900 rounded-t-3xl shadow-2xl z-50 lg:hidden max-h-[85vh] overflow-y-auto"
+            className="fixed bottom-0 left-0 right-0 bg-card rounded-t-3xl shadow-2xl z-50 lg:hidden max-h-[85vh] overflow-y-auto"
           >
-            <div className="sticky top-0 bg-white dark:bg-gray-900 border-b border-gray-200 dark:border-gray-800 px-4 py-3 flex justify-between items-center">
-              <h3 className="text-lg font-semibold text-gray-900 dark:text-gray-100">
-                {title}
-              </h3>
+            <div className="sticky top-0 bg-card border-b border-border px-4 py-3 flex justify-between items-center">
+              <h3 className="text-lg font-semibold text-foreground">{title}</h3>
               <button
                 onClick={onClose}
-                className="p-2 rounded-full hover:bg-gray-100 dark:hover:bg-gray-800 active:bg-gray-200"
+                className="p-2 rounded-full hover:bg-muted active:bg-muted/60"
               >
                 <X size={20} />
               </button>
@@ -185,15 +181,15 @@ const MobileFilterDrawer = ({ isOpen, onClose, children }) => {
             animate={{ x: 0 }}
             exit={{ x: "-100%" }}
             transition={{ type: "tween", duration: 0.3 }}
-            className="fixed left-0 top-0 bottom-0 w-[85%] max-w-sm bg-white dark:bg-gray-900 shadow-2xl z-50 lg:hidden overflow-y-auto"
+            className="fixed left-0 top-0 bottom-0 w-[85%] max-w-sm bg-card shadow-2xl z-50 lg:hidden overflow-y-auto"
           >
-            <div className="sticky top-0 bg-white dark:bg-gray-900 border-b border-gray-200 dark:border-gray-800 px-4 py-3 flex justify-between items-center">
-              <h3 className="text-lg font-semibold text-gray-900 dark:text-gray-100">
+            <div className="sticky top-0 bg-card border-b border-border px-4 py-3 flex justify-between items-center">
+              <h3 className="text-lg font-semibold text-foreground">
                 Chart Configuration
               </h3>
               <button
                 onClick={onClose}
-                className="p-2 rounded-full hover:bg-gray-100 dark:hover:bg-gray-800"
+                className="p-2 rounded-full hover:bg-muted active:bg-muted/60"
               >
                 <X size={20} />
               </button>
@@ -396,7 +392,7 @@ const FinancialAnalysisDashboard = ({
     } catch (err) {
       return (
         <div className="h-full flex items-center justify-center">
-          <div className="text-center text-red-500">
+          <div className="text-center text-destructive">
             <p>Chart rendering failed</p>
             <p className="text-sm">{err.message}</p>
           </div>
@@ -413,27 +409,27 @@ const FinancialAnalysisDashboard = ({
   const ConfigPanelContent = () => (
     <div className="space-y-5">
       <div className="flex items-center gap-3 mb-2">
-        <div className="p-2 bg-gradient-to-br from-blue-500 to-purple-500 rounded-xl">
-          <Sparkles className="w-5 h-5 text-white" />
+        <div className="p-2 bg-gradient-to-br from-primary to-secondary-purple rounded-xl">
+          <Sparkles className="w-5 h-5 text-primary-foreground" />
         </div>
-        <h2 className="text-lg sm:text-xl font-bold bg-gradient-to-r from-gray-900 to-gray-600 dark:from-white dark:to-gray-400 bg-clip-text text-transparent">
+        <h2 className="text-lg sm:text-xl font-bold bg-gradient-to-r from-foreground to-foreground/60 bg-clip-text text-transparent">
           Chart Configuration
         </h2>
       </div>
 
       <div className="space-y-4">
         <div className="space-y-2">
-          <label className="block text-sm font-semibold text-gray-700 dark:text-gray-300">
+          <label className="block text-sm font-semibold text-foreground">
             Graph Type
           </label>
           <Select
             value={selectedGraph}
             onValueChange={(val) => setGraphState({ selectedGraph: val })}
           >
-            <SelectTrigger className="w-full h-11 sm:h-12 rounded-xl border-2 hover:border-blue-400 transition-colors text-sm sm:text-base">
+            <SelectTrigger className="w-full h-11 sm:h-12 rounded-xl border-2 hover:border-primary transition-colors text-sm sm:text-base bg-background text-foreground">
               <SelectValue placeholder="Select a graph type" />
             </SelectTrigger>
-            <SelectContent className="bg-white dark:bg-gray-800 rounded-xl shadow-lg border border-gray-200 dark:border-gray-700">
+            <SelectContent className="bg-card rounded-xl shadow-lg border border-border">
               {Object.keys(graphRequirements).map((type) => {
                 const config = graphRequirements[type];
                 const Icon = config.icon;
@@ -441,15 +437,17 @@ const FinancialAnalysisDashboard = ({
                   <SelectItem
                     key={type}
                     value={type}
-                    className="hover:bg-gray-50 dark:hover:bg-gray-700 cursor-pointer px-4 py-2 sm:py-3"
+                    className="hover:bg-muted cursor-pointer px-4 py-2 sm:py-3"
                   >
                     <div className="flex items-center gap-3">
                       <div
                         className={`p-1.5 rounded-lg bg-gradient-to-r ${config.color}`}
                       >
-                        <Icon className="w-3 h-3 sm:w-4 sm:h-4 text-white" />
+                        <Icon className="w-3 h-3 sm:w-4 sm:h-4 text-primary-foreground" />
                       </div>
-                      <span className="text-sm sm:text-base">{type}</span>
+                      <span className="text-sm sm:text-base text-foreground">
+                        {type}
+                      </span>
                     </div>
                   </SelectItem>
                 );
@@ -459,27 +457,27 @@ const FinancialAnalysisDashboard = ({
         </div>
 
         <div className="space-y-2">
-          <label className="block text-sm font-semibold text-gray-700 dark:text-gray-300">
+          <label className="block text-sm font-semibold text-foreground">
             Period Type
           </label>
           <Select
             value={periodType}
             onValueChange={(val) => setGraphState({ periodType: val })}
           >
-            <SelectTrigger className="w-full h-11 sm:h-12 rounded-xl border-2 hover:border-blue-400 transition-colors">
+            <SelectTrigger className="w-full h-11 sm:h-12 rounded-xl border-2 hover:border-primary transition-colors bg-background text-foreground">
               <SelectValue placeholder="Select period type" />
             </SelectTrigger>
-            <SelectContent className="bg-white dark:bg-gray-800 rounded-xl shadow-lg border border-gray-200 dark:border-gray-700">
+            <SelectContent className="bg-card rounded-xl shadow-lg border border-border">
               <SelectItem value="annual" className="py-2 sm:py-3">
                 <div className="flex items-center gap-2">
                   <span className="text-base sm:text-lg">📅</span>
-                  <span>Annual</span>
+                  <span className="text-foreground">Annual</span>
                 </div>
               </SelectItem>
               <SelectItem value="quarterly" className="py-2 sm:py-3">
                 <div className="flex items-center gap-2">
                   <span className="text-base sm:text-lg">📊</span>
-                  <span>Quarterly</span>
+                  <span className="text-foreground">Quarterly</span>
                 </div>
               </SelectItem>
             </SelectContent>
@@ -494,13 +492,13 @@ const FinancialAnalysisDashboard = ({
             className="space-y-4 pt-2"
           >
             <div className="space-y-2">
-              <label className="block text-sm font-semibold text-gray-700 dark:text-gray-300">
+              <label className="block text-sm font-semibold text-foreground">
                 Customize your graph request
               </label>
               <div className="relative">
                 <input
                   type="text"
-                  className="w-full border-2 border-gray-200 dark:border-gray-700 rounded-xl p-3 text-sm focus:ring-2 focus:ring-blue-500 focus:border-transparent bg-white dark:bg-gray-800 transition-all"
+                  className="w-full border-2 border-border rounded-xl p-3 text-sm focus:ring-2 focus:ring-primary focus:border-transparent bg-background text-foreground transition-all"
                   placeholder="E.g., 'Compare quarterly revenue growth'"
                   value={graphPrompt}
                   onChange={(e) =>
@@ -508,7 +506,7 @@ const FinancialAnalysisDashboard = ({
                   }
                 />
                 {graphPrompt && (
-                  <div className="absolute right-3 top-1/2 -translate-y-1/2 text-xs text-gray-400">
+                  <div className="absolute right-3 top-1/2 -translate-y-1/2 text-xs text-muted-foreground">
                     {graphPrompt.length}
                   </div>
                 )}
@@ -524,8 +522,8 @@ const FinancialAnalysisDashboard = ({
               whileTap={!isLoading && canGenerateGraph ? { scale: 0.98 } : {}}
               className={`w-full py-3 px-4 rounded-xl font-semibold transition-all text-sm sm:text-base ${
                 isLoading || !canGenerateGraph
-                  ? "bg-gray-200 dark:bg-gray-700 text-gray-500 dark:text-gray-400 cursor-not-allowed"
-                  : "bg-gradient-to-r from-blue-600 to-purple-600 hover:from-blue-700 hover:to-purple-700 text-white shadow-lg active:shadow-md"
+                  ? "bg-muted text-muted-foreground cursor-not-allowed"
+                  : "bg-gradient-to-r from-primary to-secondary-purple hover:from-primary/90 hover:to-secondary-purple/90 text-primary-foreground shadow-lg active:shadow-md"
               }`}
               onClick={generateGraph}
               disabled={isLoading || !canGenerateGraph}
@@ -554,7 +552,7 @@ const FinancialAnalysisDashboard = ({
   );
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-gray-50 to-white dark:from-gray-950 dark:to-gray-900">
+    <div className="min-h-screen bg-gradient-to-br from-muted/30 to-background">
       {/* Mobile Filter Drawer */}
       <MobileFilterDrawer
         isOpen={isMobileFilterOpen}
@@ -577,29 +575,35 @@ const FinancialAnalysisDashboard = ({
                   setGraphState({ isDrawerOpen: true });
                   setIsMobileChartOptionsOpen(false);
                 }}
-                className="w-full flex items-center gap-3 p-3 rounded-xl bg-gray-100 dark:bg-gray-800 active:bg-gray-200"
+                className="w-full flex items-center gap-3 p-3 rounded-xl bg-muted active:bg-muted/60"
               >
-                <Maximize2 className="w-5 h-5 text-blue-600" />
-                <span className="flex-1 text-left">Expand View</span>
+                <Maximize2 className="w-5 h-5 text-primary" />
+                <span className="flex-1 text-left text-foreground">
+                  Expand View
+                </span>
               </button>
               <button
                 onClick={() => {
                   setIsMobileChartOptionsOpen(false);
                 }}
-                className="w-full flex items-center gap-3 p-3 rounded-xl bg-gray-100 dark:bg-gray-800 active:bg-gray-200"
+                className="w-full flex items-center gap-3 p-3 rounded-xl bg-muted active:bg-muted/60"
               >
-                <Download className="w-5 h-5 text-green-600" />
-                <span className="flex-1 text-left">Download Chart</span>
+                <Download className="w-5 h-5 text-success" />
+                <span className="flex-1 text-left text-foreground">
+                  Download Chart
+                </span>
               </button>
               <button
                 onClick={() => {
                   generateGraph();
                   setIsMobileChartOptionsOpen(false);
                 }}
-                className="w-full flex items-center gap-3 p-3 rounded-xl bg-gray-100 dark:bg-gray-800 active:bg-gray-200"
+                className="w-full flex items-center gap-3 p-3 rounded-xl bg-muted active:bg-muted/60"
               >
-                <RefreshCw className="w-5 h-5 text-purple-600" />
-                <span className="flex-1 text-left">Refresh Data</span>
+                <RefreshCw className="w-5 h-5 text-secondary-purple" />
+                <span className="flex-1 text-left text-foreground">
+                  Refresh Data
+                </span>
               </button>
             </>
           )}
@@ -610,19 +614,19 @@ const FinancialAnalysisDashboard = ({
         {/* Mobile Header with Filter Button */}
         <div className="lg:hidden mb-4">
           <div className="flex items-center justify-between">
-            <h1 className="text-xl font-bold text-gray-900 dark:text-white">
+            <h1 className="text-xl font-bold text-foreground">
               Financial Analysis
             </h1>
             <button
               onClick={() => setIsMobileFilterOpen(true)}
-              className="flex items-center gap-2 px-4 py-2 bg-gradient-to-r from-blue-600 to-purple-600 text-white rounded-xl active:scale-95 transition-transform"
+              className="flex items-center gap-2 px-4 py-2 bg-gradient-to-r from-primary to-secondary-purple text-primary-foreground rounded-xl active:scale-95 transition-transform"
             >
               <Menu size={18} />
               <span className="text-sm">Configure</span>
             </button>
           </div>
           {selectedGraph && (
-            <p className="text-sm text-gray-600 dark:text-gray-400 mt-2">
+            <p className="text-sm text-muted-foreground mt-2">
               Current: {selectedGraph}
             </p>
           )}
@@ -630,7 +634,7 @@ const FinancialAnalysisDashboard = ({
 
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-4 sm:gap-6 lg:gap-8 items-start">
           {/* Configuration Panel - Desktop */}
-          <div className="hidden lg:block bg-gradient-to-br from-white to-gray-50 dark:from-gray-900 dark:to-gray-950 rounded-2xl shadow-xl border border-gray-200 dark:border-gray-800 sticky top-4 overflow-hidden">
+          <div className="hidden lg:block bg-gradient-to-br from-card to-background rounded-2xl shadow-xl border border-border sticky top-4 overflow-hidden">
             <div className="p-5 lg:p-6">
               <ConfigPanelContent />
             </div>
@@ -639,7 +643,7 @@ const FinancialAnalysisDashboard = ({
           {/* Right Side Container */}
           <div className="space-y-4 sm:space-y-6 relative z-10">
             {/* Chart Container */}
-            <div className="bg-gradient-to-br from-white to-gray-50 dark:from-gray-900 dark:to-gray-950 rounded-2xl shadow-xl border border-gray-200 dark:border-gray-800 overflow-hidden">
+            <div className="bg-gradient-to-br from-card to-background rounded-2xl shadow-xl border border-border overflow-hidden">
               <div className="p-4 sm:p-6">
                 <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3 mb-4">
                   <div className="flex items-center gap-2">
@@ -648,11 +652,12 @@ const FinancialAnalysisDashboard = ({
                         className={`p-1.5 sm:p-2 rounded-lg bg-gradient-to-r ${currentGraphConfig.color}`}
                       >
                         {React.createElement(currentGraphConfig.icon, {
-                          className: "w-4 h-4 sm:w-5 sm:h-5 text-white",
+                          className:
+                            "w-4 h-4 sm:w-5 sm:h-5 text-primary-foreground",
                         })}
                       </div>
                     )}
-                    <h3 className="text-base sm:text-lg font-semibold text-gray-800 dark:text-gray-200 line-clamp-1">
+                    <h3 className="text-base sm:text-lg font-semibold text-foreground line-clamp-1">
                       {selectedGraph || "Select a graph to begin"}
                     </h3>
                   </div>
@@ -661,10 +666,10 @@ const FinancialAnalysisDashboard = ({
                   {graphData && isMobile && (
                     <button
                       onClick={() => setIsMobileChartOptionsOpen(true)}
-                      className="flex items-center justify-center gap-2 py-2 px-3 rounded-xl bg-gray-100 dark:bg-gray-800 active:bg-gray-200"
+                      className="flex items-center justify-center gap-2 py-2 px-3 rounded-xl bg-muted active:bg-muted/60"
                     >
                       <Maximize2 className="w-4 h-4" />
-                      <span className="text-sm">Options</span>
+                      <span className="text-sm text-foreground">Options</span>
                     </button>
                   )}
 
@@ -672,20 +677,20 @@ const FinancialAnalysisDashboard = ({
                   {graphData && !isMobile && (
                     <div className="hidden sm:flex gap-2">
                       <button
-                        className="p-2 rounded-lg hover:bg-gray-100 dark:hover:bg-gray-800 transition-colors"
+                        className="p-2 rounded-lg hover:bg-muted transition-colors"
                         onClick={() => setGraphState({ isDrawerOpen: true })}
                         aria-label="Expand graph"
                       >
-                        <Maximize2 className="w-4 h-4 text-gray-600 dark:text-gray-400" />
+                        <Maximize2 className="w-4 h-4 text-muted-foreground" />
                       </button>
-                      <button className="p-2 rounded-lg hover:bg-gray-100 dark:hover:bg-gray-800 transition-colors">
-                        <Download className="w-4 h-4 text-gray-600 dark:text-gray-400" />
+                      <button className="p-2 rounded-lg hover:bg-muted transition-colors">
+                        <Download className="w-4 h-4 text-muted-foreground" />
                       </button>
                       <button
                         onClick={generateGraph}
-                        className="p-2 rounded-lg hover:bg-gray-100 dark:hover:bg-gray-800 transition-colors"
+                        className="p-2 rounded-lg hover:bg-muted transition-colors"
                       >
-                        <RefreshCw className="w-4 h-4 text-gray-600 dark:text-gray-400" />
+                        <RefreshCw className="w-4 h-4 text-muted-foreground" />
                       </button>
                     </div>
                   )}
@@ -695,15 +700,15 @@ const FinancialAnalysisDashboard = ({
                   <div className="h-64 sm:h-80 lg:h-96 flex items-center justify-center">
                     <div className="text-center">
                       <div className="relative">
-                        <div className="w-16 h-16 sm:w-20 sm:h-20 border-4 border-blue-200 rounded-full animate-spin border-t-blue-600" />
+                        <div className="w-16 h-16 sm:w-20 sm:h-20 border-4 border-primary/20 rounded-full animate-spin border-t-primary" />
                         <div className="absolute inset-0 flex items-center justify-center">
-                          <Sparkles className="w-6 h-6 sm:w-8 sm:h-8 text-blue-600 animate-pulse" />
+                          <Sparkles className="w-6 h-6 sm:w-8 sm:h-8 text-primary animate-pulse" />
                         </div>
                       </div>
-                      <p className="mt-4 text-gray-600 dark:text-gray-400 font-medium text-sm sm:text-base">
+                      <p className="mt-4 text-foreground font-medium text-sm sm:text-base">
                         Analyzing financial data...
                       </p>
-                      <p className="text-xs text-gray-400 mt-1">
+                      <p className="text-xs text-muted-foreground mt-1">
                         This may take a few seconds
                       </p>
                     </div>
@@ -716,13 +721,13 @@ const FinancialAnalysisDashboard = ({
                           <ChartContainer graphData={graphData} />
                         ) : (
                           <div className="flex flex-col items-center justify-center h-full text-center p-8">
-                            <div className="w-16 h-16 bg-gray-100 dark:bg-gray-800 rounded-full flex items-center justify-center mb-4">
-                              <BarChart3 className="w-8 h-8 text-gray-400" />
+                            <div className="w-16 h-16 bg-muted rounded-full flex items-center justify-center mb-4">
+                              <BarChart3 className="w-8 h-8 text-muted-foreground" />
                             </div>
-                            <p className="text-gray-500 dark:text-gray-400">
+                            <p className="text-muted-foreground">
                               Select a graph type and configure your settings
                             </p>
-                            <p className="text-sm text-gray-400 mt-2">
+                            <p className="text-sm text-muted-foreground/70 mt-2">
                               Then click "Generate Graph" to visualize data
                             </p>
                           </div>
@@ -736,14 +741,14 @@ const FinancialAnalysisDashboard = ({
                         animate={{ opacity: 1, y: 0 }}
                         className="mt-4 sm:mt-6"
                       >
-                        <div className="bg-gradient-to-r from-blue-50 to-indigo-50 dark:from-blue-950/30 dark:to-indigo-950/30 p-4 sm:p-5 rounded-xl border border-blue-200 dark:border-blue-800">
+                        <div className="bg-gradient-to-r from-primary/5 to-secondary-purple/5 p-4 sm:p-5 rounded-xl border border-primary/20">
                           <div className="flex items-center gap-2 mb-2 sm:mb-3">
-                            <Sparkles className="w-4 h-4 text-blue-600" />
-                            <h4 className="font-semibold text-gray-800 dark:text-gray-200 text-sm sm:text-base">
+                            <Sparkles className="w-4 h-4 text-primary" />
+                            <h4 className="font-semibold text-foreground text-sm sm:text-base">
                               AI Analysis
                             </h4>
                           </div>
-                          <p className="text-gray-700 dark:text-gray-300 leading-relaxed text-xs sm:text-sm">
+                          <p className="text-foreground/80 leading-relaxed text-xs sm:text-sm">
                             {graphData.analysis}
                           </p>
                         </div>
@@ -756,25 +761,25 @@ const FinancialAnalysisDashboard = ({
 
             {/* Chat Container - Enhanced Mobile */}
             <motion.div
-              className="bg-gradient-to-br from-white to-gray-50 dark:from-gray-900 dark:to-gray-950 rounded-2xl shadow-xl border border-gray-200 dark:border-gray-800 overflow-hidden"
+              className="bg-gradient-to-br from-card to-background rounded-2xl shadow-xl border border-border overflow-hidden"
               initial={false}
               animate={{ height: isChatOpen ? "auto" : "56px" }}
               transition={{ type: "spring", damping: 25 }}
             >
               <button
-                className="w-full text-left font-medium p-3 sm:p-4 flex items-center justify-between hover:bg-gray-50 dark:hover:bg-gray-800 transition-colors active:bg-gray-100"
+                className="w-full text-left font-medium p-3 sm:p-4 flex items-center justify-between hover:bg-muted transition-colors active:bg-muted/60"
                 onClick={() => setGraphState({ isChatOpen: !isChatOpen })}
               >
                 <div className="flex items-center gap-2">
-                  <MessageCircle className="w-4 h-4 sm:w-5 sm:h-5 text-blue-600" />
-                  <span className="text-sm sm:text-base text-gray-700 dark:text-gray-300">
+                  <MessageCircle className="w-4 h-4 sm:w-5 sm:h-5 text-primary" />
+                  <span className="text-sm sm:text-base text-foreground">
                     Chat about this analysis
                   </span>
                 </div>
                 {isChatOpen ? (
-                  <ChevronDown className="w-4 h-4 sm:w-5 sm:h-5 text-gray-500" />
+                  <ChevronDown className="w-4 h-4 sm:w-5 sm:h-5 text-muted-foreground" />
                 ) : (
-                  <ChevronUp className="w-4 h-4 sm:w-5 sm:h-5 text-gray-500" />
+                  <ChevronUp className="w-4 h-4 sm:w-5 sm:h-5 text-muted-foreground" />
                 )}
               </button>
 
@@ -786,7 +791,7 @@ const FinancialAnalysisDashboard = ({
                     exit={{ opacity: 0, height: 0 }}
                     transition={{ duration: 0.2 }}
                   >
-                    <div className="border-t border-gray-200 dark:border-gray-700">
+                    <div className="border-t border-border">
                       <ChatBox
                         ref={chatBoxRef}
                         context={{
@@ -816,34 +821,35 @@ const FinancialAnalysisDashboard = ({
               animate={{ x: 0, opacity: 1 }}
               exit={{ x: "100%", opacity: 0 }}
               transition={{ type: "spring", stiffness: 300, damping: 30 }}
-              className="fixed inset-0 lg:inset-y-0 lg:right-0 w-full lg:max-w-5xl bg-white dark:bg-gray-900 shadow-2xl z-[5000] flex flex-col"
+              className="fixed inset-0 lg:inset-y-0 lg:right-0 w-full lg:max-w-5xl bg-card shadow-2xl z-[5000] flex flex-col"
             >
               <div className="flex-1 flex flex-col overflow-hidden">
-                <div className="flex justify-between items-center p-4 sm:p-6 border-b border-gray-200 dark:border-gray-800 bg-gradient-to-r from-gray-50 to-white dark:from-gray-900 dark:to-gray-950">
+                <div className="flex justify-between items-center p-4 sm:p-6 border-b border-border bg-gradient-to-r from-card to-background">
                   <div className="flex items-center gap-2 sm:gap-3 flex-1 min-w-0">
                     {currentGraphConfig && (
                       <div
                         className={`p-1.5 sm:p-2 rounded-xl bg-gradient-to-r ${currentGraphConfig.color} flex-shrink-0`}
                       >
                         {React.createElement(currentGraphConfig.icon, {
-                          className: "w-4 h-4 sm:w-5 sm:h-5 text-white",
+                          className:
+                            "w-4 h-4 sm:w-5 sm:h-5 text-primary-foreground",
                         })}
                       </div>
                     )}
                     <div className="min-w-0 flex-1">
-                      <h2 className="text-base sm:text-xl font-bold text-gray-800 dark:text-gray-200 truncate">
+                      <h2 className="text-base sm:text-xl font-bold text-foreground truncate">
                         {selectedGraph} Analysis
                       </h2>
-                      <p className="text-xs sm:text-sm text-gray-500 dark:text-gray-400 mt-0.5 sm:mt-1 hidden sm:block">
+                      <p className="text-xs sm:text-sm text-muted-foreground mt-0.5 sm:mt-1 hidden sm:block">
                         Detailed view with AI chat assistance
                       </p>
                     </div>
                   </div>
                   <button
                     onClick={() => setGraphState({ isDrawerOpen: false })}
-                    className="p-2 rounded-xl hover:bg-gray-100 dark:hover:bg-gray-800 transition-colors active:bg-gray-200 flex-shrink-0"
+                    className="p-2 rounded-xl hover:bg-muted transition-colors active:bg-muted/60 flex-shrink-0"
                   >
-                    <X className="w-5 h-5" />
+                    <X className="w-5 h-5 text-foreground" />
                   </button>
                 </div>
 
@@ -865,14 +871,14 @@ const FinancialAnalysisDashboard = ({
                             animate={{ opacity: 1, y: 0 }}
                             className="mt-4 sm:mt-6"
                           >
-                            <div className="bg-gradient-to-r from-blue-50 to-indigo-50 dark:from-blue-950/30 dark:to-indigo-950/30 p-4 sm:p-6 rounded-xl border border-blue-200 dark:border-blue-800">
+                            <div className="bg-gradient-to-r from-primary/5 to-secondary-purple/5 p-4 sm:p-6 rounded-xl border border-primary/20">
                               <div className="flex items-center gap-2 mb-2 sm:mb-3">
-                                <Sparkles className="w-4 h-4 sm:w-5 sm:h-5 text-blue-600" />
-                                <h3 className="font-semibold text-gray-800 dark:text-gray-200 text-sm sm:text-base">
+                                <Sparkles className="w-4 h-4 sm:w-5 sm:h-5 text-primary" />
+                                <h3 className="font-semibold text-foreground text-sm sm:text-base">
                                   AI Analysis
                                 </h3>
                               </div>
-                              <p className="text-gray-700 dark:text-gray-300 leading-relaxed text-xs sm:text-sm">
+                              <p className="text-foreground/80 leading-relaxed text-xs sm:text-sm">
                                 {graphData.analysis}
                               </p>
                             </div>
@@ -883,12 +889,12 @@ const FinancialAnalysisDashboard = ({
                   </div>
 
                   {/* Chat Panel - Mobile Optimized */}
-                  <div className="w-full lg:w-96 border-t lg:border-t-0 lg:border-l border-gray-200 dark:border-gray-800 flex flex-col bg-gray-50 dark:bg-gray-950">
-                    <div className="p-4 sm:p-5 border-b border-gray-200 dark:border-gray-800">
-                      <h3 className="font-semibold text-gray-800 dark:text-gray-200 text-sm sm:text-base">
+                  <div className="w-full lg:w-96 border-t lg:border-t-0 lg:border-l border-border flex flex-col bg-muted/30">
+                    <div className="p-4 sm:p-5 border-b border-border">
+                      <h3 className="font-semibold text-foreground text-sm sm:text-base">
                         AI Financial Analyst
                       </h3>
-                      <p className="text-xs text-gray-500 dark:text-gray-400 mt-1">
+                      <p className="text-xs text-muted-foreground mt-1">
                         Ask questions or request modifications
                       </p>
                     </div>

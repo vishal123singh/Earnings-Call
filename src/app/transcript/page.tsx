@@ -73,37 +73,37 @@ export default function Transcript() {
   };
 
   return (
-    <div className="flex flex-col px-6 py-6 space-y-6 bg-blue-50 min-h-screen">
+    <div className="flex flex-col px-6 py-6 space-y-6 bg-muted/30 min-h-screen">
       {isTranscriptLoading ? (
         <div className="flex justify-center items-center py-6">
-          <div className="animate-spin rounded-full h-12 w-12 border-t-4 border-blue-600"></div>
+          <div className="animate-spin rounded-full h-12 w-12 border-t-4 border-primary"></div>
         </div>
       ) : transcriptData ? (
-        <Card className="bg-white shadow-md border border-gray-200 rounded-xl w-full lg:max-w-[75vw] m-auto">
+        <Card className="bg-card border-border shadow-md rounded-xl w-full lg:max-w-[75vw] m-auto">
           <CardContent className="py-6">
-            <div className="prose ml-6 text-gray-700">
+            <div className="prose ml-6 text-card-foreground">
               {/* Company & Event Details */}
-              <h2 className="text-3xl font-bold text-blue-600 drop-shadow-md">
+              <h2 className="text-3xl font-bold text-primary drop-shadow-md">
                 {transcriptData.metadata?.company || "Company Name"}
               </h2>
-              <p className="text-lg text-gray-500">
+              <p className="text-lg text-muted-foreground">
                 {transcriptData.metadata?.quarter}{" "}
                 {transcriptData.metadata?.year} Earnings Call
               </p>
               {transcriptData.metadata?.date && (
-                <p className="text-sm text-gray-400">
+                <p className="text-sm text-muted-foreground/70">
                   {transcriptData.metadata.date}
                 </p>
               )}
-              <hr className="my-4 border-gray-300" />
+              <hr className="my-4 border-border" />
 
               {/* Participants & Topics */}
               <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
                 <div className="mb-4">
-                  <h3 className="text-lg font-semibold text-blue-600">
+                  <h3 className="text-lg font-semibold text-primary">
                     Corporate Participants:
                   </h3>
-                  <ul className="list-disc list-inside text-gray-600 mt-2">
+                  <ul className="list-disc list-inside text-card-foreground/80 mt-2">
                     {transcriptData.participants?.corporate?.map(
                       (participant: any, index: number) => (
                         <li key={index}>
@@ -115,10 +115,10 @@ export default function Transcript() {
                 </div>
 
                 <div className="mb-4">
-                  <h3 className="text-lg font-semibold text-blue-600">
+                  <h3 className="text-lg font-semibold text-primary">
                     Analysts:
                   </h3>
-                  <ul className="list-disc list-inside text-gray-600 mt-2">
+                  <ul className="list-disc list-inside text-card-foreground/80 mt-2">
                     {transcriptData.participants?.analysts?.map(
                       (analyst: any, index: number) => (
                         <li key={index}>{getParticipantDisplay(analyst)}</li>
@@ -130,18 +130,20 @@ export default function Transcript() {
 
               {/* Statistics Cards */}
               {transcriptData.stats && (
-                <div className="grid grid-cols-2 gap-4 mb-6 p-4 bg-gray-50 rounded-lg">
+                <div className="grid grid-cols-2 gap-4 mb-6 p-4 bg-muted rounded-lg">
                   <div>
-                    <p className="text-sm text-gray-500">
+                    <p className="text-sm text-muted-foreground">
                       Presentation Speeches
                     </p>
-                    <p className="text-2xl font-bold text-blue-600">
+                    <p className="text-2xl font-bold text-primary">
                       {transcriptData.stats.presentation_speeches || 0}
                     </p>
                   </div>
                   <div>
-                    <p className="text-sm text-gray-500">Q&A Speeches</p>
-                    <p className="text-2xl font-bold text-blue-600">
+                    <p className="text-sm text-muted-foreground">
+                      Q&A Speeches
+                    </p>
+                    <p className="text-2xl font-bold text-primary">
                       {transcriptData.stats.qa_speeches || 0}
                     </p>
                   </div>
@@ -151,7 +153,7 @@ export default function Transcript() {
               {/* Presentation Section */}
               {transcriptData.presentation?.length > 0 && (
                 <div className="mb-8">
-                  <h3 className="text-xl font-semibold text-blue-600 mb-4">
+                  <h3 className="text-xl font-semibold text-primary mb-4">
                     Presentation
                   </h3>
                   <div className="space-y-4">
@@ -159,13 +161,13 @@ export default function Transcript() {
                       (entry: any, index: number) => (
                         <div
                           key={`pres-${index}`}
-                          className="p-4 border border-gray-200 bg-gray-50 rounded-lg shadow-sm hover:shadow-md transition duration-200"
+                          className="p-4 border border-border bg-muted/30 rounded-lg shadow-sm hover:shadow-md transition duration-200"
                         >
-                          <p className="font-semibold text-gray-800">
+                          <p className="font-semibold text-card-foreground">
                             {entry.speaker}
                             {entry.title && ` — ${entry.title}`}
                           </p>
-                          <p className="text-gray-600 mt-2 whitespace-pre-wrap">
+                          <p className="text-card-foreground/80 mt-2 whitespace-pre-wrap">
                             {entry.text}
                           </p>
                         </div>
@@ -178,7 +180,7 @@ export default function Transcript() {
               {/* Q&A Section */}
               {transcriptData.qa_session?.length > 0 && (
                 <div>
-                  <h3 className="text-xl font-semibold text-blue-600 mb-4">
+                  <h3 className="text-xl font-semibold text-primary mb-4">
                     Question & Answer Session
                   </h3>
                   <div className="space-y-4">
@@ -188,17 +190,17 @@ export default function Transcript() {
                           key={`qa-${index}`}
                           className={`p-4 border rounded-lg shadow-sm hover:shadow-md transition duration-200 ${
                             entry.speaker === "Operator"
-                              ? "bg-blue-50 border-blue-200"
+                              ? "bg-primary/5 border-primary/20"
                               : entry.speaker === "Brett Iversen"
-                                ? "bg-green-50 border-green-200"
-                                : "bg-gray-50 border-gray-200"
+                                ? "bg-secondary-green/10 border-secondary-green/20"
+                                : "bg-muted/30 border-border"
                           }`}
                         >
-                          <p className="font-semibold text-gray-800">
+                          <p className="font-semibold text-card-foreground">
                             {entry.speaker}
                             {entry.title && ` — ${entry.title}`}
                           </p>
-                          <p className="text-gray-600 mt-2 whitespace-pre-wrap">
+                          <p className="text-card-foreground/80 mt-2 whitespace-pre-wrap">
                             {entry.text}
                           </p>
                         </div>
@@ -211,7 +213,7 @@ export default function Transcript() {
           </CardContent>
         </Card>
       ) : (
-        <p className="text-center">
+        <p className="text-center text-muted-foreground">
           No Data Available
           <br />
           Select a Company to get started.

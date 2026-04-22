@@ -55,7 +55,7 @@ const periodTypes = [
 const LoadingSkeleton = () => (
   <div className="min-h-screen bg-background">
     {/* Header Skeleton */}
-    <div className="bg-primary text-white shadow-lg">
+    <div className="bg-primary text-primary-foreground shadow-lg">
       <div className="max-w-7xl mx-auto px-4 py-6">
         <div className="flex justify-between items-center flex-wrap gap-4">
           <div>
@@ -63,13 +63,13 @@ const LoadingSkeleton = () => (
               variant="text"
               width={300}
               height={48}
-              className="bg-white/20"
+              className="bg-primary-foreground/20"
             />
             <Skeleton
               variant="text"
               width={200}
               height={24}
-              className="bg-white/20 mt-1"
+              className="bg-primary-foreground/20 mt-1"
             />
           </div>
           <div className="flex gap-2">
@@ -77,13 +77,13 @@ const LoadingSkeleton = () => (
               variant="circular"
               width={40}
               height={40}
-              className="bg-white/20"
+              className="bg-primary-foreground/20"
             />
             <Skeleton
               variant="circular"
               width={40}
               height={40}
-              className="bg-white/20"
+              className="bg-primary-foreground/20"
             />
           </div>
         </div>
@@ -94,7 +94,7 @@ const LoadingSkeleton = () => (
       {/* Controls Skeleton */}
       <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-6">
         {[1, 2, 3].map((i) => (
-          <Paper key={i} className="p-4 border-border">
+          <Paper key={i} className="p-4 border-border bg-card">
             <Skeleton variant="text" width="100%" height={56} />
           </Paper>
         ))}
@@ -103,7 +103,7 @@ const LoadingSkeleton = () => (
       {/* Key Metrics Cards Skeleton */}
       <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 mb-6">
         {[1, 2, 3, 4].map((i) => (
-          <Paper key={i} className="p-4 border-border">
+          <Paper key={i} className="p-4 border-border bg-card">
             <Skeleton variant="text" width="80%" height={24} className="mb-2" />
             <Skeleton variant="text" width="60%" height={32} className="mb-2" />
             <Skeleton variant="text" width="40%" height={20} />
@@ -120,13 +120,13 @@ const LoadingSkeleton = () => (
                 variant="text"
                 width={200}
                 height={28}
-                className="bg-white/20"
+                className="bg-primary-foreground/20"
               />
               <Skeleton
                 variant="text"
                 width={100}
                 height={20}
-                className="bg-white/20 mt-1"
+                className="bg-primary-foreground/20 mt-1"
               />
             </div>
             <div className="flex gap-2">
@@ -134,13 +134,13 @@ const LoadingSkeleton = () => (
                 variant="rounded"
                 width={200}
                 height={36}
-                className="bg-white/20"
+                className="bg-primary-foreground/20"
               />
               <Skeleton
                 variant="circular"
                 width={36}
                 height={36}
-                className="bg-white/20"
+                className="bg-primary-foreground/20"
               />
             </div>
           </div>
@@ -197,7 +197,7 @@ export default function FinancialReports() {
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState(null);
   const [selectedSection, setSelectedSection] = useState("income_statement");
-  const [ticker, setTicker] = useState("SOFI");
+  const [ticker, setTicker] = useState("MS");
   const [selectedYear, setSelectedYear] = useState(null);
   const [currentPage, setCurrentPage] = useState(0);
 
@@ -314,25 +314,31 @@ export default function FinancialReports() {
   return (
     <div className="min-h-screen bg-background">
       {/* Header */}
-      <div className="bg-primary text-white shadow-lg">
+      <div className="bg-primary text-primary-foreground shadow-lg">
         <div className="max-w-7xl mx-auto px-4 py-6">
           <div className="flex justify-between items-center flex-wrap gap-4">
             <div>
               <Typography variant="h3" className="font-bold">
                 {responseTicker} Financial Reports
               </Typography>
-              <Typography variant="body1" className="text-primary-light mt-1">
+              <Typography
+                variant="body1"
+                className="text-primary-foreground mt-1"
+              >
                 Last updated: {new Date(data.fetched_at).toLocaleString()}
               </Typography>
             </div>
             <div className="flex gap-2">
               {cached && (
-                <Chip label="Cached Data" className="bg-warning text-white" />
+                <Chip
+                  label="Cached Data"
+                  className="bg-warning text-warning-foreground"
+                />
               )}
               <Tooltip title="Refresh">
                 <IconButton
                   onClick={fetchData}
-                  className="bg-white/10 text-white hover:bg-white/20"
+                  className="bg-primary-foreground/10 text-primary-foreground hover:bg-primary-foreground/20"
                 >
                   <Refresh />
                 </IconButton>
@@ -340,7 +346,7 @@ export default function FinancialReports() {
               <Tooltip title="Print">
                 <IconButton
                   onClick={() => window.print()}
-                  className="bg-white/10 text-white hover:bg-white/20"
+                  className="bg-primary-foreground/10 text-primary-foreground hover:bg-primary-foreground/20"
                 >
                   <Print />
                 </IconButton>
@@ -353,9 +359,11 @@ export default function FinancialReports() {
       <div className="max-w-7xl mx-auto px-4 py-6">
         {/* Controls */}
         <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-6">
-          <Paper className="p-4 border-border">
+          <Paper className="p-4 border-border bg-card">
             <FormControl fullWidth>
-              <InputLabel>Financial Statement</InputLabel>
+              <InputLabel sx={{ color: "var(--foreground)" }}>
+                Financial Statement
+              </InputLabel>
               <Select
                 value={selectedSection}
                 onChange={(e) => {
@@ -364,9 +372,22 @@ export default function FinancialReports() {
                   setCurrentPage(0);
                 }}
                 className="bg-card"
+                sx={{
+                  color: "var(--foreground)",
+                  "& .MuiOutlinedInput-notchedOutline": {
+                    borderColor: "var(--border)",
+                  },
+                  "&:hover .MuiOutlinedInput-notchedOutline": {
+                    borderColor: "var(--primary)",
+                  },
+                }}
               >
                 {reportSections.map((section) => (
-                  <MenuItem key={section.value} value={section.value}>
+                  <MenuItem
+                    key={section.value}
+                    value={section.value}
+                    sx={{ color: "var(--foreground)" }}
+                  >
                     {section.icon} {section.name}
                   </MenuItem>
                 ))}
@@ -374,16 +395,31 @@ export default function FinancialReports() {
             </FormControl>
           </Paper>
 
-          <Paper className="p-4 border-border">
+          <Paper className="p-4 border-border bg-card">
             <FormControl fullWidth>
-              <InputLabel>Fiscal Year</InputLabel>
+              <InputLabel sx={{ color: "var(--foreground)" }}>
+                Fiscal Year
+              </InputLabel>
               <Select
                 value={displayYear}
                 onChange={(e) => setSelectedYear(e.target.value)}
                 className="bg-card"
+                sx={{
+                  color: "var(--foreground)",
+                  "& .MuiOutlinedInput-notchedOutline": {
+                    borderColor: "var(--border)",
+                  },
+                  "&:hover .MuiOutlinedInput-notchedOutline": {
+                    borderColor: "var(--primary)",
+                  },
+                }}
               >
                 {availableYears.map((year) => (
-                  <MenuItem key={year} value={year}>
+                  <MenuItem
+                    key={year}
+                    value={year}
+                    sx={{ color: "var(--foreground)" }}
+                  >
                     {year.split(" ")[0]}
                   </MenuItem>
                 ))}
@@ -391,7 +427,7 @@ export default function FinancialReports() {
             </FormControl>
           </Paper>
 
-          <Paper className="p-4 border-border">
+          <Paper className="p-4 border-border bg-card">
             <div className="flex items-center gap-2 h-full">
               <div className="flex-1">
                 <Typography variant="caption" className="text-muted-foreground">
@@ -431,7 +467,7 @@ export default function FinancialReports() {
             ticker={responseTicker}
           />
         ) : (
-          <Paper className="p-8 text-center border-border">
+          <Paper className="p-8 text-center border-border bg-card">
             <Typography variant="h6" className="text-muted-foreground">
               No data available for this period
             </Typography>
@@ -445,6 +481,12 @@ export default function FinancialReports() {
               onClick={() => setCurrentPage((prev) => Math.max(0, prev - 1))}
               disabled={currentPage === 0}
               className="bg-card border-border shadow"
+              sx={{
+                color: "var(--foreground)",
+                "&.Mui-disabled": {
+                  color: "var(--muted-foreground)",
+                },
+              }}
             >
               <ChevronLeft />
             </IconButton>
@@ -457,6 +499,12 @@ export default function FinancialReports() {
               }
               disabled={currentPage === totalPages - 1}
               className="bg-card border-border shadow"
+              sx={{
+                color: "var(--foreground)",
+                "&.Mui-disabled": {
+                  color: "var(--muted-foreground)",
+                },
+              }}
             >
               <ChevronRight />
             </IconButton>
@@ -578,7 +626,7 @@ const FinancialTable = ({ yearData, metrics, title, ticker }) => {
             <Typography variant="h6" className="text-primary-foreground">
               {title}
             </Typography>
-            <Typography variant="caption" className="text-primary-light">
+            <Typography variant="caption" className="text-primary-foreground">
               Ticker: {ticker}
             </Typography>
           </div>
@@ -588,7 +636,7 @@ const FinancialTable = ({ yearData, metrics, title, ticker }) => {
               placeholder="Search metrics..."
               value={searchTerm}
               onChange={(e) => setSearchTerm(e.target.value)}
-              className="px-3 py-1 rounded-lg bg-input text-foreground placeholder:text-muted-foreground focus:outline-none focus:ring-2 focus:ring-ring"
+              className="px-3 py-1 rounded-lg bg-input text-foreground placeholder:text-muted-foreground focus:outline-none focus:ring-2 focus:ring-ring border border-border"
             />
             <Tooltip title="Export to CSV">
               <IconButton
@@ -606,12 +654,16 @@ const FinancialTable = ({ yearData, metrics, title, ticker }) => {
         <Table stickyHeader>
           <TableHead>
             <TableRow className="bg-muted">
-              <TableCell className="font-bold text-foreground">
+              <TableCell
+                className="font-bold text-foreground"
+                sx={{ backgroundColor: "var(--muted)" }}
+              >
                 Metric
               </TableCell>
               <TableCell
                 align="right"
                 className="font-bold text-foreground cursor-pointer hover:bg-muted-foreground/10"
+                sx={{ backgroundColor: "var(--muted)" }}
                 onClick={() => {
                   if (sortColumn === 0) {
                     setSortDirection(sortDirection === "asc" ? "desc" : "asc");

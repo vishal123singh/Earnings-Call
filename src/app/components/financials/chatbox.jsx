@@ -122,12 +122,12 @@ const ChatBox = forwardRef(
     };
 
     return (
-      <div className="flex flex-col h-full bg-white dark:bg-gray-900">
+      <div className="flex flex-col h-full bg-card">
         {/* Messages container */}
         <div className="flex-1 overflow-y-auto p-3 sm:p-4">
           <AnimatePresence initial={false}>
             {messages.length === 0 ? (
-              <div className="h-full flex items-center justify-center text-gray-400 text-xs sm:text-sm text-center px-4">
+              <div className="h-full flex items-center justify-center text-muted-foreground text-xs sm:text-sm text-center px-4">
                 Ask questions or request changes to the chart...
               </div>
             ) : (
@@ -148,8 +148,8 @@ const ChatBox = forwardRef(
                     <div
                       className={`max-w-[85%] sm:max-w-[75%] rounded-lg px-3 py-2 ${
                         message.sender === "user"
-                          ? "bg-blue-600 text-white"
-                          : "bg-gray-100 dark:bg-gray-800 text-gray-800 dark:text-gray-200"
+                          ? "bg-primary text-primary-foreground"
+                          : "bg-muted text-foreground"
                       }`}
                     >
                       <p className="text-sm sm:text-base break-words">
@@ -172,15 +172,15 @@ const ChatBox = forwardRef(
                     animate={{ opacity: 1, y: 0 }}
                     className="mb-3 flex justify-start"
                   >
-                    <div className="max-w-[85%] sm:max-w-[75%] rounded-lg px-3 py-2 bg-gray-100 dark:bg-gray-800">
+                    <div className="max-w-[85%] sm:max-w-[75%] rounded-lg px-3 py-2 bg-muted">
                       <div className="flex space-x-1.5">
-                        <div className="w-1.5 h-1.5 sm:w-2 sm:h-2 rounded-full bg-gray-400 animate-bounce"></div>
+                        <div className="w-1.5 h-1.5 sm:w-2 sm:h-2 rounded-full bg-muted-foreground/60 animate-bounce"></div>
                         <div
-                          className="w-1.5 h-1.5 sm:w-2 sm:h-2 rounded-full bg-gray-400 animate-bounce"
+                          className="w-1.5 h-1.5 sm:w-2 sm:h-2 rounded-full bg-muted-foreground/60 animate-bounce"
                           style={{ animationDelay: "0.2s" }}
                         ></div>
                         <div
-                          className="w-1.5 h-1.5 sm:w-2 sm:h-2 rounded-full bg-gray-400 animate-bounce"
+                          className="w-1.5 h-1.5 sm:w-2 sm:h-2 rounded-full bg-muted-foreground/60 animate-bounce"
                           style={{ animationDelay: "0.4s" }}
                         ></div>
                       </div>
@@ -197,7 +197,7 @@ const ChatBox = forwardRef(
         {/* Input area */}
         <form
           onSubmit={handleSendMessage}
-          className="p-3 sm:p-4 border-t border-gray-200 dark:border-gray-800"
+          className="p-3 sm:p-4 border-t border-border"
         >
           <div className="flex flex-wrap gap-2">
             <input
@@ -208,12 +208,12 @@ const ChatBox = forwardRef(
               onBlur={handleBlur}
               onKeyPress={handleKeyPress}
               placeholder="Type your message..."
-              className="flex-1 border border-gray-300 dark:border-gray-700 rounded-lg px-3 py-2 text-sm sm:text-base focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent bg-white dark:bg-gray-800 text-gray-900 dark:text-gray-100"
+              className="flex-1 border border-border rounded-lg px-3 py-2 text-sm sm:text-base focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent bg-background text-foreground placeholder:text-muted-foreground"
               disabled={isWaitingForResponse}
             />
             <button
               type="submit"
-              className="w-full bg-blue-600 hover:bg-blue-700 text-white px-4 sm:px-6 py-2 rounded-lg text-sm sm:text-base font-medium transition-colors disabled:opacity-50 whitespace-nowrap"
+              className="w-full bg-primary hover:bg-primary/90 text-primary-foreground px-4 sm:px-6 py-2 rounded-lg text-sm sm:text-base font-medium transition-colors disabled:opacity-50 whitespace-nowrap"
               disabled={isWaitingForResponse || !localInput.trim()}
             >
               Send

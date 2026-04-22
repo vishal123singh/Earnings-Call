@@ -242,7 +242,6 @@ const ChartContainer = React.memo(({ graphData, title, height = 300 }) => {
     const commonProps = {
       data: enhancedData,
       options: mergedOptions,
-      height: height,
     };
 
     switch (graphData.chartType) {
@@ -252,16 +251,16 @@ const ChartContainer = React.memo(({ graphData, title, height = 300 }) => {
         return <Bar {...commonProps} />;
       case "pie":
         return (
-          <div className="flex justify-center">
-            <div style={{ maxWidth: "300px", margin: "0 auto" }}>
+          <div className="flex justify-center items-center h-full w-full">
+            <div style={{ width: "100%", maxWidth: "300px", margin: "0 auto" }}>
               <Pie {...commonProps} />
             </div>
           </div>
         );
       case "doughnut":
         return (
-          <div className="flex justify-center">
-            <div style={{ maxWidth: "300px", margin: "0 auto" }}>
+          <div className="flex justify-center items-center h-full w-full">
+            <div style={{ width: "100%", maxWidth: "300px", margin: "0 auto" }}>
               <Doughnut {...commonProps} />
             </div>
           </div>
@@ -282,9 +281,13 @@ const ChartContainer = React.memo(({ graphData, title, height = 300 }) => {
         </div>
       )}
 
-      {/* Chart content */}
-      <div className="p-5" style={{ height: title ? height - 60 : height }}>
-        {renderChart()}
+      {/* Chart content - FIXED: removed fixed height, let it be natural */}
+      <div className="p-5">
+        <div
+          style={{ height: `${height}px`, width: "100%", position: "relative" }}
+        >
+          {renderChart()}
+        </div>
       </div>
 
       {/* Footer with metadata */}

@@ -1,13 +1,9 @@
 "use client";
-
-import React, { useState, useRef, useEffect, useContext } from "react";
-import { MessageCircle, MicIcon, SendHorizonalIcon, X } from "lucide-react";
-import { Input } from "./input";
-import { Button } from "./button";
+import { useState, useRef, useEffect, useContext } from "react";
+import { MessageCircle, SendHorizonalIcon, X } from "lucide-react";
 import { AnimatePresence, motion } from "framer-motion";
 import { useSelector } from "react-redux";
 import DOMPurify from "dompurify";
-import { companies } from "../../../../public/data";
 import ReactMarkdown from "react-markdown";
 import remarkGfm from "remark-gfm";
 import rehypeRaw from "rehype-raw";

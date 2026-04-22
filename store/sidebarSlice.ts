@@ -70,7 +70,7 @@ const initialState: SidebarState & { filterConfig: FilterConfig } = {
   fmTemperature: 1,
   fmMaxTokens: 2000,
   context: "",
-  selectedCompanies: [],
+  selectedCompanies: [companies[0].ticker],
   selectedYear: [years[0]],
   selectedQuarter: [quarters[0]],
   selectedCategory: "Common",
